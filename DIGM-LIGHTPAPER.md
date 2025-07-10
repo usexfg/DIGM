@@ -4,13 +4,13 @@
 
 The modern music industry, for all its convenience, has a fundamental problem: it is a centralized system that has devalued music and disenfranchised its creators. Artists, the lifeblood of the industry, are often the last to be compensated, receiving mere fractions of a penny per stream after a labyrinth of intermediaries take their cut.
 
-DIGM (Decentralized Independent Groove Marketplace) is a direct response to this broken model. It is not another streaming service; it is a foundational, peer-to-peer protocol for a new music economy—one built on principles of ownership, transparency, and direct value exchange.
+DIGM (Decentralized Independent ₲roove Marketplace) is a direct response to this broken model. It is not another streaming service; it is a foundational, peer-to-peer protocol for a new music economy— one built on principles of ownership in audio, transparency in metrics, and privacy in direct value exchange.
 
-Our vision is simple: **empower artists to control their work and earn 100% of their revenue, while rewarding listeners for their engagement and support.**
+Our vision is simple: **empower artists to preserve control of the their work and keep 100% of their earnings, while rewarding listeners for their engagement and support.**
 
-## **2. The DIGM Ecosystem: A Symphony of Three Parts**
+## **2. The DI₲M Ecosystem: A Symphony of Three Parts**
 
-DIGM is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
+DI₲M is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
 
 *   **The Marketplace:** A vibrant, decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are peer-to-peer, using the Fuego (XFG) cryptocurrency, ensuring artists retain the full value of every sale.
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
@@ -19,19 +19,19 @@ DIGM is a comprehensive platform that integrates three core components into a si
     *   **PARA Tokens** for listener and artist rewards.
 *   **Paradio:** A revolutionary P2P streaming radio that rewards both artists and listeners for their participation.
 
-## **3. The Technology: Peer-to-Peer at its Core**
+## **3. The Technology: Peer-to-Peer 2 the Core**
 
-DIGM is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
+DI₲M is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
 
 Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio files across this distributed network. When a listener buys or streams a track, the data is delivered directly from these peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
 
 ## **4. The Tokenomics: Fueling the New Music Economy**
 
-Two distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
+Two distinct tokens power the DI₲M ecosystem, each with a specific and crucial role.
 
 ### **The DIGM Token: The Right to Host**
 
-The DIGM token is the key that unlocks an artist's ability to participate in the marketplace. To sell music on the platform, an artist must hold DIGM tokens. This mechanism serves several purposes:
+The DIGM token is the key that unlocks an artist's ability to participate in the marketplace. To sell music on the platform, an artist must hold a DIGM token. This mechanism serves several purposes:
 *   It creates a stable, committed base of content hosts.
 *   With a **fixed maximum supply of only 100,000 tokens**, it ensures the platform's growth is organic and prevents oversaturation, preserving value for participating artists.
 *   It acts as a quality-control and anti-spam measure, as hosting rights have tangible value.
