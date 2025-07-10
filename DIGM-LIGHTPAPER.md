@@ -1,4 +1,4 @@
-# **DIGM: A Lightpaper for the Decentralized Music Revolution**
+# **DIGM: A Decentralized Music Revolution**
 
 ## **1. Introduction: Tuning Out the Static**
 
