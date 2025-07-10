@@ -1,4 +1,4 @@
-# **DIGM: Decentralized Music Revolution**
+# **DI₲M: Decentralized Independent O₲ Music Revolution**
 
 ## **1. Introduction: Tuning Out the Static**
 
