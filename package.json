@@ -1,0 +1,63 @@
+{
+  "name": "digm-platform",
+  "version": "0.1.0-alpha",
+  "description": "DIGM Audio Marketplace & Listener Rewards Platform - A decentralized music platform built on Fuego network",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "npm run build:main && concurrently \"npm run dev:main\" \"npm run dev:renderer\"",
+    "dev:main": "nodemon --exec electron dist/main/index.js",
+    "dev:renderer": "cd renderer && npm run dev",
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc --project tsconfig.main.json",
+    "build:renderer": "cd renderer && npm run build",
+    "dist": "npm run build && electron-builder",
+    "clean": "rimraf dist"
+  },
+  "keywords": ["digm", "music", "blockchain", "p2p", "fuego", "xfg", "para"],
+  "author": "DIGM Platform Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "electron": "^37.2.0",
+    "electron-builder": "^24.13.3",
+    "nodemon": "^3.0.2",
+    "postcss": "^8.4.32",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.3.6",
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "helia": "^2.1.0",
+    "@helia/unixfs": "^1.4.3",
+    "@stellar/stellar-sdk": "^11.2.2",
+    "node-fetch": "^3.3.2"
+  },
+  "build": {
+    "appId": "org.digm.platform",
+    "productName": "DIGM Platform",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "renderer/dist/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.music"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
