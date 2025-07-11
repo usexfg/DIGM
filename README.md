@@ -1,4 +1,4 @@
-# DIGM Platform - Decentralized Infrastructure & Governance Management
+# DIGM  - Decentralized P2P Music/Audio Marketplace using Fuego (XF₲) L1 privacy payment network.
 
 A comprehensive platform for PARA token bridging, Fuego XFG privacy mining, and NFT-based hosting permissions.
 
@@ -38,9 +38,9 @@ A comprehensive platform for PARA token bridging, Fuego XFG privacy mining, and 
 - **CosmWasm** smart contracts for NFTs
 
 ### Blockchain Networks
-- **EVM Networks** (Ethereum, Polygon, etc.)
+- **EVM Networks** (Ethereum, COLD L3, etc.)
 - **Stellar Network** for PARA token
-- **Fuego L1 Privacy Blockchain** for XFG mining
+- **Fuego L1 Privacy Blockchain** for XFG mining and peer-to-peer private transactions (audio purchases)
 
 ## 📦 Installation
 
@@ -193,15 +193,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Fuego L1 Privacy Blockchain](https://github.com/usexfg/fuego-node)
 - [LoudMining.com](https://loudmining.com)
 - [Stellar Network](https://stellar.org)
-- [PARA Token](https://para.org)
+- [PARA Token](https://stellarterm.com/exchange/PARA-GCFWKV4KWYPBPQVQYLVL6N6VARBLVQS6POYEMLN7AGZB5UK4VIJX565U/XLM-native)
 
 ## 🆘 Support
 
 For support and questions:
 - Create an issue on GitHub
-- Join our Discord community
-- Email: support@digm.platform
+- Join our [Discord community](http://discord.usexfg.org)
 
 ---
 
-**DIGM Platform** - Building the future of decentralized infrastructure and governance. 
+**DIGM Platform** - Fuego Elder Council 2025
