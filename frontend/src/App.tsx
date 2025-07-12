@@ -4,6 +4,9 @@ import ParaBridge from './components/ParaBridge';
 import VoucherClaim from './components/VoucherClaim';
 import HostingPermissions from './components/HostingPermissions';
 import XfgWallet from './components/XfgWallet';
+import ArtistProfile from './components/ArtistProfile';
+import ArtistDashboard from './components/ArtistDashboard';
+import AudioMarketplace from './components/AudioMarketplace';
 import { WalletProvider } from './hooks/useWallet';
 
 function App() {
@@ -66,6 +69,36 @@ function App() {
             >
               Fuego XFG Mining
             </button>
+            <button
+              onClick={() => setActiveTab('artist')}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                activeTab === 'artist'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Artist Profile
+            </button>
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                activeTab === 'dashboard'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Artist Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('marketplace')}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                activeTab === 'marketplace'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Audio Marketplace
+            </button>
           </div>
 
           {/* Tab Content */}
@@ -74,6 +107,9 @@ function App() {
             {activeTab === 'vouchers' && <VoucherClaim />}
             {activeTab === 'hosting' && <HostingPermissions />}
             {activeTab === 'xfg' && <XfgWallet />}
+            {activeTab === 'artist' && <ArtistProfile />}
+            {activeTab === 'dashboard' && <ArtistDashboard />}
+            {activeTab === 'marketplace' && <AudioMarketplace />}
           </div>
         </main>
       </div>
