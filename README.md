@@ -4,8 +4,7 @@ A basic architectural outline for PARA token bridging, Fuego XFG privacy transac
 
 <img src="https://github.com/usexfg/DIGM/blob/main/digmpreview2.png"><img/>
 <img src="https://github.com/usexfg/DIGM/blob/main/digmpreview1.png"><img/>
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview3.png"><img/>
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview6.png"><img/>
+
 <img src="https://github.com/usexfg/DIGM/blob/main/digmpreview7.png"><img/>
 <img src="https://github.com/usexfg/DIGM/blob/main/digmpreview8.png"><img/>
 ## 🚀 Features
