@@ -2,10 +2,6 @@
 
 A basic architectural outline for PARA token bridging, Fuego XFG privacy transactions with freemium mining, and DIGM NFT-based hosting permissions.
 
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview2.png"><img/>
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview1.png"><img/>
-
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview7.png"><img/>
 <img src="https://github.com/usexfg/DIGM/blob/main/digmpreview8.png"><img/>
 ## 🚀 Features
 
