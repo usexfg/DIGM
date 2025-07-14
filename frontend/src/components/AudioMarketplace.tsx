@@ -219,7 +219,7 @@ const AudioMarketplace: React.FC = () => {
                 disabled={isPurchasing}
                 className="btn-primary w-full disabled:opacity-50"
               >
-                {isPurchasing ? 'Processing...' : 'Purchase with XFG'}
+                {isPurchasing ? 'Processing...' : `Pay ${track.artist} ${track.price} XFG`}
               </button>
             </div>
           </div>
@@ -293,7 +293,7 @@ const AudioMarketplace: React.FC = () => {
                   disabled={isPurchasing}
                   className="btn-primary flex-1 disabled:opacity-50"
                 >
-                  {isPurchasing ? 'Processing...' : 'Purchase with XFG'}
+                  {isPurchasing ? 'Processing...' : `Pay ${selectedTrack.artist} ${selectedTrack.price} XFG`}
                 </button>
                 <button
                   onClick={() => setSelectedTrack(null)}
@@ -307,15 +307,15 @@ const AudioMarketplace: React.FC = () => {
         </div>
       )}
 
-      {/* Privacy Notice */}
+      {/* Artist-First Notice */}
       <div className="card">
-        <h3 className="text-lg font-semibold mb-3">Privacy-First Purchases</h3>
+        <h3 className="text-lg font-semibold mb-3">100% Artist-First Economy</h3>
         <div className="space-y-2 text-sm text-slate-300">
-          <p>• <strong>Zero-Knowledge Transactions:</strong> All purchases are anonymous and untraceable</p>
-          <p>• <strong>Fuego L1 Network:</strong> Transactions processed on the privacy blockchain</p>
-          <p>• <strong>No Personal Data:</strong> We don't collect or store your personal information</p>
-          <p>• <strong>Instant Delivery:</strong> Audio files delivered immediately after purchase</p>
-          <p>• <strong>Artist Support:</strong> 90% of proceeds go directly to artists</p>
+          <p>• <strong>100% Artist Revenue:</strong> Artists keep every single XFG from their sales</p>
+          <p>• <strong>Zero Platform Fees:</strong> No hidden fees, no opaque calculations, no intermediaries</p>
+          <p>• <strong>Direct P2P Transactions:</strong> Payments go directly from listener to artist</p>
+          <p>• <strong>Privacy-Preserving:</strong> All transactions use Fuego L1 zero-knowledge proofs</p>
+          <p>• <strong>True Ownership:</strong> Artists control their music, pricing, and fan connections</p>
         </div>
       </div>
     </div>

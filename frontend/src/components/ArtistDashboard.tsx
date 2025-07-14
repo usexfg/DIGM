@@ -140,7 +140,18 @@ const ArtistDashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Dashboard Header */}
       <div className="card">
-        <h2 className="text-xl font-bold mb-4">Artist Dashboard</h2>
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-xl font-bold">Artist Dashboard</h2>
+          <div className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+            100% Revenue Model
+          </div>
+        </div>
+        <div className="bg-green-900 bg-opacity-20 border border-green-600 rounded-lg p-4 mb-6">
+          <p className="text-green-300 text-sm">
+            <strong>🎵 Keep 100% of Your Sales:</strong> Every XFG from your music sales goes directly to you. 
+            No platform fees, no intermediaries, no hidden costs. This is the DIGM promise.
+          </p>
+        </div>
         
         {/* Navigation Tabs */}
         <div className="flex space-x-1 bg-slate-800 p-1 rounded-lg mb-6">
@@ -198,8 +209,9 @@ const ArtistDashboard: React.FC = () => {
                     <p className="text-2xl font-bold text-white">{salesData.totalSales}</p>
                   </div>
                   <div className="bg-slate-700 p-4 rounded-lg">
-                    <h3 className="text-sm font-medium text-slate-300 mb-2">Total Revenue</h3>
+                    <h3 className="text-sm font-medium text-slate-300 mb-2">Total Revenue (100% Yours)</h3>
                     <p className="text-2xl font-bold text-white">{salesData.totalRevenue} XFG</p>
+                    <p className="text-xs text-green-400 mt-1">No platform fees!</p>
                   </div>
                   <div className="bg-slate-700 p-4 rounded-lg">
                     <h3 className="text-sm font-medium text-slate-300 mb-2">Monthly Revenue</h3>
