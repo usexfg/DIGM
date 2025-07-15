@@ -192,7 +192,7 @@ const MiningDashboard: React.FC = () => {
           <p>• <strong>Privacy-First:</strong> All mining operations are anonymous and untraceable</p>
           <p>• <strong>Early Bird Bonus:</strong> Early contributors get 2x mining power for the first 30 days</p>
           <p>• <strong>LoudMining Integration:</strong> Enhanced mining efficiency through LoudMining.com proxy</p>
-          <p>• <strong>Zero-Knowledge Proofs:</strong> Mining rewards distributed using privacy-preserving protocols</p>
+          <p>• <strong>CryptoNote Privacy:</strong> Mining rewards distributed using CryptoNote ring signature privacy</p>
           <p>• <strong>Pool Mining:</strong> Join privacy-focused mining pools for increased efficiency</p>
           <p>• <strong>Compound Rewards:</strong> Reinvest your XFG earnings to increase mining power</p>
         </div>

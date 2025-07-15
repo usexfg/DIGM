@@ -18,16 +18,21 @@ const WalletConnector: React.FC = () => {
   return (
     <div className="flex items-center space-x-4">
       {/* EVM Wallet */}
-      <div className="flex items-center space-x-2">
-        <span className="text-sm text-slate-300">EVM:</span>
+      <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+          <span className="text-sm text-gray-300">EVM</span>
+        </div>
         {evmAddress ? (
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-green-400">{formatAddress(evmAddress)}</span>
+            <div className="glass px-3 py-1 rounded-full">
+              <span className="text-sm text-green-400 font-medium">{formatAddress(evmAddress)}</span>
+            </div>
             <button
               onClick={disconnectEvmWallet}
-              className="text-xs text-red-400 hover:text-red-300"
+              className="text-xs text-red-400 hover:text-red-300 transition-colors"
             >
-              Disconnect
+              ✕
             </button>
           </div>
         ) : (
@@ -41,25 +46,47 @@ const WalletConnector: React.FC = () => {
       </div>
 
       {/* Stellar Wallet */}
-      <div className="flex items-center space-x-2">
-        <span className="text-sm text-slate-300">Stellar:</span>
+      <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-fuchsia-400 rounded-full"></div>
+          <span className="text-sm text-gray-300">Stellar</span>
+        </div>
         {stellarAddress ? (
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-green-400">{formatAddress(stellarAddress)}</span>
+            <div className="glass px-3 py-1 rounded-full">
+              <span className="text-sm text-fuchsia-400 font-medium">{formatAddress(stellarAddress)}</span>
+            </div>
             <button
               onClick={disconnectStellarWallet}
-              className="text-xs text-red-400 hover:text-red-300"
+              className="text-xs text-red-400 hover:text-red-300 transition-colors"
             >
-              Disconnect
+              ✕
             </button>
           </div>
         ) : (
-          <button
-            onClick={connectStellarWallet}
-            className="btn-primary text-sm"
-          >
-            Connect
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={connectStellarWallet}
+              className="btn-primary text-sm"
+            >
+              Connect
+            </button>
+            <button
+              onClick={() => {
+                console.log('Manual LOBSTR check...');
+                console.log('window.lobstrApi:', typeof window.lobstrApi);
+                console.log('window.lobstr:', typeof window.lobstr);
+                console.log('All window properties:', Object.keys(window).filter(key => 
+                  key.toLowerCase().includes('lobstr') || 
+                  key.toLowerCase().includes('stellar')
+                ));
+              }}
+              className="text-xs text-fuchsia-400 hover:text-fuchsia-300 transition-colors"
+              title="Debug LOBSTR"
+            >
+              Debug
+            </button>
+          </div>
         )}
       </div>
     </div>

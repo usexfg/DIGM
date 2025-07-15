@@ -43,12 +43,22 @@ const HostingPermissions: React.FC = () => {
     
     setIsLoading(true);
     try {
-      // This would query the CosmWasm NFT contract
-      const response = await fetch(`/api/nft/digm/${evmAddress}`);
-      if (response.ok) {
-        const data = await response.json();
-        setDigmNfts(data.nfts || []);
-      }
+      // Mock data since backend is not running
+      const mockNfts = [
+        {
+          tokenId: '1',
+          tier: 'gold' as const,
+          contributionPoints: 15000,
+          mintType: 'contribution' as const
+        },
+        {
+          tokenId: '2',
+          tier: 'silver' as const,
+          contributionPoints: 8000,
+          mintType: 'curve' as const
+        }
+      ];
+      setDigmNfts(mockNfts);
     } catch (error) {
       console.error('Failed to fetch DIGM NFTs:', error);
     } finally {
@@ -58,12 +68,9 @@ const HostingPermissions: React.FC = () => {
 
   const fetchCurrentPrice = async () => {
     try {
-      // This would query the bonding curve price
-      const response = await fetch('/api/nft/curve-price');
-      if (response.ok) {
-        const data = await response.json();
-        setCurrentPrice(data.price || '0');
-      }
+      // Mock data since backend is not running
+      const mockPrice = (Math.random() * 100 + 50).toFixed(2);
+      setCurrentPrice(mockPrice);
     } catch (error) {
       console.error('Failed to fetch current price:', error);
     }
@@ -142,7 +149,7 @@ const HostingPermissions: React.FC = () => {
           ) : (
             <div className="space-y-3">
               <div className="text-center p-4 bg-slate-700 rounded-lg">
-                <p className="text-slate-300 mb-2">Current NFT Price: {currentPrice} PARA</p>
+                <p className="text-slate-300 mb-2">Current NFT Price: {currentPrice} HEAT</p>
                 <button className="btn-primary">
                   Mint DIGM NFT
                 </button>

@@ -62,22 +62,22 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
     {
       title: 'PARA Artist / Listener Rewards',
       description: 'Earn PARA tokens for listening to music',
-      icon: '🎧'
+      icon: ':paralogo:'
     },
     {
-      title: 'Remember ownership of purchased audio?',
-      description: 'DIGM it, we remember. You own the actual track files - even the physical albums (using Fuego L1\'s simple private messaging [ie shipping details] with artist/seller) that you purchase on DIGM.',
-      icon: '📱'
+      title: ' Remember ownership of purchased audio?',
+      description: 'We remember, DIGM it. You own the actual track files - even physical albums (using Fuego L1\'s simple private messaging [ie shipping details] with artist) that you purchase on DIGM.',
+      icon: '💿'
     },
     {
-      title: '🎨 Exclusive Content',
-      description: 'Artists can decide their own exclusives to premium content or pre-releases using HEAT, PARA, or XF₲ paywalls- limit only to other DIGM holders, or create & use your own NFTs on COLD L3.',
-      icon: '🎨'
+      title: '💎 Exclusive Content',
+      description: 'Artists decide their own exclusives to premium content or pre-releases using HEAT, PARA, or XF₲ paywalls, limit only to other DIGM holders, or even create & use your own NFTs on COLD L3*.',
+      icon: '👩‍🎤'
     },
     {
-      title: '💎 Freedom isnt free - it costs responsibility',
-      description: 'DIGM is a decentralized platform- there is no customer support because there are no "customers". We are a community of artists/musicians, music lovers, and developers who help one another. We do love feedback! ',
-      icon: '💎'
+      title: '🌊 Freedom isnt free - the cost is responsibility',
+      description: 'DIGM is a decentralized platform- theres no "customer support" because there are no "customers". We\'re a community of artists/musicians, music lovers, and developers who all help one another. Join us! ',
+      icon: '🧞‍♀️'
     }
   ];
 
