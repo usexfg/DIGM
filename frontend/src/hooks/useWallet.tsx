@@ -144,9 +144,18 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         
         if (!isUnlocked) {
           console.log('Connecting to Rabet wallet...');
-          // Try different connection methods
+          // Try to connect and get public key
           if (typeof rabetApi.connect === 'function') {
-            await rabetApi.connect();
+            const connectResult = await rabetApi.connect();
+            if (connectResult && typeof connectResult === 'string') {
+              setStellarPublicKey(connectResult);
+              setStellarAddress(connectResult);
+              return;
+            } else if (connectResult && connectResult.publicKey) {
+              setStellarPublicKey(connectResult.publicKey);
+              setStellarAddress(connectResult.publicKey);
+              return;
+            }
           } else if (typeof rabetApi.unlock === 'function') {
             await rabetApi.unlock();
           } else if (typeof rabetApi.enable === 'function') {
@@ -155,97 +164,20 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           console.log('Connected to Rabet wallet');
         }
 
-        // Get public key using Rabet's actual API methods
-        console.log('Getting public key...');
+        // Try to get public key from properties
         let publicKey = null;
-        
-        // Method 1: Try to get public key through a simple sign request
-        try {
-          console.log('Attempting to get public key through sign request...');
-          
-          // Create a simple operation to get the public key
-          const dummyOperation = {
-            type: 'allowTrust',
-            trustor: 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF',
-            asset: 'PARA-GCFWKV4KWYPBPQVQYLVL6N6VARBLVQS6POYEMLN7AGZB5UK4VIJX565U-1',
-            authorize: true
-          };
-          
-          // Try to sign this operation to get the public key
-          const signResult = await rabetApi.sign([dummyOperation]);
-          console.log('Sign result:', signResult);
-          
-          if (signResult && signResult.publicKey) {
-            publicKey = signResult.publicKey;
-          } else if (signResult && signResult.accountId) {
-            publicKey = signResult.accountId;
-          }
-        } catch (error) {
-          console.log('Failed to get public key through sign:', error);
+        if (rabetApi.publicKey) {
+          publicKey = rabetApi.publicKey;
+        } else if (rabetApi.accountId) {
+          publicKey = rabetApi.accountId;
+        } else if (rabetApi.address) {
+          publicKey = rabetApi.address;
         }
-        
-        // Method 2: Try to get network info
-        if (!publicKey && typeof rabetApi.getNetwork === 'function') {
-          try {
-            const network = await rabetApi.getNetwork();
-            console.log('Network info:', network);
-            
-            // Check if network object contains public key
-            if (network && network.publicKey) {
-              publicKey = network.publicKey;
-            } else if (network && network.accountId) {
-              publicKey = network.accountId;
-            }
-          } catch (error) {
-            console.log('Failed to get network info:', error);
-          }
-        }
-        
-        // Method 3: Check if public key is available as a property
-        if (!publicKey) {
-          if (rabetApi.publicKey) {
-            publicKey = rabetApi.publicKey;
-          } else if (rabetApi.accountId) {
-            publicKey = rabetApi.accountId;
-          } else if (rabetApi.address) {
-            publicKey = rabetApi.address;
-          }
-        }
-        
-        // Method 4: Try to get public key through a payment operation
-        if (!publicKey) {
-          try {
-            console.log('Attempting to get public key through payment operation...');
-            
-            const paymentOperation = {
-              type: 'payment',
-              destination: 'GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF',
-              asset: 'XLM',
-              amount: '0.0000001'
-            };
-            
-            const paymentResult = await rabetApi.sign([paymentOperation]);
-            console.log('Payment sign result:', paymentResult);
-            
-            if (paymentResult && paymentResult.publicKey) {
-              publicKey = paymentResult.publicKey;
-            } else if (paymentResult && paymentResult.accountId) {
-              publicKey = paymentResult.accountId;
-            }
-          } catch (error) {
-            console.log('Failed to get public key through payment:', error);
-          }
-        }
-        
-        console.log('Public key received:', publicKey);
-        
         if (!publicKey) {
           throw new Error('Failed to get public key from Rabet wallet. Available methods: ' + Object.keys(rabetApi).join(', '));
         }
-        
         setStellarPublicKey(publicKey);
         setStellarAddress(publicKey); // Stellar addresses are the public key
-        
       } catch (error) {
         console.error('Failed to connect to Rabet wallet:', error);
         console.error('Error details:', {
@@ -254,7 +186,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           rabetApi: rabetApi,
           availableMethods: Object.keys(rabetApi || {})
         });
-        
         throw error;
       }
       

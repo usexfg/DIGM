@@ -1,9 +1,9 @@
 # DIGM Logo Image Generation Prompt
 
 ## Project Vision
-DIGM (Decentralized Internet Governance & Media) is a revolutionary platform that combines:
+DIGM (Decentralized Indie Genre Marketplace) is a revolutionary platform that combines:
 - **Decentralized governance** for internet infrastructure
-- **P2P media streaming** with token rewards
+- **P2P audio streaming** with token rewards
 - **Blockchain-powered** content distribution
 - **Community-driven** platform evolution
 

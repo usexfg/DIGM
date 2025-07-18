@@ -87,6 +87,36 @@ const ParaBridge: React.FC = () => {
     return smallestUnit.toLocaleString();
   };
 
+  // Utility: Format PARA numbers for UX (whole number and subunit abbreviations)
+  function formatParaAmount(num: number | string): string {
+    const n = typeof num === 'string' ? parseFloat(num) : num;
+    if (!n) return '0';
+    const abs = Math.abs(n);
+    // Large numbers (>= 1)
+    const large = [
+      { value: 1e21, symbol: 'SX' },
+      { value: 1e18, symbol: 'QN' },
+      { value: 1e15, symbol: 'QD' },
+      { value: 1e12, symbol: 'T' },
+      { value: 1e9, symbol: 'B' },
+      { value: 1e6, symbol: 'M' },
+      { value: 1e3, symbol: 'K' },
+    ];
+    for (const l of large) {
+      if (abs >= l.value) {
+        const val = n / l.value;
+        const rounded = Math.round(val);
+        return rounded + l.symbol;
+      }
+    }
+    // For numbers less than 1, show '1' if nonzero, otherwise '0'
+    if (abs < 1) {
+      return n > 0 ? '1' : '0';
+    }
+    // For all other numbers, show as whole number (rounded)
+    return Math.round(n).toString();
+  }
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
@@ -227,7 +257,7 @@ const ParaBridge: React.FC = () => {
                   />
                   <h3 className="text-sm font-medium text-slate-300">EVM Balance</h3>
                 </div>
-                <p className="text-2xl font-bold text-white">{formatParaAsWholeNumber(evmBalance)} PARA</p>
+                <p className="text-2xl font-bold text-white">{formatParaAmount(evmBalance)} PARA</p>
                 {evmAddress && (
                   <p className="text-xs text-slate-400 mt-1">{evmAddress}</p>
                 )}
@@ -244,7 +274,7 @@ const ParaBridge: React.FC = () => {
                   />
                   <h3 className="text-sm font-medium text-slate-300">Stellar Balance</h3>
                 </div>
-                <p className="text-2xl font-bold text-white">{formatParaAsWholeNumber(stellarBalance)} PARA</p>
+                <p className="text-2xl font-bold text-white">{formatParaAmount(stellarBalance)} PARA</p>
                 {stellarAddress && (
                   <p className="text-xs text-slate-400 mt-1">{stellarAddress}</p>
                 )}
@@ -348,7 +378,7 @@ const ParaBridge: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-2">
                           <span className="text-lg font-semibold text-white">
-                            {formatAmount(balance.amount, balance.asset)}
+                            {formatParaAmount(parseFloat(balance.amount) / 1e7)} {balance.asset}
                           </span>
                           <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded">
                             Voucher

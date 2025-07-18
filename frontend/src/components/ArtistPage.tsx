@@ -36,6 +36,7 @@ interface Artist {
   totalAlbums: number;
   totalSales: number;
   totalRevenue: number;
+  totalParaEarned: number; // Add this line
   genres: string[];
   socialLinks: {
     twitter?: string;
@@ -90,6 +91,7 @@ const ArtistPage: React.FC = () => {
           totalAlbums: 3,
           totalSales: 127,
           totalRevenue: 6.35,
+          totalParaEarned: 1234,
           genres: ['Electronic', 'Techno', 'Ambient'],
           socialLinks: {
             twitter: 'https://twitter.com/cryptobeats',
@@ -107,6 +109,7 @@ const ArtistPage: React.FC = () => {
           totalAlbums: 2,
           totalSales: 89,
           totalRevenue: 7.12,
+          totalParaEarned: 500,
           genres: ['Hip Hop', 'Rap', 'Trap'],
           socialLinks: {
             twitter: 'https://twitter.com/heatwave',
@@ -123,9 +126,44 @@ const ArtistPage: React.FC = () => {
           totalAlbums: 4,
           totalSales: 203,
           totalRevenue: 24.36,
+          totalParaEarned: 2000,
           genres: ['Ambient', 'Space', 'Chill'],
           socialLinks: {
             website: 'https://cosmicdj.space'
+          },
+          verified: true
+        },
+        'decentralized-soul': {
+          id: 'decentralized-soul',
+          name: 'Decentralized Soul',
+          address: '0x5555...6666',
+          bio: 'Blues with a digital twist. Decentralized Soul brings classic blues into the blockchain era with soulful melodies and modern themes.',
+          avatar: '',
+          totalAlbums: 1,
+          totalSales: 156,
+          totalRevenue: 4.21,
+          totalParaEarned: 1000,
+          genres: ['Blues', 'Digital Blues'],
+          socialLinks: {
+            twitter: 'https://twitter.com/decentralizedsoul',
+            website: 'https://decentralizedsoul.xyz'
+          },
+          verified: true
+        },
+        'headphone-son': {
+          id: 'headphone-son',
+          name: 'Headphone Son',
+          address: '0x1234...5678',
+          bio: 'Electronic journeys through neon-lit cities. Headphone Son crafts immersive soundscapes perfect for late-night listening.',
+          avatar: '',
+          totalAlbums: 2,
+          totalSales: 634,
+          totalRevenue: 12.34,
+          totalParaEarned: 800,
+          genres: ['Electronic', 'Ambient', 'Techno'],
+          socialLinks: {
+            twitter: 'https://twitter.com/headphoneson',
+            website: 'https://headphoneson.io'
           },
           verified: true
         }
@@ -246,6 +284,46 @@ const ArtistPage: React.FC = () => {
               { id: '8', title: 'Cosmic End', duration: '6:00', price: 0.12, trackNumber: 8, isPreview: true }
             ]
           }
+        ],
+        'decentralized-soul': [
+          {
+            id: 'blockchain-blues-album',
+            title: 'Blockchain Blues',
+            artist: 'Decentralized Soul',
+            artistAddress: '0x5555...6666',
+            coverArt: '',
+            price: 0.06,
+            genre: 'Blues',
+            releaseDate: '2024-01-25',
+            trackCount: 1,
+            totalSales: 156,
+            totalRevenue: 4.21,
+            description: 'A digital twist on classic blues, featuring the hit "Blockchain Blues".',
+            tracks: [
+              { id: '1', title: 'Blockchain Blues', duration: '3:30', price: 0.06, trackNumber: 1, isPreview: true }
+            ]
+          }
+        ],
+        'headphone-son': [
+          {
+            id: 'midnight-city-album',
+            title: 'Midnight City',
+            artist: 'Headphone Son',
+            artistAddress: '0x1234...5678',
+            coverArt: '',
+            price: 0.08,
+            genre: 'Electronic',
+            releaseDate: '2024-01-10',
+            trackCount: 3,
+            totalSales: 342,
+            totalRevenue: 8.21,
+            description: 'A mesmerizing electronic journey through the neon-lit streets of a digital metropolis.',
+            tracks: [
+              { id: '1', title: 'Midnight City', duration: '4:32', price: 0.08, trackNumber: 1, isPreview: true },
+              { id: '2', title: 'Bitcoin', duration: '4:20', price: 0.08, trackNumber: 2, isPreview: false },
+              { id: '3', title: 'Recording 2018-04-19', duration: '5:15', price: 0.12, trackNumber: 3, isPreview: false }
+            ]
+          }
         ]
       };
 
@@ -337,6 +415,34 @@ const ArtistPage: React.FC = () => {
             createdAt: '2024-01-08T11:20:00Z',
             totalPurchases: 15,
             revenue: 2250
+          }
+        ],
+        'decentralized-soul': [
+          {
+            id: '6',
+            title: 'Digital Blues Experience',
+            description: 'Unlock a digital blues experience, including a curated playlist and exclusive merch.',
+            tokenType: 'XFG',
+            tokenAmount: 0.01,
+            unlockType: 'custom-content',
+            isActive: true,
+            createdAt: '2024-01-18T10:00:00Z',
+            totalPurchases: 10,
+            revenue: 100
+          }
+        ],
+        'headphone-son': [
+          {
+            id: '7',
+            title: 'Neon City Soundtrack',
+            description: 'Unlock the full soundtrack of "Midnight City" and a special remix.',
+            tokenType: 'PARA',
+            tokenAmount: 50,
+            unlockType: 'exclusive-track',
+            isActive: true,
+            createdAt: '2024-01-20T11:00:00Z',
+            totalPurchases: 8,
+            revenue: 400
           }
         ]
       };
@@ -468,6 +574,7 @@ const ArtistPage: React.FC = () => {
                 <span className="text-gray-400">Revenue:</span>
                 <span className="gradient-text font-bold ml-2">{artist.totalRevenue} XFG</span>
               </div>
+              <div className="text-sm text-green-400 font-bold mt-2">Total PARA Earned: {artist.totalParaEarned.toLocaleString()} PARA</div>
             </div>
             
             {Object.keys(artist.socialLinks).length > 0 && (

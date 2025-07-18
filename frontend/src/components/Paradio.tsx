@@ -51,6 +51,12 @@ interface ParadioStats {
   xfgMined: number; // XFG mined (goes to dev wallet)
   paraMiningMultiplier: number; // PARA mining multiplier based on cores
   isMining: boolean; // Whether actively mining
+  // Skip penalty tracking
+  dailySkips: number; // Number of skips today
+  totalSkips: number; // Total skips across all time
+  lastSkipTime: number; // Last time user skipped a track
+  skipPenaltyMultiplier: number; // Current penalty multiplier (0.1 to 1.0)
+  lastSkipReset: number; // Last time daily skips were reset
   // Historical stats
   totalLifetimePARA: number; // Total PARA earned across all time
   totalLifetimeXFG: number; // Total XFG mined across all time
@@ -133,6 +139,12 @@ const Paradio: React.FC = () => {
     xfgMined: 0,
     paraMiningMultiplier: 1.0,
     isMining: false,
+    // Skip penalty tracking
+    dailySkips: 0,
+    totalSkips: 0,
+    lastSkipTime: 0,
+    skipPenaltyMultiplier: 1.0, // Start with no penalty
+    lastSkipReset: Date.now(),
     // Historical stats
     totalLifetimePARA: 0,
     totalLifetimeXFG: 0,
@@ -637,10 +649,41 @@ const Paradio: React.FC = () => {
     // Combine human verification and reputation scores
     const combinedScore = (score * 0.7) + (reputation * 0.3);
     
-    if (combinedScore >= 80) return 1.0; // Full rate
-    if (combinedScore >= 60) return 0.7; // Reduced rate
-    if (combinedScore >= 40) return 0.4; // Heavily reduced
-    return 0.1; // Minimal rate for suspicious users
+    let baseMultiplier = 1.0;
+    if (combinedScore >= 80) baseMultiplier = 1.0; // Full rate
+    else if (combinedScore >= 60) baseMultiplier = 0.7; // Reduced rate
+    else if (combinedScore >= 40) baseMultiplier = 0.4; // Heavily reduced
+    else baseMultiplier = 0.1; // Minimal rate for suspicious users
+    
+    // Apply skip penalty multiplier
+    return baseMultiplier * stats.skipPenaltyMultiplier;
+  };
+
+  // Calculate skip penalty based on daily skips
+  const calculateSkipPenalty = (dailySkips: number): number => {
+    if (dailySkips === 0) return 1.0; // No penalty
+    if (dailySkips === 1) return 0.9; // 10% penalty for first skip
+    if (dailySkips === 2) return 0.7; // 30% penalty for second skip
+    if (dailySkips === 3) return 0.5; // 50% penalty for third skip
+    if (dailySkips === 4) return 0.3; // 70% penalty for fourth skip
+    if (dailySkips >= 5) return 0.1; // 90% penalty for 5+ skips
+    return 1.0;
+  };
+
+  // Reset daily skips if it's a new day
+  const checkAndResetDailySkips = () => {
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const timeSinceReset = now - stats.lastSkipReset;
+    
+    if (timeSinceReset >= oneDay) {
+      setStats(prev => ({
+        ...prev,
+        dailySkips: 0,
+        skipPenaltyMultiplier: 1.0,
+        lastSkipReset: now
+      }));
+    }
   };
 
   // Calculate earning rate based on track popularity, current listeners, and premium status
@@ -682,7 +725,7 @@ const Paradio: React.FC = () => {
     }
   }, [volume]);
 
-  // Update earning rate when premium status changes
+  // Update earning rate when premium status or skip penalty changes
   useEffect(() => {
     if (currentTrack) {
       const newRate = calculateEarningRate(currentTrack);
@@ -691,7 +734,15 @@ const Paradio: React.FC = () => {
         currentEarningRate: newRate
       }));
     }
-  }, [stats.hasPremium, stats.premiumCores, stats.paraMiningMultiplier]);
+  }, [stats.hasPremium, stats.premiumCores, stats.paraMiningMultiplier, stats.skipPenaltyMultiplier]);
+
+  // Check for daily skip reset on component mount and periodically
+  useEffect(() => {
+    checkAndResetDailySkips();
+    
+    const interval = setInterval(checkAndResetDailySkips, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchParadioPlaylist = async () => {
     setIsLoading(true);
@@ -799,6 +850,29 @@ const Paradio: React.FC = () => {
 
   const skipTrack = () => {
     if (!currentTrack || playlist.length === 0) return;
+    
+    // Check and reset daily skips if it's a new day
+    checkAndResetDailySkips();
+    
+    // Apply skip penalty
+    const newDailySkips = stats.dailySkips + 1;
+    const newSkipPenalty = calculateSkipPenalty(newDailySkips);
+    
+    setStats(prev => ({
+      ...prev,
+      dailySkips: newDailySkips,
+      totalSkips: prev.totalSkips + 1,
+      lastSkipTime: Date.now(),
+      skipPenaltyMultiplier: newSkipPenalty
+    }));
+    
+    // Show skip penalty notification
+    const penaltyPercent = Math.round((1 - newSkipPenalty) * 100);
+    if (newDailySkips > 1) {
+      console.log(`⚠️ Skip penalty applied: ${penaltyPercent}% reduction in PARA earnings for today`);
+    }
+    
+    // Find next track
     let currentIndex = playlist.findIndex(track => track.id === currentTrack.id);
     let nextIndex = (currentIndex + 1) % playlist.length;
     let attempts = 0;
@@ -1317,13 +1391,13 @@ const Paradio: React.FC = () => {
                       className="w-16 h-16 bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-full flex items-center justify-center text-2xl transition-all duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={!isValidAudioUrl(currentTrack.audioUrl)}
                     >
-                      {isPlaying ? '⏸️' : '▶️'}
+                      {isPlaying ? '⏸' : '►'}
                     </button>
                     <button
                       onClick={skipTrack}
                       className="w-12 h-12 bg-gray-600 hover:bg-gray-700 text-white rounded-full flex items-center justify-center text-xl transition-all duration-200 hover:scale-110"
                     >
-                      ⏭️
+                      ⏭
                     </button>
                   </div>
                   {/* Show a message if not playable */}
@@ -1384,9 +1458,14 @@ const Paradio: React.FC = () => {
                           {stats.isListening ? (
                             <span className="text-green-400">🎧 Earning {stats.currentEarningRate.toFixed(3)} PARA/min</span>
                           ) : (
-                            <span className="text-orange-400">⏸️ Paused - No earning</span>
+                            <span className="text-orange-400">⏸ Paused - No earning</span>
                           )}
                         </div>
+                        {stats.skipPenaltyMultiplier < 1.0 && (
+                          <div className="text-xs text-red-400 mt-1 animate-pulse">
+                            ⚠️ Skip penalty: {Math.round((1 - stats.skipPenaltyMultiplier) * 100)}% reduction
+                          </div>
+                        )}
                         {paraMeterProgress >= 100 && (
                           <div className="text-xs text-sky-400 mt-1 animate-pulse">
                             ✅ {stats.currentEarningRate.toFixed(3)} PARA logged to Stellar blockchain!
@@ -1442,6 +1521,20 @@ const Paradio: React.FC = () => {
               <div className="glass p-4 rounded-xl">
                 <h3 className="text-sm font-medium text-gray-400 mb-2">Current Rate</h3>
                 <p className="text-2xl font-bold text-sky-400">{stats.currentEarningRate} PARA/min</p>
+              </div>
+              <div className="glass p-4 rounded-xl">
+                <h3 className="text-sm font-medium text-gray-400 mb-2">Skip Penalty</h3>
+                <div className="flex items-center space-x-2">
+                  <p className="text-2xl font-bold text-orange-400">
+                    {stats.skipPenaltyMultiplier < 1.0 ? `${Math.round((1 - stats.skipPenaltyMultiplier) * 100)}%` : 'None'}
+                  </p>
+                  {stats.skipPenaltyMultiplier < 1.0 && (
+                    <span className="text-xs text-red-400">⚠️</span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  {stats.dailySkips} skip{stats.dailySkips !== 1 ? 's' : ''} today
+                </p>
               </div>
             </div>
 
@@ -1869,7 +1962,7 @@ const Paradio: React.FC = () => {
                   >
                     Cancel
                   </button>
-                </div>
+    </div>
               </div>
               
               <div className="text-xs text-gray-400">
@@ -2129,6 +2222,54 @@ const Paradio: React.FC = () => {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Skip Penalty Tracking */}
+              <div className="glass p-6 rounded-xl border border-red-500/20">
+                <h4 className="text-lg font-semibold text-red-400 mb-4">⏭ Skip Penalty</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Daily Skips:</span>
+                    <span className={`font-bold ${stats.dailySkips > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                      {stats.dailySkips} skip{stats.dailySkips !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Total Skips:</span>
+                    <span className="text-white font-bold">{stats.totalSkips}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Current Penalty:</span>
+                    <span className={`font-bold ${stats.skipPenaltyMultiplier < 1.0 ? 'text-red-400' : 'text-green-400'}`}>
+                      {stats.skipPenaltyMultiplier < 1.0 ? `${Math.round((1 - stats.skipPenaltyMultiplier) * 100)}% reduction` : 'None'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Last Skip:</span>
+                    <span className="text-white font-bold">
+                      {stats.lastSkipTime > 0 
+                        ? new Date(stats.lastSkipTime).toLocaleTimeString()
+                        : 'Never'
+                      }
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Reset Time:</span>
+                    <span className="text-white font-bold">
+                      {new Date(stats.lastSkipReset + 24 * 60 * 60 * 1000).toLocaleTimeString()}
+                    </span>
+                  </div>
+                </div>
+                {stats.dailySkips > 0 && (
+                  <div className="mt-3 p-2 bg-red-900/20 rounded-lg border border-red-500/30">
+                    <div className="text-xs text-red-400 text-center">
+                      ⚠️ Skip penalties reset daily at midnight
+                    </div>
+                    <div className="text-xs text-gray-400 text-center mt-1">
+                      Listen longer to earn more PARA
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Export/Import */}

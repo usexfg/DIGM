@@ -430,24 +430,30 @@ const AudioMarketplace: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredTracks.map(track => (
           <div key={track.id} className="group">
-            <div className="card hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden">
-            <div className="relative">
+            <div
+              className="card hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden"
+              onClick={() => handlePreview(track)}
+            >
+              <div className="relative">
                 <div className="w-full h-64 bg-gradient-to-br from-fuchsia-900/50 to-purple-900/50 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
-                {track.coverArt ? (
+                  {track.coverArt ? (
                     <img src={track.coverArt} alt={track.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-                ) : (
+                  ) : (
                     <div className="text-6xl text-fuchsia-400/50">🎵</div>
-                )}
+                  )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300"></div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePreview(track);
-                  }}
-                    className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white p-3 rounded-full hover:bg-fuchsia-600 transition-all duration-200 transform hover:scale-110"
-                >
-                  ▶️
-                </button>
+                  {/* Centered Play Button */}
+                  <button
+                    onClick={e => {
+                      e.stopPropagation();
+                      handlePreview(track);
+                    }}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-fuchsia-600/40 transition-all duration-200 rounded-xl"
+                    style={{ pointerEvents: 'auto' }}
+                    aria-label="Play Preview"
+                  >
+                    <span className="text-white text-4xl drop-shadow-lg">▶</span>
+                  </button>
                   <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
                     {track.duration}
                   </div>
@@ -662,17 +668,17 @@ const AudioMarketplace: React.FC = () => {
           <div className="text-center space-y-2">
             <div className="text-3xl">👑</div>
             <h4 className="font-semibold text-white">True Ownership</h4>
-            <p className="text-sm text-gray-300">Artists ultimatelycontrol their music & pricing, while fans OWN (not 'suBScribe to') all audio they purchase, forever.</p>
+            <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN (not 'suBScribe to') all audio they purchase, forever.</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">🛡️</div>
             <h4 className="font-semibold text-white">Purchasing Power + Privacy</h4>
-            <p className="text-sm text-gray-300">Upgrade your money to preserve value like XF₲ (or HEAT) while controlling the privacy of your data, instead of being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
+            <p className="text-sm text-gray-300">Upgrade your money & preserve value using XF₲ (or HEAT) while controlling privacy of your data, instead of it being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">🔥</div>
-            <h4 className="font-semibold gradient-text-gold">Fuego L1 Powered</h4>
-            <p className="text-sm text-gray-300">Built on the absolute hottest L1 privacy blockchain in town, supporting a worldwide community of artists, musicians, developers, and music lovers alike.</p>
+            <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
+            <p className="text-sm text-gray-300">Built on the absolute hottest L1 privacy blockchain around, supporting a worldwide community of artists, musicians, developers, and music lovers alike.</p>
           </div>
  
         </div>

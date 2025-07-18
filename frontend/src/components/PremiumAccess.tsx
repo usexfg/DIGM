@@ -62,21 +62,21 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
     {
       title: 'PARA Artist / Listener Rewards',
       description: 'Earn PARA tokens for listening to music',
-      icon: ':paralogo:'
+      icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-6 h-6 rounded-full align-middle" />
     },
     {
-      title: ' Remember ownership of purchased audio?',
-      description: 'We remember, DIGM it. You own the actual track files - even physical albums (using Fuego L1\'s simple private messaging [ie shipping details] with artist) that you purchase on DIGM.',
+      title: ' Remember owning purchased audio?',
+      description: 'We do too, DIGM it! Welcome back to the return of ownership in actual track files AND physical albums (using Fuego L1\'s simple private messaging with artist/seller for shipping details) that you purchase on DIGM.',
       icon: '💿'
     },
     {
       title: '💎 Exclusive Content',
-      description: 'Artists decide their own exclusives to premium content or pre-releases using HEAT, PARA, or XF₲ paywalls, limit only to other DIGM holders, or even create & use your own NFTs on COLD L3*.',
+      description: 'Artists decide their own exclusivity to premium content and/or pre-release using HEAT, PARA, or XF₲ paywalls; plus limit only to other DIGM holders, or even create & use your own NFTs on COLD L3* (roadmap).',
       icon: '👩‍🎤'
     },
     {
       title: '🌊 Freedom isnt free - the cost is responsibility',
-      description: 'DIGM is a decentralized platform- theres no "customer support" because there are no "customers". We\'re a community of artists/musicians, music lovers, and developers who all help one another. Join us! ',
+      description: 'DIGM is a decentralized platform- there is no "customer support" because the platform has no "customers". We\'re a community of artists/musicians, music lovers, and developers who all help one another. Vive la révolution! ',
       icon: '🧞‍♀️'
     }
   ];
@@ -193,7 +193,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
-                    <span className="text-gray-300">Earn HEAT through mining</span>
+                    <span className="text-gray-300">Get HEAT by burning equivalent amount of XFG atomic units (heat)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
@@ -224,20 +224,11 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             <div key={index} className={`glass p-6 rounded-xl transition-all duration-300 ${
               hasPremium ? 'border-fuchsia-500/40' : 'border-gray-600/40'
             } border`}>
-              <div className="text-3xl mb-3">
-                {feature.title.includes('PARA Token Rewards') ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <img 
-                      src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" 
-                      alt="PARA" 
-                      className="w-8 h-8 rounded-full"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  </div>
-                ) : (
+              <div className="text-3xl mb-3 flex items-center justify-center">
+                {typeof feature.icon === 'object' ? (
                   feature.icon
+                ) : (
+                  <span>{feature.icon}</span>
                 )}
               </div>
               <h3 className="text-white font-semibold mb-2">{feature.title}</h3>
@@ -246,7 +237,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                   <>
                     {feature.description.replace('PARA tokens', '')}
                     <img 
-                      src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" 
+                      src="/assets/para.png" 
                       alt="PARA" 
                       className="inline-block w-4 h-4 rounded-full mx-1"
                       onError={(e) => {
@@ -273,7 +264,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       <div className="glass p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white">About HEAT Tokens</h2>
-          <p className="text-gray-400">Mine HEAT tokens to unlock premium access on DIGM</p>
+          <p className="text-gray-400">Mint HEAT tokens to unlock premium access on DIGM</p>
         </div>
         
         <div className="glass p-6 rounded-xl border border-yellow-500/20 max-w-2xl mx-auto">
@@ -290,7 +281,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Asset Type:</span>
-              <span className="text-white">Mining Token</span>
+              <span className="text-white">Proof Of XFG Burn Token</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Premium Requirement:</span>
@@ -298,7 +289,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Use Case:</span>
-              <span className="text-white">Premium Access, Mining</span>
+              <span className="text-white">Premium Access, COLD-L3 Gas</span>
             </div>
           </div>
         </div>
@@ -313,7 +304,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
-                <span className="text-gray-300">Earn <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> while 🎧 listening</span>
+                <span className="text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> while 🎧 listening</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
@@ -323,11 +314,11 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
-                <span className="text-gray-300">Priority support</span>
+                <span className="text-gray-300">Privacy & Security</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
-                <span className="text-gray-300">Offline downloads</span>
+                <span className="text-gray-300">True Ownership</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
@@ -343,14 +334,14 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="glass p-8 text-center">
           <h3 className="text-xl font-bold text-white mb-4">Ready to Go Premium?</h3>
           <p className="text-gray-400 mb-6">
-            Mine HEAT tokens to unlock premium features on DIGM
+            Mint HEAT tokens to unlock premium features on DIGM
           </p>
           <div className="max-w-md mx-auto">
             <div className="glass p-6 rounded-xl border border-yellow-500/20">
-              <h4 className="text-yellow-400 font-semibold mb-2">HEAT Mining</h4>
-              <p className="text-gray-400 text-sm mb-4">Mine 8,000+ HEAT tokens</p>
+              <h4 className="text-yellow-400 font-semibold mb-2">HEAT Minting</h4>
+              <p className="text-gray-400 text-sm mb-4">Mint 8,000+ HEAT tokens</p>
               <button className="btn-secondary w-full">
-                ⛏️ Start Mining HEAT
+                🔥 Start Minting HEAT
               </button>
             </div>
           </div>

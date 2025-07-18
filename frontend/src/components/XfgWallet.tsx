@@ -11,12 +11,17 @@ const XfgWallet: React.FC = () => {
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [contributionAmount, setContributionAmount] = useState('1');
   const [cpuCores, setCpuCores] = useState(4); // Default fallback
+  const [miningMode, setMiningMode] = useState<'freemium' | 'para'>('freemium');
+  const [isPremium, setIsPremium] = useState(false);
+  const [freemiumActive, setFreemiumActive] = useState(false);
+  const [paraMiningActive, setParaMiningActive] = useState(false);
 
   useEffect(() => {
     if (evmAddress) {
       fetchXfgBalance();
       fetchFreemiumStats();
       fetchActivityHistory();
+      checkPremiumStatus();
     }
   }, [evmAddress]);
 
@@ -32,6 +37,12 @@ const XfgWallet: React.FC = () => {
     const allocatedCores = parseInt(contributionAmount) || 1;
     setCpuPower(allocatedCores.toString());
   }, [contributionAmount]);
+
+  const checkPremiumStatus = () => {
+    // Check if user has premium access
+    const premium = localStorage.getItem('digm-premium') === 'true';
+    setIsPremium(premium);
+  };
 
   const fetchXfgBalance = async () => {
     if (!evmProvider || !evmAddress) return;
@@ -67,22 +78,25 @@ const XfgWallet: React.FC = () => {
       // Mock data since backend is not running
       const mockHistory = [
         {
-          action: 'Freemium Activated',
+          action: 'Freemium Mining Started',
           timestamp: new Date(Date.now() - 3600000).toISOString(),
-          amount: '12.5',
-          cpuPower: '8.2'
+          amount: '0',
+          cpuPower: '8.2',
+          mode: 'freemium'
         },
         {
-          action: 'HEAT Tokens Claimed',
+          action: 'PARA Mining Started',
           timestamp: new Date(Date.now() - 7200000).toISOString(),
           amount: '25.0',
-          cpuPower: '7.8'
+          cpuPower: '7.8',
+          mode: 'para'
         },
         {
           action: 'CPU Contribution Started',
           timestamp: new Date(Date.now() - 86400000).toISOString(),
           amount: '15.3',
-          cpuPower: '9.1'
+          cpuPower: '9.1',
+          mode: 'para'
         }
       ];
       setActivityHistory(mockHistory);
@@ -91,9 +105,9 @@ const XfgWallet: React.FC = () => {
     }
   };
 
-  const activateFreemium = async () => {
+  const activateFreemiumMining = async () => {
     if (!evmAddress || !contributionAmount) {
-      alert('Please allocate CPU cores to activate freemium');
+      alert('Please allocate CPU cores to activate freemium mining');
       return;
     }
 
@@ -102,16 +116,47 @@ const XfgWallet: React.FC = () => {
       // Mock activation since backend is not running
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
       
-      const mockCpuPower = (Math.random() * 5 + 5).toFixed(2);
-      alert(`Freemium activated! CPU power: ${mockCpuPower}x multiplier`);
+      setFreemiumActive(true);
+      alert(`Freemium mining activated! You now have access to premium features while mining.`);
       
       // Refresh data
       await fetchFreemiumStats();
       await fetchActivityHistory();
       setContributionAmount('');
     } catch (error) {
-      console.error('Freemium activation failed:', error);
-      alert('Failed to activate freemium');
+      console.error('Freemium mining activation failed:', error);
+      alert('Failed to activate freemium mining');
+    } finally {
+      setIsActive(false);
+    }
+  };
+
+  const activateParaMining = async () => {
+    if (!evmAddress || !contributionAmount) {
+      alert('Please allocate CPU cores to activate PARA mining');
+      return;
+    }
+
+    if (!isPremium) {
+      alert('You need premium access to mine PARA tokens. Please upgrade to premium first.');
+      return;
+    }
+
+    setIsActive(true);
+    try {
+      // Mock activation since backend is not running
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
+      
+      setParaMiningActive(true);
+      alert(`PARA mining activated! You can now earn extra PARA tokens while contributing CPU power.`);
+      
+      // Refresh data
+      await fetchFreemiumStats();
+      await fetchActivityHistory();
+      setContributionAmount('');
+    } catch (error) {
+      console.error('PARA mining activation failed:', error);
+      alert('Failed to activate PARA mining');
     } finally {
       setIsActive(false);
     }
@@ -119,6 +164,11 @@ const XfgWallet: React.FC = () => {
 
   const claimRewards = async () => {
     if (!evmAddress) return;
+
+    if (!isPremium) {
+      alert('You need premium access to claim PARA rewards from mining.');
+      return;
+    }
 
     try {
       // Mock claim since backend is not running
@@ -139,19 +189,30 @@ const XfgWallet: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="card">
-        <h2 className="text-xl font-bold mb-4">Freemium Access</h2>
+        <h2 className="text-xl font-bold mb-4">Freemium Access & Mining</h2>
         
         {/* Status and Stats Display */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-slate-700 p-4 rounded-lg">
-            <h3 className="text-sm font-medium text-slate-300 mb-2">Freemium Status</h3>
-            <p className="text-2xl font-bold text-green-400">Inactive</p>
-            <p className="text-xs text-slate-400 mt-1">No ads, just premium features</p>
+            <h3 className="text-sm font-medium text-slate-300 mb-2">Premium Status</h3>
+            <p className={`text-2xl font-bold ${isPremium ? 'text-green-400' : 'text-red-400'}`}>
+              {isPremium ? 'Active' : 'Inactive'}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">Required for PARA mining</p>
           </div>
           <div className="bg-slate-700 p-4 rounded-lg">
-            <h3 className="text-sm font-medium text-slate-300 mb-2">CPU Power</h3>
-            <p className="text-2xl font-bold gradient-text-green">{cpuPower}x</p>
-            <p className="text-xs text-slate-400 mt-1">CPU cores allocated</p>
+            <h3 className="text-sm font-medium text-slate-300 mb-2">Freemium Mining</h3>
+            <p className={`text-2xl font-bold ${freemiumActive ? 'text-green-400' : 'text-gray-400'}`}>
+              {freemiumActive ? 'Active' : 'Inactive'}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">Premium features while mining</p>
+          </div>
+          <div className="bg-slate-700 p-4 rounded-lg">
+            <h3 className="text-sm font-medium text-slate-300 mb-2">PARA Mining</h3>
+            <p className={`text-2xl font-bold ${paraMiningActive ? 'text-green-400' : 'text-gray-400'}`}>
+              {paraMiningActive ? 'Active' : 'Inactive'}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">Extra PARA rewards</p>
           </div>
           <div className="bg-slate-700 p-4 rounded-lg">
             <div className="flex items-center space-x-3 mb-2">
@@ -166,41 +227,75 @@ const XfgWallet: React.FC = () => {
               <h3 className="text-sm font-medium text-slate-300">Total Mined</h3>
             </div>
             <p className="text-2xl font-bold text-white">{totalEarned} PARA</p>
-            <p className="text-xs text-slate-400 mt-1">PARA tokens earned from CPU contribution</p>
+            <p className="text-xs text-slate-400 mt-1">PARA tokens earned from mining</p>
           </div>
         </div>
 
-        {/* How to Get Freemium Section */}
+        {/* Mining Mode Selection */}
         <div className="glass p-6 rounded-xl mb-6 border border-fuchsia-500/20">
-          <h3 className="text-lg font-semibold text-white mb-4">How to Get Freemium Access</h3>
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-fuchsia-600 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
-              <div>
-                <h4 className="text-white font-medium">Allocate CPU Cores</h4>
-                <p className="text-gray-400 text-sm">Choose how many CPU cores to contribute to the Fuego L1 network</p>
+          <h3 className="text-lg font-semibold text-white mb-4">Choose Mining Mode</h3>
+          
+          {/* Freemium Mining Option */}
+          <div className="mb-6 p-4 bg-slate-800 rounded-lg border border-green-500/20">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h4 className="text-white font-semibold text-lg mb-2">🆓 Freemium Mining</h4>
+                <p className="text-gray-400 text-sm mb-3">
+                  Contribute CPU power to unlock premium features while mining. No PARA rewards, but you get ad-free access and premium features during mining sessions.
+                </p>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <p>• ✅ Available to all users</p>
+                  <p>• ✅ Premium features while mining</p>
+                  <p>• ✅ Ad-free experience during mining</p>
+                  <p>• ❌ No PARA token rewards</p>
+                </div>
               </div>
+              <button
+                onClick={() => setMiningMode('freemium')}
+                className={`ml-4 px-4 py-2 rounded-lg font-medium transition-all ${
+                  miningMode === 'freemium'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                }`}
+              >
+                Select
+              </button>
             </div>
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-fuchsia-600 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
-              <div>
-                <h4 className="text-white font-medium">Activate Freemium</h4>
-                <p className="text-gray-400 text-sm">Start contributing CPU power to unlock ad-free premium features</p>
+          </div>
+
+          {/* PARA Mining Option */}
+          <div className="p-4 bg-slate-800 rounded-lg border border-purple-500/20">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h4 className="text-white font-semibold text-lg mb-2">💰 PARA Mining</h4>
+                <p className="text-gray-400 text-sm mb-3">
+                  Earn extra PARA tokens by contributing CPU power. Requires premium access and provides additional PARA rewards on top of normal earnings.
+                </p>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <p>• {isPremium ? '✅' : '❌'} Requires premium access</p>
+                  <p>• ✅ Extra PARA token rewards</p>
+                  <p>• ✅ All premium features included</p>
+                  <p>• ✅ Higher earning potential</p>
+                </div>
+                {!isPremium && (
+                  <p className="text-red-400 text-sm mt-2">
+                    ⚠️ Upgrade to premium to access PARA mining
+                  </p>
+                )}
               </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-fuchsia-600 rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
-              <div>
-                <h4 className="text-white font-medium">Earn PARA Tokens</h4>
-                <p className="text-gray-400 text-sm">Receive PARA tokens as rewards for your computational contribution</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-fuchsia-600 rounded-full flex items-center justify-center text-white font-bold text-sm">4</div>
-              <div>
-                <h4 className="text-white font-medium">Enjoy Premium Features</h4>
-                <p className="text-gray-400 text-sm">Access unlimited streaming, exclusive content, and premium audio quality</p>
-              </div>
+              <button
+                onClick={() => setMiningMode('para')}
+                disabled={!isPremium}
+                className={`ml-4 px-4 py-2 rounded-lg font-medium transition-all ${
+                  !isPremium
+                    ? 'bg-slate-600 text-gray-500 cursor-not-allowed'
+                    : miningMode === 'para'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                }`}
+              >
+                {!isPremium ? 'Locked' : 'Select'}
+              </button>
             </div>
           </div>
         </div>
@@ -242,21 +337,23 @@ const XfgWallet: React.FC = () => {
               </button>
             </div>
             <p className="text-xs text-slate-400 mt-2 text-center">
-              More CPU cores = Higher HEAT token earnings and faster freemium activation
+              More CPU cores = {miningMode === 'freemium' ? 'Faster freemium activation' : 'Higher PARA earnings'}
             </p>
           </div>
 
           <div className="flex space-x-4">
             <button
-              onClick={activateFreemium}
-              disabled={isActive || !evmAddress || !contributionAmount}
-              className="btn-success flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={miningMode === 'freemium' ? activateFreemiumMining : activateParaMining}
+              disabled={isActive || !evmAddress || !contributionAmount || (miningMode === 'para' && !isPremium)}
+              className={`flex-1 disabled:opacity-50 disabled:cursor-not-allowed ${
+                miningMode === 'freemium' ? 'btn-success' : 'btn-primary'
+              }`}
             >
-              {isActive ? 'Activating...' : 'Activate Freemium'}
+              {isActive ? 'Activating...' : `Activate ${miningMode === 'freemium' ? 'Freemium' : 'PARA'} Mining`}
             </button>
             <button
               onClick={claimRewards}
-              disabled={!evmAddress || parseFloat(cpuPower) === 0}
+              disabled={!evmAddress || !isPremium || !paraMiningActive}
               className="btn-secondary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Claim PARA Tokens
@@ -277,6 +374,11 @@ const XfgWallet: React.FC = () => {
                 <div>
                   <p className="text-white font-medium">{entry.action}</p>
                   <p className="text-slate-400 text-sm">{new Date(entry.timestamp).toLocaleString()}</p>
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    entry.mode === 'freemium' ? 'bg-green-600/20 text-green-400' : 'bg-purple-600/20 text-purple-400'
+                  }`}>
+                    {entry.mode === 'freemium' ? 'Freemium' : 'PARA'} Mining
+                  </span>
                 </div>
                 <div className="text-right">
                   <p className="text-white font-medium">{entry.amount} PARA</p>
@@ -290,25 +392,25 @@ const XfgWallet: React.FC = () => {
 
       {/* Freemium Benefits */}
       <div className="card">
-        <h3 className="text-lg font-semibold mb-3">Freemium Benefits</h3>
+        <h3 className="text-lg font-semibold mb-3">Mining Benefits</h3>
         <div className="space-y-2 text-sm text-slate-300">
-          <p>• <strong>Ad-Free Experience:</strong> Enjoy DIGM without any advertisements</p>
+          <p>• <strong>Freemium Mining:</strong> Access premium features while contributing CPU power</p>
+          <p>• <strong>PARA Mining:</strong> Earn extra PARA tokens (requires premium access)</p>
+          <p>• <strong>Ad-Free Experience:</strong> Enjoy DIGM without any advertisements during mining</p>
           <p>• <strong>Unlimited Streaming:</strong> Stream any track without restrictions</p>
           <p>• <strong>Premium Audio Quality:</strong> Access to high-fidelity audio streams</p>
-          <p>• <strong>PARA Token Rewards:</strong> Earn PARA tokens while contributing CPU power</p>
           <p>• <strong>Exclusive Content:</strong> Access to exclusive artist content and early releases</p>
-          <p>• <strong>Priority Support:</strong> Priority customer support and faster response times</p>
         </div>
         <div className="mt-4 space-y-2">
           <button
-            onClick={() => window.open('/freemium-dashboard', '_blank')}
-            className="btn-secondary w-full"
+            onClick={() => window.open('/premium', '_blank')}
+            className="btn-primary w-full"
           >
-            View Freemium Dashboard
+            Upgrade to Premium
           </button>
           <button
             onClick={() => window.open('https://github.com/usexfg/fuego-node', '_blank')}
-            className="btn-primary w-full"
+            className="btn-secondary w-full"
           >
             Learn About Fuego L1
           </button>

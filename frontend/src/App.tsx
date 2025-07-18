@@ -64,13 +64,13 @@ function AppContent() {
   const activeTab = getActiveTab();
 
   const navigationItems = [
-    { id: 'marketplace', label: 'Discover', icon: '🎵', description: 'Audio Marketplace', path: '/' },
+    { id: 'marketplace', label: 'Discover', icon: '►', description: 'Audio Marketplace', path: '/' },
     ...(hasDigmHosting ? [
       { id: 'artist', label: 'Profile', icon: '👤', description: 'Artist Profile', path: '/artist/profile' },
       { id: 'dashboard', label: 'Dashboard', icon: '📊', description: 'Artist Dashboard', path: '/artist/dashboard' }
     ] : []),
     { id: 'paradio', label: 'Paradio', icon: '📻', description: 'P2P Radio Station', path: '/paradio' },
-    { id: 'bridge', label: 'Bridge', icon: ':paralogo:', description: 'Bridge PARA & claim vouchers', path: '/bridge' },
+    { id: 'bridge', label: 'Bridge', icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-5 h-5 md:w-6 md:h-6 rounded-full align-middle" />, description: 'PARA bridge & vouchers', path: '/bridge' },
     { id: 'hosting', label: 'Hosting', icon: '🖥️', description: 'Hosting Permissions', path: '/hosting' },
     { id: 'premium', label: 'Premium', icon: '👑', description: 'Premium Access', path: '/premium' },
     { id: 'xfg', label: 'Freemium', icon: '🔥', description: 'CPU-Powered Freemium Access', path: '/xfg' },
@@ -92,12 +92,24 @@ function AppContent() {
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-xl font-bold">D</span>
-                  </div>
-                  <div>
-                    <h1 className="gradient-text text-2xl font-bold">DIGM</h1>
-                    <p className="text-xs text-gray-400">Decentralize</p>
+                  <div style={{ paddingLeft: '10px' }}>
+                    <h1 className="gradient-text text-2xl font-bold" style={{ fontSize: '39px', fontStretch: 'expanded' }}>
+                      DIGM
+                    </h1>
+                    <p className="text-xs text-gray-400 flex justify-between" style={{ fontStretch: 'expanded' }}>
+                      <span>D</span>
+                      <span>E</span>
+                      <span>C</span>
+                      <span>E</span>
+                      <span>N</span>
+                      <span>T</span>
+                      <span>R</span>
+                      <span>A</span>
+                      <span>L</span>
+                      <span>I</span>
+                      <span>Z</span>
+                      <span>E</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -128,50 +140,76 @@ function AppContent() {
         {/* Top Header */}
         <header className="glass border-b border-fuchsia-500/20 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
+            <div className="flex flex-col md:flex-row justify-between items-center py-4">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <span className="text-white text-xl font-bold">D</span>
-                  </div>
-                  <div>
-                    <h1 className="gradient-text text-2xl font-bold">DIGM</h1>
-                    <p className="text-xs text-gray-400">Decentralize</p>
+                  <div style={{ paddingLeft: '10px' }}>
+                    <h1 className="gradient-text text-2xl font-bold" style={{ fontSize: '39px', fontStretch: 'expanded' }}>
+                      DIGM
+                    </h1>
+                    <p className="text-xs text-gray-400 flex justify-between" style={{ fontStretch: 'expanded' }}>
+                      <span>D</span>
+                      <span>E</span>
+                      <span>C</span>
+                      <span>E</span>
+                      <span>N</span>
+                      <span>T</span>
+                      <span>R</span>
+                      <span>A</span>
+                      <span>L</span>
+                      <span>I</span>
+                      <span>Z</span>
+                      <span>E</span>
+                    </p>
                   </div>
                 </div>
               </div>
               <WalletConnector />
             </div>
-          </div>
-        </header>
-
-        <div className="flex">
-          {/* Sidebar Navigation */}
-          <aside className="w-64 min-h-screen glass border-r border-fuchsia-500/20 p-6">
-            <nav className="space-y-2">
+            {/* Mobile Nav Icons */}
+            <nav className="flex md:hidden justify-between items-center w-full mt-2 mb-1 px-2">
               {navigationItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item.path)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                  className={`flex-1 flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 ${
+                    activeTab === item.id
+                      ? 'bg-fuchsia-600/20 text-fuchsia-300'
+                      : 'text-gray-300 hover:bg-black/40 hover:text-white'
+                  }`}
+                  aria-label={item.label}
+                >
+                  {typeof item.icon === 'object' ? (
+                    item.icon
+                  ) : (
+                    <span className="text-xl">{item.icon}</span>
+                  )}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </header>
+
+        <div className="flex flex-col md:flex-row">
+          {/* Sidebar Navigation */}
+          <nav className="w-full md:w-64 md:fixed md:left-0 md:top-16 h-[calc(100vh-4rem)] glass border-b md:border-b-0 md:border-r border-fuchsia-500/20 p-4 md:p-6 flex md:block hidden md:flex z-40 overflow-y-auto">
+            <div className="flex md:flex-col w-full space-x-2 md:space-x-0 md:space-y-2">
+              {navigationItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item.path)}
+                  className={`flex-1 md:w-full flex items-center space-x-3 px-2 md:px-4 py-2 md:py-3 rounded-xl transition-all duration-200 group text-xs md:text-base ${
                     activeTab === item.id
                       ? 'bg-fuchsia-600/20 border border-fuchsia-500/40 text-fuchsia-300'
                       : 'text-gray-300 hover:bg-black/40 hover:text-white hover:border-fuchsia-500/20 border border-transparent'
                   }`}
                 >
-                  {item.icon === ':paralogo:' ? (
-                    <img 
-                      src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" 
-                      alt="PARA" 
-                      className="w-6 h-6 rounded-full"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+                  {typeof item.icon === 'object' ? (
+                    item.icon
                   ) : (
-                    <span className="text-xl">{item.icon}</span>
+                    <span className="text-lg md:text-xl">{item.icon}</span>
                   )}
-                  <div className="text-left">
+                  <div className="text-left hidden md:block">
                     <div className="font-medium">{item.label}</div>
                     <div className="text-xs text-gray-400 group-hover:text-gray-300">
                       {item.description}
@@ -179,22 +217,11 @@ function AppContent() {
                   </div>
                 </button>
               ))}
-            </nav>
-
-            {/* Bottom section */}
-            <div className="mt-8 pt-6 border-t border-fuchsia-500/20">
-              <div className="text-center">
-                <p className="text-xs text-gray-400 mb-2">Powered by</p>
-                <div className="flex items-center justify-center space-x-2">
-                  <span className="text-xl">🔥</span>
-                  <span className="text-sm font-medium gradient-text-gold">Fuego L1</span>
-                </div>
-              </div>
             </div>
-          </aside>
+          </nav>
 
           {/* Main Content */}
-          <main className="flex-1 p-8 overflow-auto">
+          <main className="flex-1 p-2 md:p-8 md:ml-64 md:mt-16 overflow-y-auto min-h-[calc(100vh-4rem)]">
             <div className="max-w-6xl mx-auto">
               <Routes>
                 <Route path="/" element={<AudioMarketplace />} />
