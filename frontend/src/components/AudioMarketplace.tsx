@@ -484,7 +484,7 @@ const AudioMarketplace: React.FC = () => {
                     <span className="text-fuchsia-400 font-medium">{track.sales} sales</span>
                   </div>
               </div>
-              
+
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-2xl font-bold gradient-text">{track.price} XF₲</span>
@@ -622,7 +622,9 @@ const AudioMarketplace: React.FC = () => {
                   disabled={isPurchasing}
                   className="btn-primary flex-1 disabled:opacity-50"
                 >
-                    {isPurchasing ? 'Processing...' : `Purchase for ${selectedTrack.price} XFG`}
+
+                  {isPurchasing ? 'Processing...' : `Pay ${selectedTrack.artist} ${selectedTrack.price} XFG`}
+
                 </button>
                 <button
                   onClick={() => setSelectedTrack(null)}
@@ -680,7 +682,6 @@ const AudioMarketplace: React.FC = () => {
             <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
             <p className="text-sm text-gray-300">Built on the absolute hottest L1 privacy blockchain around, supporting a worldwide community of artists, musicians, developers, and music lovers alike.</p>
           </div>
- 
         </div>
       </div>
     </div>

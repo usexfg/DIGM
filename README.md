@@ -1,9 +1,9 @@
-# DIGM  - Decentralized P2P Music/Audio Marketplace using Fuego (XF₲) L1 privacy payment network.
+# DIGM  - Decentralized P2P Music/Audio Marketplace powered by Fuego (XF₲) L1 privacy payment network.
 
-A basic architectural outline for PARA token bridging, Fuego XFG privacy transactions with freemium mining, and DIGM NFT-based hosting permissions.
+A basic architectural outline for bridging PARA (Stellar) and PARA (COLD L3), DIGM NFTs (COLD L3) for hosting permissions, Fuego Embers (Arbitrum/COLD L3) for premium and additional web3 functionality, with Fuego L1 for private XFG transactions and freemium mining.
 
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview2.png"><img/>
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview1.png"><img/>
+<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview8.png"><img/>
+<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview9.png"><img/>
 ## 🚀 Features
 
 ### 🔗 PARA Bridge
@@ -12,15 +12,14 @@ A basic architectural outline for PARA token bridging, Fuego XFG privacy transac
 - Real-time balance tracking
 - Secure transaction processing
 
-### ⛏️ Fuego XFG Privacy Mining
+### ⛏️ Fuego XFG Privacy & Mining
 - Integration with Fuego L1 Privacy Blockchain Network
 - LoudMining.com proxy integration for enhanced efficiency
 - Contribution-based mining system using PARA tokens
-- Privacy-preserving mining operations with zero-knowledge proofs
-- Early adopter bonuses and mining pools
-
-### 🏠 NFT-Based Hosting Permissions
-- Tiered hosting system (Bronze, Silver, Gold)
+- CPU mining operations for freemium access
+- Early adopter bonuses
+  
+### ✅ NFT-Based Hosting Permissions
 - NFT-based access control
 - Contribution-based NFT minting
 - Bonding curve economics
@@ -37,7 +36,7 @@ A basic architectural outline for PARA token bridging, Fuego XFG privacy transac
 - **Node.js** with Express
 - **FuegoBridge** for child process management
 - **ParaBridge** for Stellar interactions
-- **CosmWasm** smart contracts for NFTs
+- **CosmWasm** COLD L3 smart contracts for NFTs
 
 ### Blockchain Networks
 - **EVM Networks** (Ethereum, COLD L3, etc.)

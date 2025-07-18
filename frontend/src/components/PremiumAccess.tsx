@@ -194,6 +194,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
                     <span className="text-gray-300">Get HEAT by burning equivalent amount of XFG atomic units (heat)</span>
+
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
@@ -264,7 +265,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       <div className="glass p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white">About HEAT Tokens</h2>
-          <p className="text-gray-400">Mint HEAT tokens to unlock premium access on DIGM</p>
+          <p className="text-gray-400">Mint or buy HEAT tokens to unlock premium access on DIGM</p>
         </div>
         
         <div className="glass p-6 rounded-xl border border-yellow-500/20 max-w-2xl mx-auto">
@@ -334,14 +335,14 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="glass p-8 text-center">
           <h3 className="text-xl font-bold text-white mb-4">Ready to Go Premium?</h3>
           <p className="text-gray-400 mb-6">
-            Mint HEAT tokens to unlock premium features on DIGM
+            Mint or buy HEAT tokens to unlock premium features on DIGM
           </p>
           <div className="max-w-md mx-auto">
             <div className="glass p-6 rounded-xl border border-yellow-500/20">
               <h4 className="text-yellow-400 font-semibold mb-2">HEAT Minting</h4>
               <p className="text-gray-400 text-sm mb-4">Mint 8,000+ HEAT tokens</p>
               <button className="btn-secondary w-full">
-                🔥 Start Minting HEAT
+                🔥 Buy some HEAT
               </button>
             </div>
           </div>
