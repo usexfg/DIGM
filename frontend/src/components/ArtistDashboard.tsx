@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
+import FileUpload from './FileUpload';
+import { UploadedFile, formatFileSize, formatDuration } from '../utils/fileUpload';
+import { api } from '../utils/api';
 
 interface Track {
   id: string;
@@ -36,6 +39,9 @@ const ArtistDashboard: React.FC = () => {
     genre: '',
     description: ''
   });
+  const [uploadedAudio, setUploadedAudio] = useState<UploadedFile | null>(null);
+  const [uploadedCoverArt, setUploadedCoverArt] = useState<UploadedFile | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (evmAddress) {
@@ -48,9 +54,8 @@ const ArtistDashboard: React.FC = () => {
     if (!evmAddress) return;
     
     try {
-      const response = await fetch(`/api/artist/tracks/${evmAddress}`);
-      const data = await response.json();
-      setTracks(data.tracks || []);
+      const tracks = await api.tracks.getArtistTracks(evmAddress);
+      setTracks(tracks);
     } catch (error) {
       console.error('Failed to fetch tracks:', error);
     }
@@ -60,9 +65,8 @@ const ArtistDashboard: React.FC = () => {
     if (!evmAddress) return;
     
     try {
-      const response = await fetch(`/api/artist/sales/${evmAddress}`);
-      const data = await response.json();
-      setSalesData(data);
+      const salesData = await api.sales.getArtistSales(evmAddress);
+      setSalesData(salesData);
     } catch (error) {
       console.error('Failed to fetch sales data:', error);
     }
@@ -74,28 +78,38 @@ const ArtistDashboard: React.FC = () => {
       return;
     }
 
+    if (!uploadedAudio) {
+      alert('Please upload an audio file');
+      return;
+    }
+
     setIsUploading(true);
     try {
-      const response = await fetch('/api/artist/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          artistAddress: evmAddress,
-          ...uploadForm
-        })
+      // Upload track using API
+      const newTrack = await api.tracks.uploadTrack({
+        artistAddress: evmAddress,
+        title: uploadForm.title,
+        price: parseFloat(uploadForm.price),
+        genre: uploadForm.genre,
+        description: uploadForm.description,
+        audioFile: uploadedAudio,
+        coverArt: uploadedCoverArt || undefined
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to upload track');
-      }
 
+      // Refresh tracks list
       await fetchTracks();
+
+      // Reset form
       setUploadForm({
         title: '',
         price: '',
         genre: '',
         description: ''
       });
+      setUploadedAudio(null);
+      setUploadedCoverArt(null);
+      setUploadError(null);
+
       alert('Track uploaded successfully!');
     } catch (error) {
       console.error('Upload failed:', error);
@@ -105,20 +119,24 @@ const ArtistDashboard: React.FC = () => {
     }
   };
 
+  const handleAudioUploaded = (file: UploadedFile) => {
+    setUploadedAudio(file);
+    setUploadError(null);
+  };
+
+  const handleCoverArtUploaded = (file: UploadedFile) => {
+    setUploadedCoverArt(file);
+    setUploadError(null);
+  };
+
+  const handleUploadError = (error: string) => {
+    setUploadError(error);
+  };
+
   const handleTrackAction = async (trackId: string, action: 'publish' | 'unpublish' | 'delete') => {
     try {
-      const response = await fetch(`/api/artist/tracks/${trackId}/${action}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          artistAddress: evmAddress
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to ${action} track`);
-      }
-
+      const apiAction = action === 'publish' ? 'published' : action;
+      await api.tracks.updateTrackStatus(trackId, apiAction);
       await fetchTracks();
       alert(`Track ${action}ed successfully!`);
     } catch (error) {
@@ -414,33 +432,94 @@ const ArtistDashboard: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Audio File
+                    Audio File *
                   </label>
-                  <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
-                    <p className="text-slate-400 mb-2">Drag and drop your audio file here</p>
-                    <p className="text-slate-500 text-sm">or click to browse</p>
-                    <input type="file" className="hidden" accept="audio/*" />
-                  </div>
+                  <FileUpload
+                    type="audio"
+                    onFileUploaded={handleAudioUploaded}
+                    onError={handleUploadError}
+                    placeholder="Upload your audio track"
+                    disabled={isUploading}
+                  />
+                  {uploadedAudio && (
+                    <div className="mt-3 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-green-400">✅</span>
+                        <div className="flex-1">
+                          <p className="text-green-300 font-medium">{uploadedAudio.name}</p>
+                          <p className="text-green-400 text-sm">
+                            {formatFileSize(uploadedAudio.size)}
+                            {uploadedAudio.duration && ` • ${formatDuration(uploadedAudio.duration)}`}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => setUploadedAudio(null)}
+                          className="text-red-400 hover:text-red-300 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">
-                    Cover Art
+                    Cover Art (Optional)
                   </label>
-                  <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
-                    <p className="text-slate-400 mb-2">Upload cover art (optional)</p>
-                    <p className="text-slate-500 text-sm">Recommended: 1000x1000px</p>
-                    <input type="file" className="hidden" accept="image/*" />
-                  </div>
+                  <FileUpload
+                    type="image"
+                    onFileUploaded={handleCoverArtUploaded}
+                    onError={handleUploadError}
+                    placeholder="Upload cover art for your track"
+                    disabled={isUploading}
+                  />
+                  {uploadedCoverArt && (
+                    <div className="mt-3 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-green-400">✅</span>
+                        <div className="flex-1">
+                          <p className="text-green-300 font-medium">{uploadedCoverArt.name}</p>
+                          <p className="text-green-400 text-sm">
+                            {formatFileSize(uploadedCoverArt.size)}
+                            {uploadedCoverArt.dimensions && 
+                              ` • ${uploadedCoverArt.dimensions.width}x${uploadedCoverArt.dimensions.height}px`
+                            }
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => setUploadedCoverArt(null)}
+                          className="text-red-400 hover:text-red-300 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
+
+                {/* Upload Error Display */}
+                {uploadError && (
+                  <div className="p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
+                    <p className="text-red-400 text-sm">
+                      ❌ {uploadError}
+                    </p>
+                  </div>
+                )}
 
                 <button
                   onClick={handleUpload}
-                  disabled={isUploading || !uploadForm.title || !uploadForm.price}
+                  disabled={isUploading || !uploadForm.title || !uploadForm.price || !uploadedAudio}
                   className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isUploading ? 'Uploading...' : 'Upload Track'}
+                  {isUploading ? 'Uploading Track...' : 'Upload Track'}
                 </button>
+                
+                {/* Upload Requirements */}
+                <div className="text-xs text-slate-500 space-y-1">
+                  <p>Required: Track title, price, and audio file</p>
+                  <p>Optional: Genre, description, and cover art</p>
+                </div>
               </div>
             </div>
           )}

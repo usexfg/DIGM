@@ -9,8 +9,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0f172a;
-  color: #f8fafc;
+  background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
+  color: #ffffff;
 }
 
 code {
@@ -19,17 +19,117 @@ code {
 }
 
 .btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors;
+  @apply bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-fuchsia-500/25;
+}
+
+.btn-success {
+  @apply bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-green-500/25;
 }
 
 .btn-secondary {
-  @apply bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-colors;
+  @apply bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 border border-gray-600;
 }
 
 .card {
-  @apply bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg;
+  @apply bg-black/40 backdrop-blur-sm border border-fuchsia-500/20 rounded-xl p-6 shadow-2xl hover:border-fuchsia-500/40 transition-all duration-300;
+}
+
+.card-success {
+  @apply bg-black/40 backdrop-blur-sm border border-green-500/20 rounded-xl p-6 shadow-2xl hover:border-green-500/40 transition-all duration-300;
 }
 
 .input-field {
-  @apply bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500;
+  @apply bg-black/60 border border-fuchsia-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-500/20 transition-all duration-200;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c026d3;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a21caf;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(192, 38, 211, 0.2);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #c026d3, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Sky blue gradient text */
+.gradient-text-green {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Combined gradient text */
+.gradient-text-mixed {
+  background: linear-gradient(135deg, #c026d3, #22c55e, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Fuego gradient text */
+.gradient-text-gold {
+  background: linear-gradient(180deg, #f5310b, #ffdf5f 65.55%, rgba(255, 255, 255, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pulse animation for music elements */
+@keyframes pulse-music {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pulse-music {
+  animation: pulse-music 2s infinite;
+}
+
+/* Custom slider styling */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #c026d3;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(192, 38, 211, 0.5);
+}
+
+.slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #c026d3;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(192, 38, 211, 0.5);
 } 
