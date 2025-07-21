@@ -358,6 +358,7 @@ const ParaBridge: React.FC = () => {
                 <span className="text-gray-400">Use Case:</span>
                 <span className="text-white">Artist/Listener Rewards, Bridge, Vouchers</span>
               </div>
+
             </div>
           </div>
 

@@ -14,6 +14,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
   const [isChecking, setIsChecking] = useState(true);
   const [showMintModal, setShowMintModal] = useState(false);
 
+
   useEffect(() => {
     checkPremiumStatus();
   }, [evmAddress, stellarAddress]);
@@ -68,6 +69,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
     {
       title: ' Remember owning purchased audio?',
       description: 'We do too, DIGM it! Welcome back to ownership of digital tracks AND physical albums (using Fuego L1\'s simple private messaging with artist/seller for shipping details) that you purchase on DIGM.',
+
       icon: '💿'
     },
     {
@@ -121,6 +123,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <span className="text-2xl">{hasPremium ? '♛' : '🔒'}</span>
+
                 <div>
                   <h3 className={`font-semibold ${hasPremium ? 'gradient-text-green' : 'text-red-400'}`}>
                     {hasPremium ? 'Premium Access Active' : 'Premium Access Required'}
@@ -146,6 +149,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
           <div className="glass p-6 rounded-xl">
             <div className="flex items-center space-x-3 mb-4">
               <img src="/assets/heatlogo.png" alt="HEAT Logo" className="w-12 h-12 object-contain" />
+
               <div>
                 <h3 className="text-white font-semibold text-lg">HEAT Balance</h3>
                 <p className="text-gray-400 text-sm">COLD L3 Token</p>
@@ -193,6 +197,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
                     <span className="text-gray-300">Get HEAT by burning equivalent amount of XFG atomic units (heat)</span>
+
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
@@ -263,20 +268,22 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       <div className="glass p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white">About HEAT Tokens</h2>
-          <p className="text-gray-400">Mint HEAT tokens to unlock premium access on DIGM</p>
+          <p className="text-gray-400">Mint or buy HEAT tokens to unlock premium access on DIGM</p>
         </div>
         
         <div className="glass p-6 rounded-xl border border-yellow-500/20 max-w-2xl mx-auto">
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-12 h-12 flex items-center justify-center">
               <img src="/assets/heatlogo.png" alt="HEAT Logo" className="w-10 h-10 object-contain rounded-full bg-black" />
+
             </div>
             <h3 className="text-white font-semibold text-lg">HEAT Token</h3>
           </div>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-400">Networks:</span>
-              <span className="text-white">CODL❸ (Arbitrum), Solana</span>
+              <span className="text-white">COLD L3 (Arbitrum), Solana</span>
+
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Asset Type:</span>
@@ -333,14 +340,16 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="glass p-8 text-center">
           <h3 className="text-xl font-bold text-white mb-4">Ready to Go Premium?</h3>
           <p className="text-gray-400 mb-6">
-            Mint HEAT tokens to unlock premium features on DIGM
+
+            Mint or buy HEAT tokens to unlock premium features on DIGM
           </p>
           <div className="max-w-md mx-auto">
             <div className="glass p-6 rounded-xl border border-yellow-500/20">
               <h4 className="text-yellow-400 font-semibold mb-2">HEAT Minting</h4>
               <p className="text-gray-400 text-sm mb-4">Mint 8,000+ HEAT tokens</p>
-              <button className="btn-secondary w-full" onClick={() => setShowMintModal(true)}>
-                🔥 Start Minting HEAT
+
+              <button className="btn-secondary w-full">
+                🔥 Acquire and hold HEAT 
               </button>
             </div>
           </div>
@@ -392,6 +401,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
           </div>
         </div>
       )}
+
 
       {hasPremium && (
         <div className="card-success text-center">
