@@ -25,7 +25,7 @@ DI₲M is built on a decentralized network of **Elder Nodes**. These nodes, oper
 
 Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio files across this distributed network. When a listener buys or streams a track, the data is delivered directly from these peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
 
-## **4. Tokenomics: Powering a New Music Economy **
+## **4. The Tokenomics: Powering a New Music Economy **
 
 Two distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
 

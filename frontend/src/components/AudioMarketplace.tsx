@@ -304,7 +304,8 @@ const AudioMarketplace: React.FC = () => {
         {!hasPremium && (
           <div className="glass p-4 rounded-xl border border-fuchsia-500/40 bg-fuchsia-900/20 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-3">
-              <span className="text-2xl">👑</span>
+              <span className="text-2xl">♛</span>
+
               <div>
                 <h3 className="text-fuchsia-400 font-semibold">Premium Access Required</h3>
                 <p className="text-gray-400 text-sm">Hold 8,000 HEAT tokens to unlock streaming features</p>
@@ -322,7 +323,8 @@ const AudioMarketplace: React.FC = () => {
         {hasPremium && (
           <div className="card-success p-4 rounded-xl max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-3">
-              <span className="text-2xl">👑</span>
+              <span className="text-2xl">♛</span>
+
               <div>
                 <h3 className="gradient-text-green font-semibold">Premium Access Active</h3>
                 <p className="text-gray-400 text-sm">You can stream music and earn <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA tokens!</p>
@@ -484,7 +486,7 @@ const AudioMarketplace: React.FC = () => {
                     <span className="text-fuchsia-400 font-medium">{track.sales} sales</span>
                   </div>
               </div>
-
+              
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-2xl font-bold gradient-text">{track.price} XF₲</span>
@@ -543,6 +545,7 @@ const AudioMarketplace: React.FC = () => {
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         ))}
@@ -624,7 +627,6 @@ const AudioMarketplace: React.FC = () => {
                 >
 
                   {isPurchasing ? 'Processing...' : `Pay ${selectedTrack.artist} ${selectedTrack.price} XFG`}
-
                 </button>
                 <button
                   onClick={() => setSelectedTrack(null)}
@@ -682,6 +684,7 @@ const AudioMarketplace: React.FC = () => {
             <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
             <p className="text-sm text-gray-300">Built on the absolute hottest L1 privacy blockchain around, supporting a worldwide community of artists, musicians, developers, and music lovers alike.</p>
           </div>
+
         </div>
       </div>
     </div>

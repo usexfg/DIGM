@@ -333,6 +333,35 @@ const ParaBridge: React.FC = () => {
             </div>
           </div>
 
+          {/* About PARA Section */}
+          <div className="glass p-6 rounded-xl border border-blue-500/20 max-w-2xl mx-auto mb-6">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-12 h-12 flex items-center justify-center">
+                <img src="/assets/para.png" alt="PARA Logo" className="w-10 h-10 object-contain rounded-full bg-black" />
+              </div>
+              <h3 className="text-white font-semibold text-lg">PARA Token</h3>
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-400">Networks:</span>
+                <span className="text-white">Stellar, EVM (Arbitrum, Ethereum)</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Asset Type:</span>
+                <span className="text-white">Multi-chain Utility & Rewards Token</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Decimals:</span>
+                <span className="text-white">7 (Stellar), 18 (EVM)</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Use Case:</span>
+                <span className="text-white">Artist/Listener Rewards, Bridge, Vouchers</span>
+              </div>
+
+            </div>
+          </div>
+
           {/* Instructions */}
           <div className="card">
             <h3 className="text-lg font-semibold mb-3">How it works</h3>

@@ -114,7 +114,8 @@ const Paradio: React.FC = () => {
   const { evmAddress, stellarAddress } = useWallet();
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.7);
+  const [volume, setVolume] = useState(0.5);
+  const [showVolumeWarning, setShowVolumeWarning] = useState(false);
   const [stats, setStats] = useState<ParadioStats>({
     currentListeners: 0,
     totalPARAEarned: 0,
@@ -839,6 +840,15 @@ const Paradio: React.FC = () => {
       setIsPlaying(false);
       setStats(prev => ({ ...prev, isListening: false }));
     } else {
+      // Check if volume is below 40% before allowing play
+      if (volume < 0.4) {
+        setShowVolumeWarning(true);
+        setTimeout(() => {
+          setShowVolumeWarning(false);
+        }, 5000);
+        return; // Don't resume playback
+      }
+
       audioRef.current?.play();
       setIsPlaying(true);
       setStats(prev => ({ ...prev, isListening: true }));
@@ -1325,6 +1335,25 @@ const Paradio: React.FC = () => {
     }
   }, [currentTrack]);
 
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    
+    // Check if volume drops below 40%
+    if (newVolume < 0.4 && isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+      setStats(prev => ({ ...prev, isListening: false }));
+      setShowVolumeWarning(true);
+      
+      // Hide warning after 5 seconds
+      setTimeout(() => {
+        setShowVolumeWarning(false);
+      }, 5000);
+    } else if (newVolume >= 0.4) {
+      setShowVolumeWarning(false);
+    }
+  };
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -1484,11 +1513,25 @@ const Paradio: React.FC = () => {
                       max="1"
                       step="0.1"
                       value={volume}
-                      onChange={(e) => setVolume(parseFloat(e.target.value))}
+                      onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+
                       className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
                     />
                     <span className="text-gray-400 text-sm">{Math.round(volume * 100)}%</span>
                   </div>
+                  
+                  {/* Volume Warning */}
+                  {showVolumeWarning && (
+                    <div className="mt-3 p-3 bg-red-900/20 border border-red-500/40 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-red-400">⚠️</span>
+                        <span className="text-red-300 text-sm">
+                          Playback paused. Volume must be at least 40% for Paradio to continue playing.
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               </div>
             ) : (

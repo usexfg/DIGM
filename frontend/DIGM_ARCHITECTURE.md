@@ -98,9 +98,7 @@ Decrypts on the fly → HTML5 <audio> stream
 * **Permanent Availability** – Celestia DA + Fuego PoW anchoring.  
 * **Modular Upgradeability** – Swap any layer without disrupting others.
 
----
 
-07/17/25
 ### Recent Developments
 - Playback and audio controls validated and improved.
 - PARA payout model implemented with dynamic, real-time earnings and anti-bot protections.
@@ -112,13 +110,7 @@ Decrypts on the fly → HTML5 <audio> stream
 - Lyrics for "Blockchain Blues" by Decentralized Soul added.
 
 ### Branding & Logo Resources
-- Modern, futuristic logo designs generated via Recraft AI, matching DIGM's brand palette and vision.
-- Example resource for PARA EVM edition: [Recraft Logo Image](https://www.recraft.ai/community?imageId=d4b84cfe-cf4e-4768-9354-35ce96bc318e)
 - Brand colors: Deep Space Blue (#0B1426), Electric Blue (#3B82F6), Neon Cyan (#06B6D4), Purple Gradient (#8B5CF6 to #A855F7), Gold Accent (#F59E0B), Emerald Green (#10B981), and supporting grays/white/glassmorphism.
 
-### PARA EVM Edition Notes
-- The referenced Recraft logo is suitable for PARA EVM branding.
-- To use: Download from the link above and add to project assets (e.g., `/public/assets/para-evm-logo.svg`).
-- Integration guidance available for React/Next.js or documentation as needed.
 
 © DIGM 2025 
