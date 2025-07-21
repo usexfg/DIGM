@@ -75,6 +75,15 @@ code {
   background-clip: text;
 }
 
+/* Premium queen gradient text */
+.gradient-text-queen {
+  background: linear-gradient(180deg, #d9d9d9, #c026d3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: xxx-large !important;
+}
+
 /* Sky blue gradient text */
 .gradient-text-green {
   background: linear-gradient(135deg, #0ea5e9, #0284c7);

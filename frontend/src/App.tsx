@@ -72,7 +72,7 @@ function AppContent() {
     { id: 'paradio', label: 'Paradio', icon: '📻', description: 'P2P Radio Station', path: '/paradio' },
     { id: 'bridge', label: 'Bridge', icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-5 h-5 md:w-6 md:h-6 rounded-full align-middle" />, description: 'PARA bridge & vouchers', path: '/bridge' },
     { id: 'hosting', label: 'Hosting', icon: '🖥️', description: 'Hosting Permissions', path: '/hosting' },
-    { id: 'premium', label: 'Premium', icon: '👑', description: 'Premium Access', path: '/premium' },
+    { id: 'premium', label: 'Premium', icon: '♛', description: 'Premium Access', path: '/premium' },
     { id: 'xfg', label: 'Freemium', icon: '🔥', description: 'CPU-Powered Freemium Access', path: '/xfg' },
   ];
 
@@ -182,7 +182,7 @@ function AppContent() {
                   {typeof item.icon === 'object' ? (
                     item.icon
                   ) : (
-                    <span className="text-xl">{item.icon}</span>
+                    <span className={`text-xl ${item.id === 'premium' ? 'text-4xl md:text-5xl gradient-text-queen' : ''}`}>{item.icon}</span>
                   )}
                 </button>
               ))}
@@ -207,7 +207,7 @@ function AppContent() {
                   {typeof item.icon === 'object' ? (
                     item.icon
                   ) : (
-                    <span className="text-lg md:text-xl">{item.icon}</span>
+                    <span className={`text-lg md:text-xl ${item.id === 'premium' ? 'text-4xl md:text-5xl gradient-text-queen' : ''}`}>{item.icon}</span>
                   )}
                   <div className="text-left hidden md:block">
                     <div className="font-medium">{item.label}</div>

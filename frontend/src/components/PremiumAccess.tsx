@@ -12,6 +12,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
   const [isLoading, setIsLoading] = useState(false);
   const [hasPremium, setHasPremium] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [showMintModal, setShowMintModal] = useState(false);
 
   useEffect(() => {
     checkPremiumStatus();
@@ -66,7 +67,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
     },
     {
       title: ' Remember owning purchased audio?',
-      description: 'We do too, DIGM it! Welcome back to the return of ownership in actual track files AND physical albums (using Fuego L1\'s simple private messaging with artist/seller for shipping details) that you purchase on DIGM.',
+      description: 'We do too, DIGM it! Welcome back to ownership of digital tracks AND physical albums (using Fuego L1\'s simple private messaging with artist/seller for shipping details) that you purchase on DIGM.',
       icon: '💿'
     },
     {
@@ -89,7 +90,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="text-6xl">👑</div>
+        <div className="text-6xl gradient-text-queen" style={{ fontSize: 'xxx-large' }}>♛</div>
         <h1 className="text-4xl font-bold gradient-text">Premium Access</h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
           Unlock premium features by holding 8,000 HEAT tokens
@@ -119,7 +120,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
           }`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">{hasPremium ? '👑' : '🔒'}</span>
+                <span className="text-2xl">{hasPremium ? '♛' : '🔒'}</span>
                 <div>
                   <h3 className={`font-semibold ${hasPremium ? 'gradient-text-green' : 'text-red-400'}`}>
                     {hasPremium ? 'Premium Access Active' : 'Premium Access Required'}
@@ -144,9 +145,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="grid md:grid-cols-2 gap-6">
           <div className="glass p-6 rounded-xl">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-xl">🔥</span>
-              </div>
+              <img src="/assets/heatlogo.png" alt="HEAT Logo" className="w-12 h-12 object-contain" />
               <div>
                 <h3 className="text-white font-semibold text-lg">HEAT Balance</h3>
                 <p className="text-gray-400 text-sm">COLD L3 Token</p>
@@ -269,15 +268,15 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         
         <div className="glass p-6 rounded-xl border border-yellow-500/20 max-w-2xl mx-auto">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-lg">🔥</span>
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img src="/assets/heatlogo.png" alt="HEAT Logo" className="w-10 h-10 object-contain rounded-full bg-black" />
             </div>
             <h3 className="text-white font-semibold text-lg">HEAT Token</h3>
           </div>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-400">Network:</span>
-              <span className="text-white">COLD L3</span>
+              <span className="text-gray-400">Networks:</span>
+              <span className="text-white">CODL❸ (Arbitrum), Solana</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Asset Type:</span>
@@ -340,10 +339,56 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             <div className="glass p-6 rounded-xl border border-yellow-500/20">
               <h4 className="text-yellow-400 font-semibold mb-2">HEAT Minting</h4>
               <p className="text-gray-400 text-sm mb-4">Mint 8,000+ HEAT tokens</p>
-              <button className="btn-secondary w-full">
+              <button className="btn-secondary w-full" onClick={() => setShowMintModal(true)}>
                 🔥 Start Minting HEAT
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mint HEAT Modal */}
+      {showMintModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="glass rounded-2xl p-8 max-w-lg w-full relative">
+            <button
+              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl"
+              onClick={() => setShowMintModal(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold gradient-text mb-4 text-center">Mint HEAT with XFG</h2>
+            <ol className="list-decimal list-inside text-gray-200 space-y-2 mb-4">
+              <li>
+                <strong>Send a deposit burn transaction</strong> from your XFG wallet to the official burn address:
+                <div className="bg-gray-800 rounded p-2 my-2 text-yellow-300 font-mono text-sm select-all">
+                  XFG_BURN_ADDRESS_HERE
+                </div>
+                (Replace with the actual burn address)
+              </li>
+              <li>
+                <strong>Generate a burn CLI proofer</strong> using the Fuego CLI tool:
+                <div className="bg-gray-800 rounded p-2 my-2 text-green-300 font-mono text-sm select-all">
+                  fuego-cli prove-burn --txid &lt;your_txid&gt;
+                </div>
+                This will output a proof string.
+              </li>
+              <li>
+                <strong>Paste your burn proof below</strong> and submit it for verification:
+              </li>
+            </ol>
+            <textarea
+              className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
+              rows={4}
+              placeholder="Paste your burn proof here..."
+            />
+            <button className="btn-primary w-full" disabled>
+              Submit Proof (Coming Soon)
+            </button>
+            <p className="text-xs text-gray-400 mt-2 text-center">
+              Your proof will be verified and HEAT tokens minted to your wallet.
+            </p>
           </div>
         </div>
       )}
