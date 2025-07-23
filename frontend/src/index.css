@@ -38,6 +38,16 @@ code {
   @apply bg-black/40 backdrop-blur-sm border border-green-500/20 rounded-xl p-6 shadow-2xl hover:border-green-500/40 transition-all duration-300;
 }
 
+/* Sleek, minimal info card */
+.info-card {
+  @apply bg-black/30 backdrop-blur-sm border border-gray-700/40 rounded-lg p-4 shadow hover:border-fuchsia-500/40 transition-all duration-200;
+}
+
+/* Make all stat/info boxes inside .card more minimal */
+.card .bg-slate-700 {
+  @apply bg-black/30 border border-gray-700/40 backdrop-blur-sm;
+}
+
 .input-field {
   @apply bg-black/60 border border-fuchsia-500/30 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-500/20 transition-all duration-200;
 }
