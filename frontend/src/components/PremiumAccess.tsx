@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
+// @ts-ignore - ComparisonTable is a TSX component
 import ComparisonTable from './ComparisonTable';
 
 interface PremiumAccessProps {
@@ -52,34 +53,34 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
 
   const getPremiumFeatures = () => [
     {
-      title: 'Unlimited Streaming',
-      description: 'No play limits.',
+      title: '🎵 Unlimited Streaming',
+      description: 'Stream any track without restrictions',
       icon: '🎧'
     },
     {
-      title: 'Hi-Fi Audio',
-      description: 'Lossless streams.',
+      title: '🎧 Premium Audio Quality',
+      description: 'Access to high-fidelity audio streams',
       icon: '🎵'
     },
     {
-      title: 'PARA Rewards',
-      description: 'Earn PARA while you listen.',
+      title: 'PARA Artist / Listener Rewards',
+      description: 'Earn PARA tokens for listening to music',
       icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-6 h-6 rounded-full align-middle" />
     },
     {
-      title: 'Own Your Music',
-      description: 'Digital + physical rights.',
+      title: ' Own purchased audio?',
+      description: 'Welcome back to ownership in digital tracks AND physical albums (using Fuego L1\'s simple private messaging with artist/seller for shipping details) that you purchase on DIGM.',
       icon: '💿'
     },
     {
-      title: 'Token-Gated Drops',
-      description: 'Artists set paywalls or NFTs.',
-      icon: '🔑'
+      title: 'Exclusive Content',
+      description: 'Artists decide their own exclusivity to premium content and/or pre-release using HEAT, PARA, or XF₲ paywalls; plus limit only to other DIGM holders, or even create & use your own NFTs on COLD L3* (roadmap).',
+      icon: ''
     },
     {
-      title: 'Community-Run',
-      description: 'Self-service. No middlemen.',
-      icon: '🤝'
+      title: '🌊 Freedom isnt free - the cost is responsibility',
+      description: 'DIGM is a decentralized platform. There is no "customer support" because the platform has no "customers". We\'re a community of artists/musicians, music lovers, and developers who all help one another. Vive la révolution! ',
+      icon: '🧞‍♀️'
     }
   ];
 
@@ -92,9 +93,9 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="text-6xl gradient-text-queen" style={{ fontSize: 'xxx-large' }}>♛</div>
-        <h1 className="text-4xl font-bold gradient-text">Premium</h1>
+        <h1 className="text-4xl font-bold gradient-text">Premium Access</h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          Hold 8,000 HEAT to unlock.
+          Unlock premium features by holding 8,000 HEAT tokens
         </p>
       </div>
 
@@ -102,15 +103,15 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       <div className="glass p-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-white">HEAT Balance</h2>
-            <p className="text-gray-400 text-sm">Need 8,000 HEAT for premium</p>
+            <h2 className="text-2xl font-bold text-white">Your HEAT Balance</h2>
+            <p className="text-gray-400 text-sm">Hold 8,000 HEAT tokens for premium access</p>
           </div>
           <button
             onClick={refreshBalance}
             disabled={isLoading}
             className="btn-secondary text-sm disabled:opacity-50"
           >
-            {isLoading ? 'Refreshing...' : 'Refresh'}
+            {isLoading ? 'Refreshing...' : '🔄 Refresh'}
           </button>
         </div>
 
@@ -218,7 +219,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
 
       {/* Premium Features */}
       <div className="glass p-8">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">Features</h2>
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Premium Features</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {getPremiumFeatures().map((feature, index) => (
             <div key={index} className={`glass p-6 rounded-xl transition-all duration-300 ${
@@ -263,8 +264,8 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       {/* Token Information */}
       <div className="glass p-8">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white">HEAT Token</h2>
-          <p className="text-gray-400">Mint HEAT to unlock premium.</p>
+          <h2 className="text-2xl font-bold text-white">About HEAT Tokens</h2>
+          <p className="text-gray-400">Mint HEAT tokens to unlock premium access on DIGM</p>
         </div>
         
         <div className="glass p-6 rounded-xl border border-yellow-500/20 max-w-2xl mx-auto">
@@ -295,7 +296,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         </div>
         
         <div className="mt-6 p-4 bg-yellow-900/20 rounded-lg">
-          <h3 className="text-white font-semibold mb-2">Premium Benefits</h3>
+          <h3 className="text-white font-semibold mb-2">Benefits of Premium Access</h3>
           <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
