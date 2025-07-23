@@ -848,7 +848,7 @@ const Paradio: React.FC = () => {
         }, 5000);
         return; // Don't resume playback
       }
-
+      
       audioRef.current?.play();
       setIsPlaying(true);
       setStats(prev => ({ ...prev, isListening: true }));
@@ -1514,7 +1514,6 @@ const Paradio: React.FC = () => {
                       step="0.1"
                       value={volume}
                       onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-
                       className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
                     />
                     <span className="text-gray-400 text-sm">{Math.round(volume * 100)}%</span>
@@ -1531,7 +1530,6 @@ const Paradio: React.FC = () => {
                       </div>
                     </div>
                   )}
-
                 </div>
               </div>
             ) : (
