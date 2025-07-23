@@ -2,8 +2,8 @@
 
 A basic architectural outline for PARA token bridging, Fuego XFG privacy transactions with freemium mining, and DIGM NFT-based hosting permissions.
 
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview2.png"><img/>
-<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview1.png"><img/>
+<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview8.png"><img/>
+<img src="https://github.com/usexfg/DIGM/blob/main/digmpreview9.png"><img/>
 ## 🚀 Features
 
 ### 🔗 PARA Bridge
@@ -211,9 +211,13 @@ For support and questions:
 
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
-| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** |
+| Monthly Fee | $10.99 | $10.99 | $9.99 | **Lifetime Hold 8k HEAT** |
 | Lossless Audio | ❌ | ✅ | ❌ | ✅ |
 | Own the Music | ❌ | ❌ | ❌ | ✅ |
+| Decentralized | ❌ | ❌ | ❌ | ✅ |
+| Lifetime Artist Hosting | ❌ | ❌ | ✅ | ✅ DI₲M NFT |
 | Artist Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
+| Listener Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | P2P Payments | ❌ | ❌ | ❌ | ✅ Fuego |
+| Privacy  | 😂 | 😂 | ❌ | ✅ payments + data|
 | Open Source | ❌ | ❌ | ❌ | ✅ |
