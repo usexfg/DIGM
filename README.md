@@ -1,4 +1,4 @@
-# DIGM  - Decentralized P2P Music/Audio Marketplace using Fuego (XF₲) L1 privacy payment network.
+# DIGM  - Decentralized P2P Music/Audio Marketplace using Fuego (XF₲) privacy L1 payment network.
 
 A basic architectural outline for PARA token bridging, Fuego XFG privacy transactions with freemium mining, and DIGM NFT-based hosting permissions.
 
