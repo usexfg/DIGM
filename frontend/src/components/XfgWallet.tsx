@@ -395,11 +395,10 @@ const XfgWallet: React.FC = () => {
         <h3 className="text-lg font-semibold mb-3">Mining Benefits</h3>
         <div className="space-y-2 text-sm text-slate-300">
           <p>• <strong>Freemium Mining:</strong> Access premium features while contributing CPU power</p>
-          <p>• <strong>PARA Mining:</strong> Earn extra PARA tokens (requires premium access)</p>
-          <p>• <strong>Ad-Free Experience:</strong> Enjoy DIGM without any advertisements during mining</p>
-          <p>• <strong>Unlimited Streaming:</strong> Stream any track without restrictions</p>
-          <p>• <strong>Premium Audio Quality:</strong> Access to high-fidelity audio streams</p>
-          <p>• <strong>Exclusive Content:</strong> Access to exclusive artist content and early releases</p>
+          <p>• <strong>PARA Mining:</strong> Earn <strong>more</strong> PARA tokens (requires premium membership)</p>
+          <p>• <strong>Ad-Free Experience:</strong> Enjoy DIGM without being infiltrated by advertisements</p>
+          <p>• <strong>Unlimited Streaming:</strong> Stream any track and skip without restrictions</p>
+          <p>• <strong>Standard Quality Audio:</strong> Access to standard-fidelity audio streams</p>
         </div>
         <div className="mt-4 space-y-2">
           <button

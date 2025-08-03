@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import WalletConnector from './components/WalletConnector';
 import ParaBridge from './components/ParaBridge';
 import VoucherClaim from './components/VoucherClaim';
@@ -66,14 +66,14 @@ function AppContent() {
   const navigationItems = [
     { id: 'marketplace', label: 'Discover', icon: '►', description: 'Audio Marketplace', path: '/' },
     ...(hasDigmHosting ? [
-      { id: 'artist', label: 'Profile', icon: '👤', description: 'Artist Profile', path: '/artist/profile' },
-      { id: 'dashboard', label: 'Dashboard', icon: '📊', description: 'Artist Dashboard', path: '/artist/dashboard' }
+      { id: 'artist', label: 'Profile', icon: '⭑', description: 'Artist Profile', path: '/artist/profile' },
+      { id: 'dashboard', label: 'Dashboard', icon: '♪', description: 'Artist Dashboard', path: '/artist/dashboard' }
     ] : []),
     { id: 'paradio', label: 'Paradio', icon: '📻', description: 'P2P Radio Station', path: '/paradio' },
     { id: 'bridge', label: 'Bridge', icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-5 h-5 md:w-6 md:h-6 rounded-full align-middle" />, description: 'PARA bridge & vouchers', path: '/bridge' },
     { id: 'hosting', label: 'Hosting', icon: '🖥️', description: 'Hosting Permissions', path: '/hosting' },
     { id: 'premium', label: 'Premium', icon: '♛', description: 'Premium Access', path: '/premium' },
-    { id: 'xfg', label: 'Freemium', icon: '🔥', description: 'CPU-Powered Freemium Access', path: '/xfg' },
+    { id: 'xfg', label: 'Freemium', icon: '🆓', description: 'CPU-Powered Freemium Access', path: '/xfg' },
   ];
 
   const handleNavigation = (path: string) => {
@@ -122,7 +122,7 @@ function AppContent() {
           <div className="card text-center py-16 max-w-md">
             <div className="text-6xl mb-4">🎭</div>
             <h3 className="text-2xl font-bold text-white mb-2">Artist Features Locked</h3>
-            <p className="text-gray-400 mb-4">You need DIGM hosting permissions to access artist features</p>
+            <p className="text-gray-400 mb-4">You must hold a DIGM NFT for hosting permissions to access artist features</p>
             <button
               onClick={() => navigate('/hosting')}
               className="btn-primary"

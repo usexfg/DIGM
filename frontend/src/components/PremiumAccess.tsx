@@ -63,23 +63,23 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
       icon: '🎵'
     },
     {
-      title: 'PARA Artist / Listener Rewards',
-      description: 'Earn PARA tokens for listening to music',
+      title: 'PARA Rewards',
+      description: 'Earn the token powering a new decentralized music economy, just by listening to music',
       icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-6 h-6 rounded-full align-middle" />
     },
     {
-      title: ' Own purchased audio?',
-      description: 'Welcome back to ownership in digital tracks AND physical albums (using Fuego L1\'s simple private messaging with artist/seller for shipping details) that you purchase on DIGM.',
+      title: ' Own Your Purchased Audio',
+      description: 'Welcome back to ownership of the digital tracks AND physical albums (using Fuego L1\'s secure private messaging with artist/seller for shipping details) that you purchase on DIGM.',
       icon: '💿'
     },
     {
       title: 'Exclusive Content',
-      description: 'Artists decide their own exclusivity to premium content and/or pre-release using HEAT, PARA, or XF₲ paywalls; plus limit only to other DIGM holders, or even create & use your own NFTs on COLD L3* (roadmap).',
-      icon: ''
+      description: 'Artists decide their own exclusivity to premium content using HEAT, PARA, or XF₲ paywalls; or limit only to other DIGM holders.',
+      icon: '💎'
     },
     {
       title: '🌊 Freedom isnt free - the cost is responsibility',
-      description: 'DIGM is a decentralized platform. There is no "customer support" because the platform has no "customers". We\'re a community of artists/musicians, music lovers, and developers who all help one another. Vive la révolution! ',
+      description: 'DIGM is a decentralized platform. Theres no "robotic customer support" because DIGM platform has no "customers". It is simply public infrastructure built for (private) p2p commerce. The true power of DIGM is in the community of artists/musicians, music lovers, and developers who make use of it, and help one another. Vive la révolution! ',
       icon: '🧞‍♀️'
     }
   ];
@@ -301,11 +301,11 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
-                <span className="text-gray-300">Unlock streaming features</span>
+                <span className="text-gray-300">Unlock unlimited streaming features</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
-                <span className="text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> while 🎧 listening</span>
+                <span className="text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA while listening</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-yellow-400">✓</span>
@@ -335,7 +335,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="glass p-8 text-center">
           <h3 className="text-xl font-bold text-white mb-4">Ready to Go Premium?</h3>
           <p className="text-gray-400 mb-6">
-            Mint HEAT tokens to unlock premium features on DIGM
+            Buy or mint HEAT tokens (by burning XFG) to unlock premium features on DIGM
           </p>
           <div className="max-w-md mx-auto">
             <div className="glass p-6 rounded-xl border border-yellow-500/20">
@@ -363,33 +363,32 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             <h2 className="text-2xl font-bold gradient-text mb-4 text-center">Mint HEAT with XFG</h2>
             <ol className="list-decimal list-inside text-gray-200 space-y-2 mb-4">
               <li>
-                <strong>Send a deposit burn transaction</strong> from your XFG wallet to the official burn address:
+                Mint HEAT by burning collateral in XFG atomic units, (like BTC has satoshis or 'sats', 0.0000001 XFG are called, 'heat')  All XFG burns use the standardized amount of ₲0.8 (or 8M HEAT) for increased privacy- all from your Fuego wallet:
                 <div className="bg-gray-800 rounded p-2 my-2 text-yellow-300 font-mono text-sm select-all">
-                  XFG_BURN_ADDRESS_HERE
+                  
                 </div>
-                (Replace with the actual burn address)
               </li>
               <li>
-                <strong>Generate a burn CLI proofer</strong> using the Fuego CLI tool:
+                <strong>Generate a burn proof</strong> using the Fuego CLI tool:
                 <div className="bg-gray-800 rounded p-2 my-2 text-green-300 font-mono text-sm select-all">
                   fuego-cli prove-burn --txid &lt;your_txid&gt;
                 </div>
                 This will output a proof string.
               </li>
               <li>
-                <strong>Paste your burn proof below</strong> and submit it for verification:
+                Redeem the burn proof to your chosen platform of mint by submitting it to a smart contract for verification.
               </li>
             </ol>
             <textarea
               className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700 mb-4"
               rows={4}
-              placeholder="Paste your burn proof here..."
+              placeholder=""
             />
             <button className="btn-primary w-full" disabled>
               Submit Proof (Coming Soon)
             </button>
             <p className="text-xs text-gray-400 mt-2 text-center">
-              Your proof will be verified and HEAT tokens minted to your wallet.
+              Once your proof is verified, HEAT tokens are minted to your web3 wallet address.
             </p>
           </div>
         </div>
@@ -400,7 +399,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
           <div className="text-4xl mb-4">🎉</div>
           <h3 className="text-xl font-bold gradient-text-green mb-2">Premium Active!</h3>
           <p className="text-gray-400 mb-4">
-            You have access to all premium features. Enjoy unlimited streaming and exclusive content!
+            Awww YEAH...you have full access to all premium features. Enjoy unlimited streaming and exclusive content!
           </p>
           <div className="flex justify-center">
             <button className="btn-success">

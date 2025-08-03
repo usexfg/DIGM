@@ -325,7 +325,7 @@ const AudioMarketplace: React.FC = () => {
               <span className="text-2xl">♛</span>
               <div>
                 <h3 className="gradient-text-green font-semibold">Premium Access Active</h3>
-                <p className="text-gray-400 text-sm">You can stream music and earn <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA tokens!</p>
+                <p className="text-gray-400 text-sm">You can stream music and earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA tokens!</p>
               </div>
             </div>
           </div>
@@ -650,35 +650,35 @@ const AudioMarketplace: React.FC = () => {
         <h3 className="gradient-text text-2xl font-bold mb-6 text-center">Artist & Listener-First Economy</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="text-center space-y-2">
-            <div className="text-3xl">💰</div>
+            <div className="text-3xl">₲</div>
             <h4 className="font-semibold text-white">100% Artist Revenue</h4>
             <p className="text-sm text-gray-300">Artists keep every single XFG from their sales. No 60/40 split, no $0.000001 per stream- One. Hundred. Percent. </p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">🎧</div>
                     <h4 className="font-semibold text-white">Artist & Listener Rewards</h4>
-        <p className="text-sm text-gray-300">Earn <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens from listening to music, while the artist you are listening to earns Para as you stream their music.</p>
+        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens from listening to music, while the artist you are listening to earns Para as you stream their music.</p>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-3xl">🔗</div>
+            <div className="text-3xl">⇆</div>
             <h4 className="font-semibold text-white">Direct P2P Payments</h4>
             <p className="text-sm text-gray-300">Payments go directly from buyers to artists while inheriting all monetary privacy & security features of XF₲.</p>
           </div>
 
           <div className="text-center space-y-2">
-            <div className="text-3xl">👑</div>
+            <div className="text-3xl">䷍</div>
             <h4 className="font-semibold text-white">True Ownership</h4>
             <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN (not 'suBScribe to') all audio they purchase, forever.</p>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-3xl">🛡️</div>
+            <div className="text-3xl">⛨</div>
             <h4 className="font-semibold text-white">Purchasing Power + Privacy</h4>
             <p className="text-sm text-gray-300">Upgrade your money & preserve value using XF₲ (or HEAT) while controlling privacy of your data, instead of it being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-3xl">🔥</div>
+            <div className="text-3xl">🜂</div>
             <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
-            <p className="text-sm text-gray-300">Built on the absolute hottest L1 privacy blockchain around, supporting a worldwide community of artists, musicians, developers, and music lovers alike.</p>
+            <p className="text-sm text-gray-300">Built on the hottest L1 privacy blockchain in town, supporting the private commerce of a worldwide community of artists, musicians, developers, and music lovers alike.</p>
           </div>
  
         </div>
