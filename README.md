@@ -1,4 +1,4 @@
-# DIGM  - Decentralized P2P Music/Audio Marketplace using Fuego (XF₲) privacy L1 payment network.
+# DIGM  - Decentralized P2P Music/Audio Marketplace using Fuego (XF₲) L1 privacy payment network.
 
 A basic architectural outline for PARA token bridging, Fuego XFG privacy transactions with freemium mining, and DIGM NFT-based hosting permissions.
 
@@ -211,6 +211,7 @@ For support and questions:
 
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
+<<<<<<< HEAD
 | Monthly Fee | $10.99 | $10.99 | $9.99 | **Lifetime Hold 8k HEAT** |
 | Lossless Audio | ❌ | ✅ | ❌ | ✅ |
 | Own the Music | ❌ | ❌ | ❌ | ✅ |

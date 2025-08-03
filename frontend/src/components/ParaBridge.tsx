@@ -285,7 +285,7 @@ const ParaBridge: React.FC = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Amount (<img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> tokens)
+                  Amount (<img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> tokens)
                 </label>
                 <input
                   type="number"
@@ -328,7 +328,7 @@ const ParaBridge: React.FC = () => {
                 disabled={isLoading || !evmAddress || !destinationAddress || !amount}
                 className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Processing...' : createVoucher ? 'Create Voucher' : `Bridge ${<img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" />} tokens`}
+                {isLoading ? 'Processing...' : createVoucher ? 'Create Voucher' : `Bridge ${<img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" />} tokens`}
               </button>
             </div>
           </div>
@@ -356,7 +356,7 @@ const ParaBridge: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Use Case:</span>
-                <span className="text-white">Artist/Listener Rewards, Bridge, Vouchers</span>
+                <span className="text-white">Artist & Listener Rewards, Elder Node Rewards, Listener-centric Economy</span>
               </div>
             </div>
           </div>
@@ -365,9 +365,9 @@ const ParaBridge: React.FC = () => {
           <div className="card">
             <h3 className="text-lg font-semibold mb-3">How it works</h3>
             <div className="space-y-2 text-sm text-slate-300">
-              <p>• <strong>Direct Bridge:</strong> <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> tokens are transferred directly to the destination Stellar address</p>
-              <p>• <strong>Voucher:</strong> Creates a claimable balance that the recipient can claim later</p>
-              <p>• <strong>Fees:</strong> Small network fees apply for both EVM and Stellar transactions</p>
+              <p>• <strong>Direct Bridge:</strong> <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA tokens are transferred directly to the your Stellar address</p>
+              <p>• <strong>Voucher:</strong> Creates a claimable balance that recipient can redeem later</p>
+              <p>• <strong>Fees:</strong> Small network fees apply for both EVM and Stellar-based transactions</p>
               <p>• <strong>Time:</strong> Bridge typically completes within 1-2 minutes</p>
             </div>
           </div>
@@ -392,7 +392,7 @@ const ParaBridge: React.FC = () => {
               <div className="text-center py-8">
                 <p className="text-slate-400">No claimable balances found</p>
                 <p className="text-sm text-slate-500 mt-2">
-                  Vouchers will appear here when they're created for your address
+                  Vouchers will appear here when they've been created for your address
                 </p>
               </div>
             ) : (
@@ -437,8 +437,8 @@ const ParaBridge: React.FC = () => {
             <h3 className="text-lg font-semibold mb-3">About Vouchers</h3>
             <div className="space-y-2 text-sm text-slate-300">
               <p>• <strong>Vouchers</strong> are claimable balances created on the Stellar network</p>
-              <p>• They allow you to receive <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> without needing to sign a transaction immediately</p>
-              <p>• Click "Claim" to transfer the <img src="https://github.com/usexfg/fuego-data/raw/master/fuego-images/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> to your Stellar wallet</p>
+              <p>• They allow you to receive <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA without needing to sign a transaction immediately</p>
+              <p>• Click "Claim" to transfer the <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA to your Stellar wallet</p>
               <p>• Vouchers may have expiration dates set by the creator</p>
               <p>• You can only claim vouchers created for your address</p>
             </div>
