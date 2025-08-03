@@ -34,7 +34,7 @@ interface ArtistUnlock {
 }
 
 const ArtistProfile: React.FC = () => {
-  const { evmAddress, stellarAddress } = useWallet();
+  const { evmAddress } = useWallet();
   const [profile, setProfile] = useState<ArtistProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +68,7 @@ const ArtistProfile: React.FC = () => {
       fetchArtistProfile();
       fetchArtistUnlocks();
     }
-  }, [evmAddress]);
+  }, [evmAddress, fetchArtistProfile, fetchArtistUnlocks]);
 
   const fetchArtistProfile = async () => {
     if (!evmAddress) return;

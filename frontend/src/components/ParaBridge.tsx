@@ -74,6 +74,7 @@ const ParaBridge: React.FC = () => {
     }
   };
 
+  // Format amount for display
   const formatAmount = (amount: string, asset: string) => {
     if (asset === STELLAR_CONFIG.PARA_CODE) {
       return PARA_UTILS.formatPARA(parseFloat(amount)) + ' ' + asset;
@@ -133,14 +134,14 @@ const ParaBridge: React.FC = () => {
       fetchStellarBalance();
       fetchClaimableBalances();
     }
-  }, [evmAddress, stellarAddress]);
+  }, [evmAddress, stellarAddress, fetchEvmBalance, fetchStellarBalance, fetchClaimableBalances]);
 
   const fetchEvmBalance = async () => {
     if (!evmProvider || !evmAddress) return;
     
     try {
       // This would be the PARA token contract address
-      const paraAddress = '0x...'; // Replace with actual PARA contract address
+      // const paraAddress = '0x...'; // Replace with actual PARA contract address
       const balance = await evmProvider.getBalance(evmAddress);
       // EVM uses 18 decimals (wei to ether)
       setEvmBalance(ethers.formatEther(balance));

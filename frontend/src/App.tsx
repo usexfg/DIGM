@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import WalletConnector from './components/WalletConnector';
 import ParaBridge from './components/ParaBridge';
-import VoucherClaim from './components/VoucherClaim';
 import HostingPermissions from './components/HostingPermissions';
 import XfgWallet from './components/XfgWallet';
 import Paradio from './components/Paradio';
@@ -82,7 +81,6 @@ function AppContent() {
 
   // Check if current route requires DIGM hosting
   const requiresDigmHosting = location.pathname === '/artist/profile' || location.pathname === '/artist/dashboard';
-  const hasAccess = !requiresDigmHosting || hasDigmHosting;
 
   if (requiresDigmHosting && !hasDigmHosting) {
   return (
