@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useWallet } from '../hooks/useWallet';
+import { STELLAR_CONFIG, PARA_UTILS } from '../config/stellar';
 
 interface ClaimableBalance {
   id: string;
@@ -74,6 +75,9 @@ const ParaBridge: React.FC = () => {
   };
 
   const formatAmount = (amount: string, asset: string) => {
+    if (asset === STELLAR_CONFIG.PARA_CODE) {
+      return PARA_UTILS.formatPARA(parseFloat(amount)) + ' ' + asset;
+    }
     // Stellar uses 7 decimals for PARA
     const numAmount = parseFloat(amount) / 10000000;
     return `${numAmount.toFixed(7)} ${asset}`;
