@@ -68,7 +68,7 @@ const ArtistProfile: React.FC = () => {
       fetchArtistProfile();
       fetchArtistUnlocks();
     }
-  }, [evmAddress, fetchArtistProfile, fetchArtistUnlocks]);
+  }, [evmAddress]);
 
   const fetchArtistProfile = async () => {
     if (!evmAddress) return;
