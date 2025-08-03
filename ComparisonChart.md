@@ -2,7 +2,7 @@
 
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
-| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when *holding XFG (or HEAT) |
+| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG (or HEAT) |
 | Lossless Audio | ❌ | ✅ | ❌ | ✅ FLAC | 
 | Upload Limits | pay per distro | pay per distro | free 100MB | 10 albums per DIGM (Lifetime) |
 | Sells your privacy | ✅ | ✅ | ✅ | ❌hell nah. financial & personal data **REMAIN** private |
