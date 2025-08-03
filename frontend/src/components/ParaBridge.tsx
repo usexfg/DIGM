@@ -134,7 +134,7 @@ const ParaBridge: React.FC = () => {
       fetchStellarBalance();
       fetchClaimableBalances();
     }
-  }, [evmAddress, stellarAddress, fetchEvmBalance, fetchStellarBalance, fetchClaimableBalances]);
+  }, [evmAddress, stellarAddress]);
 
   const fetchEvmBalance = async () => {
     if (!evmProvider || !evmAddress) return;
