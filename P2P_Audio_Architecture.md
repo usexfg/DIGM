@@ -37,7 +37,7 @@
     "duration": "18 months"
   }
   ```
-* Elder-Nodes stake DIGM token as collateral and receive HEAT/PARA rewards for keeping the chunk online and passing audit-proofs.
+* Eldernodes (or COLD L3 nodes) stake collateral (DI₲M or XFG/HEAT) to receive PARA rewards for keeping the chunk online and passing audit-proofs.
 
 ### 2.3  Audit-proofs (“Fresh Index”)
 * Once per epoch a random subset of nodes must return the SHA-256 of a random byte-range inside a chunk they claim to hold.
@@ -62,9 +62,9 @@
 ```mermaid
 graph TD
     A[Artist drops WAV/MP3] --> B[App: chunk + encrypt + metadata]
-    B --> C[PinTrack RPC → Elder-Node swarm]
+    B --> C[PinTrack RPC → Eldernode swarm]
     C --> D[Smart-contract TrackPublished event]
-    D --> E[Elder-Nodes start advertising content]
+    D --> E[Eldernodes start advertising content]
 ```
 1. **Artist** drops a file into the DIGM desktop app.
 2. App extracts metadata, performs chunking & encryption.
@@ -92,4 +92,4 @@ graph TD
 
 ---
 
-*Prepared for the DIGM core contributors – let’s build the future of music, one block, one note, one stream at a time.* 
+*Prepared by DIGM core contributors – let’s build the future of music, one block, one note, one stream at a time.* 
