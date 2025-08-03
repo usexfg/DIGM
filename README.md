@@ -9,11 +9,11 @@ DIGM (Decentralized Independent ₲roove Marketplace) is a direct response to th
 
 Our vision is simple: **empower artists to preserve control of the their work and keep 100% of their earnings, while rewarding listeners for their engagement and support.**
 
-## **2. The DI₲M Ecosystem: A Symphony of Three Parts**
+## **2. The DIGM Ecosystem: A Symphony of Three **
 
-DI₲M is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
+DIGM is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
 
-*   **The Marketplace:** A vibrant, decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are peer-to-peer, using the Fuego (XFG) cryptocurrency, ensuring artists retain the full value of every sale.
+*   **The Marketplace:** A vibrant, decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are private & peer-to-peer, using the Fuego (XF₲) cryptocurrency, ensuring artists retain the full value of every sale.
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
     *   **Fuego (XFG)** for purchasing music.
     *   **DIGM Tokens** for artist hosting rights.
@@ -22,7 +22,7 @@ DI₲M is a comprehensive platform that integrates three core components into a 
 
 ## **3. The Technology: Peer-to-Peer 2 the Core**
 
-DI₲M is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
+DIGM is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
 
 Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio files across this distributed network. When a listener buys or streams a track, the data is delivered directly from these peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
 
