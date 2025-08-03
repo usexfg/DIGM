@@ -1,12 +1,10 @@
-# DIGM on COLD L3 with Celestia — Detailed Explanation
-
-*(verbatim from prior assistant reply for archival/reference)*
+# DIGM on COLD L3 with Celestia — Explanation
 
 ---
 
-## 1. Is DIGM hosted on COLD L3 instead of Fuego?
+## 1. Is DIGM going to be hosted on COLD L3 instead of Fuego?
 
-It's not a replacement, but a powerful evolution in layering. DIGM becomes an **application** that **leverages the COLD L3 protocol**, which in turn is **secured by the Fuego L1**.
+It's not a replacement, instead a powerful evolution in layering. DIGM becomes an **application** that **leverages the COLD L3 protocol**, which in turn is **secured by the Fuego L1**.
 
 Think of it like a traditional web stack:
 
@@ -17,11 +15,11 @@ Think of it like a traditional web stack:
 | **Celestia DA** | Hard drive / CDN | Stores big encrypted audio blobs cheaply & verifiably |
 | **Fuego L1** | Physical data-center security | PoW chain anchoring COLD, scarcity for XFG/HEAT |
 
-**So, the answer is:** DIGM runs *on* COLD L3, and COLD L3 is anchored *to* Fuego. You aren't choosing one over the other; you are using them together in a powerful modular stack.
+**So, the answer is: yes, ** DIGM will run *on* COLD L3, and COLD L3 is anchored *to* Fuego. We aren't choosing one over the other; we are using them together in concert as a powerful modular stack.
 
 ---
 
-## 2. The Flow of Audio with Celestia
+## 2. The Flow of Audio with Celestia (or other Data Availability layer)
 
 ### Storage — *Artist Uploads a Track*
 
@@ -45,9 +43,9 @@ Think of it like a traditional web stack:
 
 ---
 
-## 3. Which Way is More Resilient and “Alpha”?
+## 3. Which Way is More Efficient?
 
-The **COLD L3 + Celestia** architecture is unequivocally more resilient and has vastly more "alpha." It's not even a close contest.
+The **COLD L3 + Celestia** architecture is more efficient. 
 
 | Feature | Elder-Node IPFS Model | **COLD L3 + Celestia** |
 |---------|----------------------|-------------------------|
@@ -62,8 +60,7 @@ The **COLD L3 + Celestia** architecture is unequivocally more resilient and has 
 
 ## Conclusion
 
-The **COLD L3 + Celestia** model transforms DIGM from a *"decentralized music app"* into a **privacy-first, modular, and highly composable media economy.** It is more resilient, more scalable, cheaper, and possesses an order of magnitude more *alpha* by every metric.
+The **COLD L3 + Celestia** model transforms DIGM from a *"decentralized music app"* into a **private, modular, and highly composable media economy.** We'll explore all the possibilities of other DA layers/storage providers when we get closer to phase 3.
 
 ---
-
-*End of verbatim explanation.* 
+ 
