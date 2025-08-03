@@ -2,7 +2,7 @@
   "name": "digm-superapp",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aejt.github.io/digm-platform",
+  "homepage": "https://usexfg.github.io/DIGM",
   "dependencies": {
     "@stellar/stellar-sdk": "^13.3.0",
     "@stellar/wallet-sdk": "^0.11.2",

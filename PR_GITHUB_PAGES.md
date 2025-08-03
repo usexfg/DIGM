@@ -13,7 +13,7 @@ This PR adds comprehensive GitHub Pages deployment configuration to the DIGM Pla
 - **Environment**: Uses Node.js 18 for compatibility
 
 ### 📦 Frontend Configuration
-- **Homepage URL**: Configured for `https://aejt.github.io/digm-platform`
+- **Homepage URL**: Configured for `https://usexfg.github.io/DIGM`
 - **Deployment Scripts**: Added `predeploy` and `deploy` npm scripts
 - **Dependencies**: Added `gh-pages` package for deployment
 - **Router**: Updated to use `HashRouter` for GitHub Pages compatibility
@@ -126,7 +126,7 @@ npm run build
 ## 🔗 Links
 
 - **Repository**: https://github.com/usexfg/DIGM
-- **Deployment URL**: https://aejt.github.io/digm-platform (after merge)
+- **Deployment URL**: https://usexfg.github.io/DIGM (after merge)
 - **Actions**: https://github.com/usexfg/DIGM/actions
 - **Pages Settings**: https://github.com/usexfg/DIGM/settings/pages
 
@@ -137,7 +137,7 @@ After merging this PR:
 1. **Enable GitHub Pages**:
    - Go to repository Settings > Pages
    - Select "GitHub Actions" as source
-   - Site will be available at https://aejt.github.io/digm-platform
+   - Site will be available at https://usexfg.github.io/DIGM
 
 2. **Monitor Deployment**:
    - Check Actions tab for build status

@@ -14,6 +14,7 @@ The DIGM Platform is a decentralized audio marketplace and P2P radio application
 2. **Pages Section**: Navigate to Settings > Pages
 3. **Source**: Select "GitHub Actions" as the source
 4. **Branch**: The deployment will use the `gh-pages` branch automatically
+5. **URL**: Your site will be available at https://usexfg.github.io/DIGM
 
 ### Automatic Deployment
 
@@ -43,7 +44,7 @@ npm run deploy
 
 The `frontend/package.json` has been updated with:
 
-- `homepage`: Set to `https://aejt.github.io/digm-platform`
+- `homepage`: Set to `https://usexfg.github.io/DIGM`
 - `predeploy`: Script to build the application
 - `deploy`: Script to deploy to GitHub Pages
 - `gh-pages`: Development dependency for deployment
