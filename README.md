@@ -85,8 +85,8 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 <sub>(*) user must hold a minimum of 0.0008 XFG in wallet (or 8k HEAT)</sub>
 
 
-Welcome to the return of an economy where art is valued, creators are respected, and fans are part of the ecosystem, not just consumers to be data-mined.
-DIGM is just a platform; it's supporting community is the true power of this movement. 
+Welcome back to an economy where art is valued, creators are respected, and fans are part of the ecosystem, not just consumers to be data-mined.
+DIGM is just a platform; the community supporting it is the true power of this movement. 
 
 **Join us in building the future of music. One block, one note, one stream at a time.** 
 <sub>2025 © DIGM contributors
