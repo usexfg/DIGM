@@ -89,6 +89,8 @@ Welcome back to an economy where art is valued, creators are respected, and fans
 DIGM is just the platform; our community supporting it is the true power of this movement. Vive la révolution!
 
 **Join us in building the sustainable future of music. One stream, one album, one block at a time.** 
+
+
 <sub>2025 © DIGM contributors</sub>
 
 
