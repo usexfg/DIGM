@@ -9,7 +9,13 @@ DIGM (Decentralized Independent ₲roove Marketplace) is a direct response to th
 
 Our vision is simple: **empower artists to preserve control of the their work and keep 100% of their earnings, while rewarding listeners for their engagement and support.**
 
-## **2. The DIGM Ecosystem: A Symphony of 3**
+## **2. The Tech: Peer-to-Peer 2 the Core**
+
+DIGM is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
+
+Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio catalogue across this distributed network. When a listener buys or streams a track, the data is delivered directly from peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
+
+## **3. The DIGM Ecosystem: A Symphony of 3**
 
 DIGM is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
 
@@ -20,13 +26,7 @@ DIGM is a comprehensive platform that integrates three core components into a si
     *   **PARA Tokens** for listener and artist rewards.
 *   **Paradio:** A revolutionary P2P streaming radio that rewards both artists and listeners for their participation.
 
-## **3. The Tech: Peer-to-Peer 2 the Core**
-
-DIGM is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
-
-Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio catalogue across this distributed network. When a listener buys or streams a track, the data is delivered directly from peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
-
-## **4. The Tokenomics: Powering a New Music Economy **
+## **4. The Tokenomics: Powering a New Music Economy**
 
 Two distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
 
@@ -69,9 +69,9 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
-| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT (Lifetime not monthly) |
+| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT Lifetime (not monthly) |
 | Lossless Audio | ❌ | ✅ | ❌ | ✅ FLAC albums Opus streaming | 
-| Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM (Lifetime) |
+| Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
 | Sells your privacy | ✅ | ✅ | ✅ | ❌hell nah. financial & personal data **REMAIN** private |
 | Own the Music | ❌ | ❌ | ❌ | ✅ mp3s + physical |
 | Pray to an algorithm | ✅ | ✅ | 🔁Reposts |❌hell nah,Equal opportunity. Paradio|
