@@ -37,12 +37,12 @@ The DI₲M token (XFG-colored coin) is the key that unlocks an artist's ability 
 *   With a **fixed maximum supply of only 100,000 tokens**, it ensures the platform's growth is organic and prevents oversaturation, preserving value for participating artists.
 *   It acts as a quality-control and anti-spam measure, as catalogue hosting rights have tangible value.
 
-### **The PARA Token: The Currency of Engagement**
+### **The PARA Token: The Currency of Streaming**
 
 The PARA token is designed to reward activity and bootstrap a thriving micro-economy around listening.
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock freemium without ads! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
-*   **Vibrant Ecosystem:** PARA is designed to be the defacto currency of streaming used for tipping, platform features, and the listener-built economy created by the wider DIGM community.
+*   **Vibrant Ecosystem:** PARA is designed to be the defacto currency of streaming used for tipping, platform features, and the listener economy created by the wider DIGM community.
 
 ## **5. For the Artist: Reclaim Your Art**
 
@@ -56,7 +56,7 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 *   **Directly Support Artists:** Know that your purchase goes directly to the creator.
 *   **Earn While You Listen:** Get rewarded with PARA tokens just for discovering new music by tuning into Paradio.
 *   **Discover Independent Talent:** Explore a marketplace free from the influence of major-label gatekeepers.
-*   **Privacy and Control:** Experience music without being the product.
+*   **Privacy and Control:** Experience music like it was made to be experienced- without being the product.
 
 ## **7. The Roadmap Ahead**
 
@@ -85,9 +85,9 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 <sub>(*) user must hold minimum of 0.8 XFG in wallet (or 8M HEAT)</sub>
 
 
-Welcome back to an economy where art is valued, creators are respected, and fans are part of the ecosystem, not some CEO's ad-revenue or big-data's consumer point to be exploited.
-DIGM is just the platform; the community supporting it is the true power of this movement. Vive la révolution!
+Welcome back to an economy where art is valued, creators are respected, and fans are part of the ecosystem, not some CEO's ad-revenue or big-data's consumer profile to be exploited.
+DIGM is just the platform; our community supporting it is the true power of this movement. Vive la révolution!
 
-**Join us in building a sustainable future in music. One stream, one album, one block at a time.** 
+**Join us in building the sustainable future of music. One stream, one album, one block at a time.** 
 <sub>2025 © DIGM contributors
 2025 © Elderfire Council</sub>
