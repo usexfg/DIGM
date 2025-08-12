@@ -9,47 +9,47 @@ DIGM (Decentralized Independent ₲roove Marketplace) is a direct response to th
 
 Our vision is simple: **empower artists to preserve control of the their work and keep 100% of their earnings, while rewarding listeners for their engagement and support.**
 
-## **2. The Tech: Peer-to-Peer 2 the Core**
+## **2. Technology: Peer-2-Peer 2 the Core**
 
 DIGM is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
 
 Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio catalogue across this distributed network. When a listener buys or streams a track, the data is delivered directly from peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
 
-## **3. The DIGM Ecosystem: A Symphony of 3**
+## **3. DIGM Ecosystem: A Symphony of 3**
 
 DIGM is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
 
 *   **The Marketplace:** A vibrant, decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are private & peer-to-peer, using the Fuego (XF₲) cryptocurrency, ensuring artists retain the full value of every sale.
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
-    *   **Fuego (XFG)** for purchasing music.
-    *   **DI₲M Tokens** for artist hosting rights.
-    *   **PARA Tokens** for listener and artist rewards.
-*   **Paradio:** A revolutionary P2P streaming radio that rewards both artists and listeners for their participation.
+    *   Fuego (XFG) for purchasing albums.
+    *    DI₲M for catalogue hosting rights.
+    *    PARA for listener and artist rewards.
+*   **Paradio+:** A revolutionary P2P streaming radio that rewards both artists and listeners for their participation.
 
-## **4. The Tokenomics: Powering a New Music Economy**
+## **4. Tokenomics: Powering the New Music Economy**
 
 Two distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
 
 ### **DI₲M Token: The Right to Host**
 
 The DI₲M token (XFG-colored coin) is the key that unlocks an artist's ability to participate in the marketplace. To sell music on the platform, an artist must hold a DI₲M token. This mechanism serves several purposes:
-*   It creates a stable, committed base of content hosts.
-*   With a **fixed maximum supply of only 100,000 tokens**, it ensures the platform's growth is organic and prevents oversaturation, preserving value for participating artists.
-*   It acts as a quality-control and anti-spam measure, as catalogue hosting rights have tangible value.
+*   It creates a stable, committed base of established (or upcoming) artists/labels who wish to host their audio albums on DIGM.
+*   With a **fixed maximum supply of only 100,000**, it ensures DIGM platform's growth is organic and prevents oversaturation while preserving value for participating artists.
+*   Also acts as a quality-control and anti-spam measure, as catalogue hosting rights have tangible value.
 
-### **The PARA Token: The Currency of Streaming**
+### **PARA Token: The Currency of Streaming**
 
 The PARA token is designed to reward activity and bootstrap a thriving micro-economy around listening.
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock freemium without ads! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
-*   **Vibrant Ecosystem:** PARA is designed to be the defacto currency of streaming used for tipping, platform features, and the listener economy created by the wider DIGM community.
+*   **Vibrant Ecosystem:** PARA is designed to be the defacto currency for audio streaming. Ofc, para can also be used for tipping, platform features, non-platform features, users are encouraged to build or integrate their own novel ways to use their para tokens  for their own purposes, and expanding the listener economy to be utilized & enjoyed by music communities worldwide. 
 
 ## **5. For the Artist: Reclaim Your Art**
 
 *   **Keep 100% of Your Revenue:** Sell your albums and keep every single XFG. No hidden fees, no opaque calculations.
 *   **True Ownership:** You control your music, your pricing, and your connection to your fans.
 *   **Earn More with Paradio:** Generate an actual, continuous revenue stream from radio airplay, paid in PARA.
-*   **Collaborate:** A single Elder Node can host content for multiple artists, allowing for the formation of decentralized "digital labels" or artist pools.
+*   **Collaborate:** A single Elder Node can host content for multiple artists, allowing for the formation of decentralized "curator labels" or artist pools.
 
 ## **6. For the Listener: Be Part of the Music**
 
@@ -70,7 +70,7 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
 | Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT Lifetime (not monthly) |
-| Lossless Audio | ❌ | ✅ | ❌ | ✅ FLAC albums Opus streaming | 
+| Lossless Audio | ❌ | ✅ | ❌ | ✅ FLAC albums | 
 | Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
 | Sells your privacy | ✅ | ✅ | ✅ | ❌hell nah. financial & personal data **REMAIN** private |
 | Own the Music | ❌ | ❌ | ❌ | ✅ mp3s + physical |
@@ -89,5 +89,7 @@ Welcome back to an economy where art is valued, creators are respected, and fans
 DIGM is just the platform; our community supporting it is the true power of this movement. Vive la révolution!
 
 **Join us in building the sustainable future of music. One stream, one album, one block at a time.** 
-<sub>2025 © DIGM contributors
-2025 © Elderfire Council</sub>
+<sub>2025 © DIGM contributors</sub>
+
+
+<sub>2025 © Ξlderfire | USEXFG </sub>
