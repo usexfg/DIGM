@@ -17,14 +17,14 @@ Instead of uploading music to a central server owned by a corporation, artists h
 
 ## **3. DIGM Ecosystem: A Symphony of 3**
 
-DIGM is a comprehensive platform that integrates three core components into a single, user-friendly desktop application (with mobile to follow).
+DIGM is a comprehensive platform that integrates three core components into a single, user-friendly web application (with mobile to follow).
 
-*   **The Marketplace:** A vibrant, decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are private & peer-to-peer, using the Fuego (XF₲) cryptocurrency, ensuring artists retain the full value of every sale.
+*   **The Marketplace:** A decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are private & peer-to-peer, using the Fuego (XF₲) cryptocurrency, ensuring artists retain the full value of every sale. (XF₲ also enables the preservation of **future** purchasing power on any value earned, unlike fiat currencies)
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
     *   Fuego (XFG) for purchasing albums.
     *    DI₲M for catalogue hosting rights.
     *    PARA for listener and artist rewards.
-*   **Paradio+:** A revolutionary P2P streaming radio that rewards both artists and listeners for their participation.
+*   **Paradio+:** A revolutionary P2P streaming radio that rewards both artists & listeners for their participation.
 
 ## **4. Tokenomics: Powering the New Music Economy**
 
@@ -42,27 +42,27 @@ The DI₲M token (XFG-colored coin) is the key that unlocks an artist's ability 
 The PARA token is designed to reward activity and bootstrap a thriving micro-economy around listening.
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock freemium without ads! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
-*   **Vibrant Ecosystem:** PARA is designed to be the defacto currency for audio streaming. Ofc, para can also be used for tipping, platform features, non-platform features, users are encouraged to build or integrate their own novel ways to use their para tokens  for their own purposes, and expanding the listener economy to be utilized & enjoyed by music communities worldwide. 
+*   **The Artist/Listener Economy:** PARA is designed to be the defacto currency for audio streaming. Ofc, para can also be used for tipping, platform features, and even non-platform features. Users are encouraged to build or integrate their own novel ways to use their para tokens for their own purposes- expanding the artist/listener economy to be utilized & enjoyed by music communities worldwide. 
 
 ## **5. For the Artist: Reclaim Your Art**
 
-*   **Keep 100% of Your Revenue:** Sell your albums and keep every single XFG. No hidden fees, no opaque calculations.
+*   **Keep 100% of Your Revenue:** Sell your albums and keep every. single. XFG. No hidden fees, no opaque calculations.
 *   **True Ownership:** You control your music, your pricing, and your connection to your fans.
-*   **Earn More with Paradio:** Generate an actual, continuous revenue stream from radio airplay, paid in PARA.
-*   **Collaborate:** A single Elder Node can host content for multiple artists, allowing for the formation of decentralized "curator labels" or artist pools.
+*   **Earn More with Paradio:** Generate an actual, continuous revenue **stream** from Paradio airplay, paid in PARA.
+*   **Collaborate:** A single DIGM node can host content for multiple artists, allowing for the formation of decentralized "curator labels" or artist pools.
 
 ## **6. For the Listener: Be Part of the Music**
 
 *   **Directly Support Artists:** Know that your purchase goes directly to the creator.
 *   **Earn While You Listen:** Get rewarded with PARA tokens just for discovering new music by tuning into Paradio.
 *   **Discover Independent Talent:** Explore a marketplace free from the influence of major-label gatekeepers.
-*   **Privacy and Control:** Experience music like it was made to be experienced- without being the product.
+*   **Privacy and Control:** Experience music like it was meant to be experienced- without being the product.
 
 ## **7. The Roadmap Ahead**
 
-1.  **Phase 1: Desktop Prototype Launch** - The initial release of the DIGM "super-app" for Windows, macOS, and Linux.
+1.  **Phase 1: WebApp Prototype Launch** - The initial release of the DIGM "super-app" utilizing a web3 framework.
 2.  **Phase 2: Network Expansion** - Onboarding of more artists and Elder Node operators to decentralize the network further.
-3.  **Phase 3: Mobile & Web Integration** - Bringing the DIGM experience on all devices.
+3.  **Phase 3: Mobile & Desktop Integration** - Bringing the DIGM experience on all devices.
 4.  **Phase 4: Governance** - Transitioning platform governance of DIGM to token holders through a DAO.
 
 ## **8. The Stage is Set**
@@ -88,10 +88,10 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 Welcome back to an economy where art is valued, creators are respected, and fans are part of the ecosystem, not some CEO's ad-revenue or big-data's consumer profile to be exploited.
 DIGM is just the platform; our community supporting it is the true power of this movement. Vive la révolution!
 
-**Join us in building the sustainable future of music. One stream, one album, one block at a time.** 
+**Join us in building the sustainable future of music. One block, one album, one stream at a time.** 
 
 
 <sub>2025 © DIGM contributors</sub>
 
 
-<sub>2025 © Ξlderfire | USEXFG </sub>
+<sub>2025 © Ξlderfire Privacy Council | USEXFG </sub>
