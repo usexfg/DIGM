@@ -86,7 +86,7 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 
 
 Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of *VOX POPULI* that is, itself, also part of a much larger & diverse ecosystem as a whole. Not as 'the ad-revenue' for a CEO, or a big-data consumer profile to be exploited.
-DIGM is just a tech platform; our community of individuals supporting and using it- are the true power of this movement. Vive la révolution!
+DIGM platform is just an open-source software framework; the true power of this movement is it's community of super cool people supporting one another using the platform. Vive la révolution!
 
 **Join us in building the sustainable future of music.** 
 
