@@ -46,7 +46,7 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 
 ## **5. For the Artist: Reclaim Your Art**
 
-*   **Keep 100% of Your Revenue:** Sell your albums and keep every. single. XFG. No hidden fees, no opaque calculations.
+*   **Keep 100% of Your Revenue:** Sell your albums and keep every. single. cent earned in XFG with no hidden fees, no opaque calculations.
 *   **True Ownership:** You control your music, your pricing, and your connection to your fans.
 *   **Earn More with Paradio:** Generate an actual, continuous revenue **stream** from Paradio airplay, paid in PARA.
 *   **Collaborate:** A single DIGM node can host content for multiple artists, allowing for the formation of decentralized "curator labels" or artist pools.
@@ -72,23 +72,23 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 | Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT Lifetime (not monthly) |
 | Lossless Audio | ❌ | ✅ | ❌ | ✅ FLAC albums | 
 | Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
-| Sells your privacy | ✅ | ✅ | ✅ | ❌hell nah. financial & personal data **REMAIN** private |
-| Own the Music | ❌ | ❌ | ❌ | ✅ mp3s + physical |
-| Pray to an algorithm | ✅ | ✅ | 🔁Reposts |❌hell nah,Equal opportunity. Paradio|
+| Sells your privacy | 👁️‍🗨️✅ | 👁️‍🗨️✅ | ✅👁️‍🗨️ | 🔒🥷nah bruh. financial & personal data **REMAIN** private |
+| Own the Music | ❌ | ❌ | ✅ mp3s | ✅ WAV/FLAC albums &/or physical delivery |
+| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity via Paradio Soapbox + Curator Stations (playlists)|
 | Artist Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Listener Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
-| Decentralized | 😂 | 😂 | ❌ | ✅  The Future Is Decentralized, D.Ekhead |
+| Decentralized | 😂 | 😂 | ❌ | **AF**✅  The Future Is Decentralized, D.Ekhead |
 | P2P Payments | ❌ | ❌ | ❌ | ✅ XF₲, Fuego Ξmbers (HEAT), PARA |
 | Freemium | Ads | ❌ | Ads | ✅ no ads. cpu-power |
 | Open Source | ❌ | ❌ | ❌ | ✅FOSSM | 
 
-<sub>(*) user must hold minimum of 0.8 XFG in wallet (or 8M HEAT)</sub>
+<sub>(*) user must hold minimum of 0.1 XFG in wallet (or 1M HEAT)</sub>
 
 
-Welcome back to an economy where art is valued, creators are respected, and fans are part of the ecosystem, not some CEO's ad-revenue or big-data's consumer profile to be exploited.
-DIGM is just the platform; our community supporting it is the true power of this movement. Vive la révolution!
+Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of *VOX POPULI* that is, itself, also part of a much larger & diverse ecosystem as a whole. Not as 'the ad-revenue' for a CEO, or a big-data consumer profile to be exploited.
+DIGM is just a tech platform; our community of individuals supporting and using it- are the true power of this movement. Vive la révolution!
 
-**Join us in building the sustainable future of music. One block, one album, one stream at a time.** 
+**Join us in building the sustainable future of music.** 
 
 
 <sub>2025 © DIGM contributors</sub>
