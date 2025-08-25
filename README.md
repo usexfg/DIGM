@@ -69,8 +69,8 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
-| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT Lifetime (not monthly) |
-| Lossless Audio | ❌ | ✅ | ❌ | ✅ FLAC albums | 
+| Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT -Lifetime (not monthly) |
+| Lossless Audio | ❌ | ✅ | ❌ | ✅ WAV/FLAC albums | 
 | Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
 | Sells your privacy | 👁️‍🗨️✅ | 👁️‍🗨️✅ | ✅👁️‍🗨️ | 🔒🥷nah bruh. financial & personal data **REMAIN** private |
 | Own the Music | ❌ | ❌ | ✅ mp3s | ✅ WAV/FLAC albums &/or physical delivery |
@@ -82,7 +82,7 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 | Freemium | Ads | ❌ | Ads | ✅ no ads. cpu-power |
 | Open Source | ❌ | ❌ | ❌ | ✅FOSSM | 
 
-<sub>(*) user must hold minimum of 0.1 XFG in wallet (or 1M HEAT)</sub>
+<sub>(*) user's wallet must meet/exceed 0.1 XF₲ threshold (1M HEAT) for premium access when using DIGM platform.</sub>
 
 
 Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of *VOX POPULI* that is, itself, also part of a much larger & diverse ecosystem as a whole. Not as 'the ad-revenue' for a CEO, or a big-data consumer profile to be exploited.
