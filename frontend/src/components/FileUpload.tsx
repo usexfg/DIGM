@@ -19,6 +19,7 @@ interface FileUploadProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  allowMultiple?: boolean;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -29,7 +30,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
   accept,
   placeholder,
   className = '',
-  disabled = false
+  disabled = false,
+  allowMultiple = true
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -80,8 +82,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
     setUploadProgress({ loaded: 0, total: file.size, percentage: 0 });
 
     try {
-      // Use mock upload for development (replace with real upload when server is ready)
-      const uploadedFile = await mockUploadFile(file, type, (progress) => {
+      // Use simple storage upload for phase 1/2
+      const { simpleStorageUpload } = await import('../utils/fileUpload');
+      const uploadedFile = await simpleStorageUpload(file, type, (progress) => {
         setUploadProgress(progress);
       });
 
@@ -194,6 +197,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           ref={fileInputRef}
           type="file"
           accept={getAcceptTypes()}
+          multiple={allowMultiple}
           onChange={handleFileInputChange}
           className="hidden"
           disabled={disabled || isUploading}
