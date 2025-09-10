@@ -60,60 +60,75 @@ export const featureFlags = {
 ```
 
 
-### 2) Album-centric catalog (static JSON, no server)
-- Location: `frontend-arch/public/assets/catalog/albums.json` (served statically)
-- Refer to audio and cover art stored in `frontend-arch/public/assets/` or a CDN via `VITE_ASSET_ORIGIN`.
+### 2) Album-centric catalog (GUN database, P2P)
+- **Metadata Storage**: GUN database for real-time album catalog sync
+- **Preview Audio**: Short clips (30-60s) stored directly in GUN
+- **Full Audio**: WebTorrent with Eldernode guaranteed seeding
+- **Cover Art**: Small images in GUN, larger assets via WebTorrent
 
-Schema (minimum viable):
-```json
-{
-  "version": 1,
-  "albums": [
-    {
-      "albumId": "album_001",
-      "title": "Album Title",
-      "artistName": "Artist",
-      "artistId": "artist_abc",
-      "coverUrl": "/assets/covers/album_001.jpg",
-      "description": "Optional blurb",
-      "releaseDate": "2025-09-01",
-      "genre": ["electronic"],
-      "paradioPreviewTrackIds": ["track_001", "track_003"],
-      "tracks": [
-        {
-          "trackId": "track_001",
-          "title": "Intro",
-          "durationSec": 122,
-          "audioUrl": "/assets/audio/album_001/track_001.mp3",
-          "contentHash": "<sha256-hex>",
-          "isPreview": true
-        },
-        {
-          "trackId": "track_002",
-          "title": "Main",
-          "durationSec": 284,
-          "audioUrl": "/assets/audio/album_001/track_002.mp3",
-          "contentHash": "<sha256-hex>",
-          "isPreview": false
-        }
-      ],
-      "payment": {
-        "network": "stellar",
-        "paymentCode": "apc1...base58-or-bech32",
-        "resolverUrl": "https://pay.digm.example.com/api/v1/resolve",
-        "addressHash": "blake2b-256(paymentCode || albumId || salt)"
-      }
-    }
-  ]
-}
+GUN Schema (P2P database structure):
+```typescript
+// Albums collection in GUN
+gun.get('albums').get('album_001').put({
+  albumId: "album_001",
+  title: "Album Title", 
+  artistName: "Artist",
+  artistId: "artist_abc",
+  description: "Optional blurb",
+  releaseDate: "2025-09-01",
+  genre: ["electronic"],
+  priceXFG: 1.5,
+  coverImage: base64SmallCover, // <50KB optimized image
+  paradioPreviewTrackIds: ["track_001", "track_003"],
+  payment: {
+    paymentCode: "PC01000102a1b2c3...", // BIP47-style
+    artistKey: "02a1b2c3..."
+  },
+  createdAt: 1672531200,
+  updatedAt: 1672531200
+})
+
+// Tracks with preview audio + WebTorrent references  
+gun.get('tracks').get('track_001').put({
+  trackId: "track_001",
+  albumId: "album_001", 
+  title: "Intro",
+  durationSec: 122,
+  isPreview: true,
+  previewAudio: base64_30SecClip, // ~1MB preview stored in GUN
+  magnetURI: "magnet:?xt=urn:btih:abc123...", // Full track WebTorrent
+  contentHash: "sha256:def456...",
+  fileSize: 4194304 // bytes
+})
+
+gun.get('tracks').get('track_002').put({
+  trackId: "track_002", 
+  albumId: "album_001",
+  title: "Main",
+  durationSec: 284,
+  isPreview: false,
+  // No previewAudio for non-preview tracks
+  magnetURI: "magnet:?xt=urn:btih:xyz789...", 
+  contentHash: "sha256:ghi012...",
+  fileSize: 10485760
+})
 ```
-Notes:
-- Use `isPreview` and `paradioPreviewTrackIds` to control free streaming and Paradio submission.
-- If using a CDN/bucket, prefix paths at runtime with `VITE_ASSET_ORIGIN`.
+**P2P Storage Architecture**:
+- **GUN Database**: Real-time metadata sync across all peers
+- **Preview Audio**: 30-60s clips stored directly in GUN (~1MB each)
+- **Full Audio**: WebTorrent with Eldernode guaranteed seeding
+- **Eldernode Network**: 3+ dedicated nodes auto-seed all new albums
+- **Content Addressing**: SHA256 hashes for integrity verification
 
-Compute audio file hashes for future content-addressing:
-```bash
-shasum -a 256 frontend-arch/public/assets/audio/album_001/track_001.mp3 | awk '{print $1}'
+**Environment Configuration**:
+```env
+# P2P Network
+VITE_GUN_PEERS=wss://gun1.digm.io/gun,wss://gun2.digm.io/gun
+VITE_ELDERNODE_TRACKERS=wss://eldernode1.digm.io:8000,wss://eldernode2.digm.io:8000
+
+# Feature flags
+VITE_FEATURE_WEBTORRENT=true
+VITE_FEATURE_GUN_STORAGE=true
 ```
 
 
