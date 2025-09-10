@@ -113,22 +113,29 @@ gun.get('tracks').get('track_002').put({
   fileSize: 10485760
 })
 ```
-**P2P Storage Architecture**:
+**Hybrid Storage Architecture**:
 - **GUN Database**: Real-time metadata sync across all peers
 - **Preview Audio**: 30-60s clips stored directly in GUN (~1MB each)
-- **Full Audio**: WebTorrent with Eldernode guaranteed seeding
-- **Eldernode Network**: 3+ dedicated nodes auto-seed all new albums
+- **GitHub Vault**: Encrypted full audio files (free, reliable, public but useless)
+- **Elderfier Network**: Staked validators provide guaranteed seeding + decryption services
+- **WebTorrent Fallback**: P2P distribution when Elderfiers are busy
 - **Content Addressing**: SHA256 hashes for integrity verification
 
 **Environment Configuration**:
 ```env
 # P2P Network
 VITE_GUN_PEERS=wss://gun1.digm.io/gun,wss://gun2.digm.io/gun
-VITE_ELDERNODE_TRACKERS=wss://eldernode1.digm.io:8000,wss://eldernode2.digm.io:8000
+VITE_ELDERFIER_TRACKERS=wss://elderfier1.digm.io:8000,wss://elderfier2.digm.io:8000
+
+# Storage
+VITE_GITHUB_AUDIO_VAULT=https://github.com/digm/audio-vault/raw/main/
+VITE_GITHUB_TOKEN=ghp_xxxxxxxxxxxx
 
 # Feature flags
 VITE_FEATURE_WEBTORRENT=true
 VITE_FEATURE_GUN_STORAGE=true
+VITE_FEATURE_GITHUB_VAULT=true
+VITE_FEATURE_ELDERFIER_SEEDING=true
 ```
 
 
