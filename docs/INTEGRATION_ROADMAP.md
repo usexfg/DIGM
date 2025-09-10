@@ -8,7 +8,7 @@ The complete 0x0B album license system is now implemented at both the blockchain
 
 #### **Blockchain Level (Fuego Core)**
 - ✅ **Transaction Extra 0x0B**: Complete C++ implementation for album licenses
-- ✅ **Transaction Extra 0x09**: CURA colored-coin for curation metadata
+- ✅ **Transaction Extra 0x0C**: CURA colored-coin for curation metadata
 - ✅ **Parsing & Serialization**: Full integration with Fuego's transaction system
 - ✅ **API Functions**: `appendAlbumLicenseToExtra()` and `getAlbumLicenseFromExtra()`
 
@@ -103,7 +103,7 @@ interface TransactionExtraParser {
   // Parse 0x0B album licenses
   parseAlbumLicense(extraData: string): Promise<TransactionExtraAlbumLicense>;
   
-  // Parse 0x09 CURA colored-coins
+  // Parse 0x0C CURA colored-coins
   parseCuraColoredCoin(extraData: string): Promise<TransactionExtraCuraColoredCoin>;
   
   // Serialize license data for transactions
