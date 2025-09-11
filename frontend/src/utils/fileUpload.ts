@@ -318,6 +318,38 @@ export const mockUploadFile = async (
   return uploadedFile;
 };
 
+// Simple stub for storage upload - unconditionally returns blob URL
+export const simpleStorageUpload = async (
+  file: File,
+  fileType: 'audio' | 'image',
+  onProgress?: (p: UploadProgress) => void
+): Promise<UploadedFile> => {
+  // Simulate upload progress
+  const total = file.size;
+  let loaded = 0;
+  return new Promise<UploadedFile>((resolve) => {
+    const interval = setInterval(() => {
+      loaded = Math.min(loaded + total / 10, total);
+      onProgress?.({ loaded, total, percentage: Math.floor((loaded / total) * 100) });
+      if (loaded >= total) {
+        clearInterval(interval);
+        const blobUrl = URL.createObjectURL(file);
+        resolve({
+          id: crypto.randomUUID(),
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          url: blobUrl,
+          thumbnail: undefined,
+          duration: fileType === 'audio' ? undefined : undefined,
+          dimensions: fileType === 'image' ? undefined : undefined,
+          uploadedAt: new Date()
+        });
+      }
+    }, 100);
+  });
+};
+
 // Format file size for display
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
