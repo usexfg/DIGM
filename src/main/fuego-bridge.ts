@@ -50,6 +50,27 @@ export class FuegoBridge extends EventEmitter {
     }
   }
 
+  /**
+   * Create a 0x0B Album License transaction on Fuego
+   * @param licensePayload JSON-serializable 0x0B extra data
+   * @returns the new transaction hash
+   */
+  async createAlbumLicense(licensePayload: Record<string, any>): Promise<string> {
+    const url = `http://localhost:${this.config.rpcPort}/api/v1/create_album_license`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ extra: licensePayload })
+      });
+      if (!res.ok) throw new Error(`RPC error ${res.status}`);
+      const json = await res.json();
+      return json.txHash;
+    } catch (e) {
+      throw new Error(`createAlbumLicense failed: ${e}`);
+    }
+  }
+
   private resolveBinaryPath(): string {
     if (isDev()) {
       // Expect fuego-node to be installed globally or in PATH during development
