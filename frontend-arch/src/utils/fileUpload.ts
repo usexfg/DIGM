@@ -400,6 +400,40 @@ export const simpleStorageUpload = async (
   return uploadedFile;
 };
 
+// Fallback simple storage uploader (temporary stub)
+export const simpleStorageUpload = async (
+  file: File,
+  fileType: 'audio' | 'image',
+  onProgress?: (p: UploadProgress) => void
+): Promise<UploadedFile> => {
+  // Simulate 1-second upload delay and progressive callbacks
+  return new Promise<UploadedFile>((resolve) => {
+    const chunk = file.size / 10;
+    let loaded = 0;
+    const interval = setInterval(() => {
+      loaded += chunk;
+      if (onProgress) {
+        onProgress({
+          loaded: Math.min(loaded, file.size),
+          total: file.size,
+          percentage: Math.min((loaded / file.size) * 100, 100)
+        });
+      }
+      if (loaded >= file.size) {
+        clearInterval(interval);
+        resolve({
+          id: crypto.randomUUID(),
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          url: URL.createObjectURL(file), // local blob URL placeholder
+          uploadedAt: new Date()
+        });
+      }
+    }, 100);
+  });
+};
+
 // Format file size for display
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
