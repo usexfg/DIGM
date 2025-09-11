@@ -30,10 +30,6 @@ code {
   @apply bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 border border-gray-600;
 }
 
-.btn-danger {
-  @apply bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-red-500/25;
-}
-
 .card {
   @apply bg-black/40 backdrop-blur-sm border border-fuchsia-500/20 rounded-xl p-6 shadow-2xl hover:border-fuchsia-500/40 transition-all duration-300;
 }
