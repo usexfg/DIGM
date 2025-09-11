@@ -318,114 +318,31 @@ export const mockUploadFile = async (
   return uploadedFile;
 };
 
-// Simple storage upload function for phase 1/2
-export const simpleStorageUpload = async (
-  file: File,
-  type: 'audio' | 'image',
-  onProgress?: (progress: UploadProgress) => void
-): Promise<UploadedFile> => {
-  // Import simple storage dynamically to avoid circular dependencies
-  const simpleStorage = (await import('./simpleStorage')).default;
-  
-  // Validate file first
-  const validation = validateFile(file, type);
-  if (!validation.isValid) {
-    throw new Error(`File validation failed: ${validation.errors.join(', ')}`);
-  }
-
-  // Simulate upload progress
-  const total = file.size;
-  let loaded = 0;
-  
-  const progressInterval = setInterval(() => {
-    loaded += Math.random() * (total / 10);
-    if (loaded >= total) {
-      loaded = total;
-      clearInterval(progressInterval);
-    }
-    
-    onProgress?.({
-      loaded: Math.floor(loaded),
-      total,
-      percentage: Math.floor((loaded / total) * 100)
-    });
-  }, 100);
-
-  // Simulate upload delay
-  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-  clearInterval(progressInterval);
-
-  // Process file metadata
-  let duration: number | undefined;
-  let dimensions: { width: number; height: number } | undefined;
-  let thumbnail: string | undefined;
-
-  if (type === 'audio') {
-    try {
-      duration = await getAudioDuration(file);
-    } catch (error) {
-      console.warn('Failed to get audio duration:', error);
-    }
-  }
-
-  if (type === 'image') {
-    try {
-      dimensions = await getImageDimensions(file);
-      thumbnail = await createThumbnail(file);
-    } catch (error) {
-      console.warn('Failed to process image:', error);
-    }
-  }
-
-  // Store in simple storage
-  const fileId = await simpleStorage.storeFile(file, {
-    duration,
-    dimensions: dimensions ? { width: dimensions.width, height: dimensions.height } : undefined
-  });
-
-  const storedFile = simpleStorage.getFile(fileId);
-  
-  const uploadedFile: UploadedFile = {
-    id: fileId,
-    name: file.name,
-    size: file.size,
-    type: file.type,
-    url: storedFile?.url || URL.createObjectURL(file),
-    thumbnail,
-    duration,
-    dimensions,
-    uploadedAt: new Date()
-  };
-
-  return uploadedFile;
-};
-
-// Temporary stub for simple storage upload (used by older UI during CI)
+// Simple stub for storage upload - unconditionally returns blob URL
 export const simpleStorageUpload = async (
   file: File,
   fileType: 'audio' | 'image',
   onProgress?: (p: UploadProgress) => void
 ): Promise<UploadedFile> => {
+  // Simulate upload progress
+  const total = file.size;
+  let loaded = 0;
   return new Promise<UploadedFile>((resolve) => {
-    const chunk = file.size / 10;
-    let loaded = 0;
     const interval = setInterval(() => {
-      loaded += chunk;
-      if (onProgress) {
-        onProgress({
-          loaded: Math.min(loaded, file.size),
-          total: file.size,
-          percentage: Math.min((loaded / file.size) * 100, 100)
-        });
-      }
-      if (loaded >= file.size) {
+      loaded = Math.min(loaded + total / 10, total);
+      onProgress?.({ loaded, total, percentage: Math.floor((loaded / total) * 100) });
+      if (loaded >= total) {
         clearInterval(interval);
+        const blobUrl = URL.createObjectURL(file);
         resolve({
           id: crypto.randomUUID(),
           name: file.name,
           size: file.size,
           type: file.type,
-          url: URL.createObjectURL(file),
+          url: blobUrl,
+          thumbnail: undefined,
+          duration: fileType === 'audio' ? undefined : undefined,
+          dimensions: fileType === 'image' ? undefined : undefined,
           uploadedAt: new Date()
         });
       }
