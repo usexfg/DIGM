@@ -238,6 +238,41 @@ const HostingPermissions: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* DI₲M Colored Coin Explainer */}
+      <div className="card">
+        <h3 className="text-lg font-semibold mb-3">What is the DI₲M Colored Coin?</h3>
+        <div className="space-y-3 text-sm text-slate-300">
+          <div className="flex items-start space-x-3">
+            <span className="text-green-400 font-bold">★</span>
+            <div>
+              <p className="font-medium">On-chain upload key</p>
+              <p className="text-slate-400">Holding a <span className="font-semibold">DI₲M</span> coin (color-id 1) is the only way to publish albums on the DIGM platform. Each coin grants <span className="font-semibold">10 upload slots</span>.</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3">
+            <span className="text-green-400 font-bold">★</span>
+            <div>
+              <p className="font-medium">Album signature</p>
+              <p className="text-slate-400">When you release an album the wallet signs a <code>0x0A</code> transaction-extra with the DI₲M coin&#39;s private key. This proves on-chain that <em>you</em> are the rightful artist.</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3">
+            <span className="text-green-400 font-bold">★</span>
+            <div>
+              <p className="font-medium">Immutable but updatable</p>
+              <p className="text-slate-400">Albums can be updated (new cover, description) using a free 0x0A **update** txn, but they can never be deleted. Buyers keep permanent access.</p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-3">
+            <span className="text-green-400 font-bold">★</span>
+            <div>
+              <p className="font-medium">Color-aware wallet</p>
+              <p className="text-slate-400">Your wallet shows DI₲M outputs separately from regular XFG so you never accidentally spend your upload rights.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
