@@ -8,7 +8,7 @@ The **ElderfierAudioIndex** is completely separate from **ENindex** (burn verifi
 ```cpp
 // Used for burn verification and consensus
 class ENindex {
-  // Tracks burned tokens for cross-chain validation
+  // Tracks Elderfier service list for cross-chain validation
   // Verifies legitimate token destruction
   // Critical for blockchain consensus integrity
 };

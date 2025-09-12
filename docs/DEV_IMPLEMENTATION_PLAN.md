@@ -243,6 +243,9 @@ Acceptance:
   - Query Fuego RPC for transactions containing album licenses
   - Verify artist signature and purchase authenticity
   - Cache license ownership locally for performance
+  - Playback & **Download**: License holders can stream or request a one-time zip download via `/download-album` from any Elderfier
+  - **Immutable albums**: 0x0A record is permanent; artist can only push metadata updates (cover, description) with new 0x0A *update* txns. Audio blobs and idx files stay pinned by Elderfiers for the life of the chain.
+  - **Price increases are non-retroactive**: `priceAtomic` stored in each 0x0B; license valid if `paid >= priceAtPurchase`. Subsequent price hikes do **not** invalidate existing TxHashes.
 - **Gating logic**: License holders stream full album; non-holders see CTA to purchase with XFG.
 - **Privacy integration**: Works with BIP47-style payment codes for private purchases.
 - **Flags**: `VITE_FEATURE_LICENSES=true` to enable license gating.

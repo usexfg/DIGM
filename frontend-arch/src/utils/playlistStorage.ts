@@ -9,6 +9,14 @@ export interface PlaylistTrack {
   audioUrl: string;
   genre: string;
   mood: string;
+  // WebTorrent metadata (optional)
+  magnet?: string;
+  infoHash?: string;
+  pieceLength?: number;
+  webSeeds?: string[];
+  // Encryption and pricing (optional)
+  encryption?: { algo: 'AES-CTR'; keyId: string };
+  priceXfg?: string; // decimal string
 }
 
 export interface DIGMPlaylist {

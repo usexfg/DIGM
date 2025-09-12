@@ -258,7 +258,7 @@ const ArtistProfile: React.FC = () => {
       'early-access': { label: 'Early Access', icon: '⏰', color: 'text-yellow-400' },
       'custom-content': { label: 'Custom Content', icon: '🎨', color: 'text-purple-400' },
       'merch-discount': { label: 'Merch Discount', icon: '👕', color: 'text-orange-400' },
-      'vip-access': { label: 'VIP Access', icon: '👑', color: 'text-fuchsia-400' }
+              'vip-access': { label: 'VIP Access', icon: '👑', color: 'text-fuchsia-400' }
     };
     return types[type];
   };

@@ -1868,8 +1868,8 @@ const Paradio: React.FC = () => {
 
             {/* Track Info */}
             {currentTrack && (
-              <div className="glass p-4 rounded-xl border border-fuchsia-500/20">
-                <h3 className="text-sm font-semibold text-fuchsia-400 mb-2">🎵 Current Track Info</h3>
+                      <div className="glass p-4 rounded-xl border border-fuchsia-500/20">
+          <h3 className="text-sm font-semibold text-fuchsia-400 mb-2">🎵 Current Track Info</h3>
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Stream Count:</span>
@@ -1888,8 +1888,8 @@ const Paradio: React.FC = () => {
             )}
 
             {/* Privacy Notice */}
-            <div className="glass p-4 rounded-xl border border-fuchsia-500/20">
-              <h3 className="text-sm font-semibold text-fuchsia-400 mb-2">🛡️ Privacy Protected</h3>
+                    <div className="glass p-4 rounded-xl border border-fuchsia-500/20">
+          <h3 className="text-sm font-semibold text-fuchsia-400 mb-2">🛡️ Privacy Protected</h3>
               <p className="text-xs text-gray-400">
                 Your listening habits are private. No tracking, no profiling, no data collection.
                 Earn PARA tokens anonymously through P2P streaming.
