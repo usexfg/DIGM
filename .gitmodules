@@ -1,0 +1,3 @@
+[submodule "fuego-core"]
+	path = fuego-core
+	url = https://github.com/usexfg/fuego.git
