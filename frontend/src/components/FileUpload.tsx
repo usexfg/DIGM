@@ -19,6 +19,7 @@ interface FileUploadProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  allowMultiple?: boolean;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -29,7 +30,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
   accept,
   placeholder,
   className = '',
-  disabled = false
+  disabled = false,
+  allowMultiple = false
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -197,6 +199,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           onChange={handleFileInputChange}
           className="hidden"
           disabled={disabled || isUploading}
+          multiple={allowMultiple}
         />
       </div>
 
