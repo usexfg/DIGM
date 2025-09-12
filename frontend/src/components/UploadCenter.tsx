@@ -124,7 +124,7 @@ const UploadCenter: React.FC<UploadCenterProps> = ({ className = '' }) => {
             <div>
               <h3 className="text-lg font-semibold text-slate-200 mb-4">Single File Upload</h3>
               <FileUpload
-                type={uploadType === 'mixed' ? 'audio' : uploadType}
+                type={uploadType === 'mixed' ? 'audio' : uploadType as 'audio' | 'image'}
                 onFileUploaded={handleSingleFileUploaded}
                 onError={handleError}
                 placeholder={`Upload your ${uploadType} file`}
