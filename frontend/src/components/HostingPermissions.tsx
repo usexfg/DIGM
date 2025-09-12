@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
 
-interface DigmNft {
+interface DigmCoin {
   tokenId: string;
   tier: 'bronze' | 'silver' | 'gold';
   contributionPoints?: number;
@@ -10,22 +10,22 @@ interface DigmNft {
 
 const HostingPermissions: React.FC = () => {
   const { evmAddress, stellarAddress } = useWallet();
-  const [digmNfts, setDigmNfts] = useState<DigmNft[]>([]);
+  const [digmCoins, setDigmCoins] = useState<DigmCoin[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hostingStatus, setHostingStatus] = useState<'none' | 'bronze' | 'silver' | 'gold'>('none');
   const [currentPrice, setCurrentPrice] = useState('0');
 
   useEffect(() => {
     if (evmAddress) {
-      fetchDigmNfts();
+      fetchDigmCoins();
       fetchCurrentPrice();
     }
   }, [evmAddress]);
 
   useEffect(() => {
-    // Determine highest tier from NFTs
-    if (digmNfts.length > 0) {
-      const tiers = digmNfts.map(nft => nft.tier);
+    // Determine highest tier from DI₲M coins
+    if (digmCoins.length > 0) {
+      const tiers = digmCoins.map(coin => coin.tier);
       if (tiers.includes('gold')) {
         setHostingStatus('gold');
       } else if (tiers.includes('silver')) {
@@ -36,15 +36,15 @@ const HostingPermissions: React.FC = () => {
     } else {
       setHostingStatus('none');
     }
-  }, [digmNfts]);
+  }, [digmCoins]);
 
-  const fetchDigmNfts = async () => {
+  const fetchDigmCoins = async () => {
     if (!evmAddress) return;
     
     setIsLoading(true);
     try {
       // Mock data since backend is not running
-      const mockNfts = [
+      const mockCoins = [
         {
           tokenId: '1',
           tier: 'gold' as const,
@@ -58,9 +58,9 @@ const HostingPermissions: React.FC = () => {
           mintType: 'curve' as const
         }
       ];
-      setDigmNfts(mockNfts);
+      setDigmCoins(mockCoins);
     } catch (error) {
-      console.error('Failed to fetch DIGM NFTs:', error);
+      console.error('Failed to fetch DI₲M coins:', error);
     } finally {
       setIsLoading(false);
     }
@@ -113,7 +113,7 @@ const HostingPermissions: React.FC = () => {
               <p className="text-slate-300">
                 {canHost 
                   ? `You have ${hostingStatus} tier hosting permissions`
-                  : 'No hosting permissions - acquire a DIGM NFT to start hosting'
+                  : 'No hosting permissions - acquire a DI₲M coin to start hosting'
                 }
               </p>
             </div>
@@ -149,9 +149,9 @@ const HostingPermissions: React.FC = () => {
           ) : (
             <div className="space-y-3">
               <div className="text-center p-4 bg-slate-700 rounded-lg">
-                <p className="text-slate-300 mb-2">Current NFT Price: {currentPrice} HEAT</p>
+                <p className="text-slate-300 mb-2">Current DI₲M Coin Price: {currentPrice} HEAT</p>
                 <button className="btn-primary">
-                  Mint DIGM NFT
+                  Mint DI₲M Coin
                 </button>
               </div>
               <p className="text-sm text-slate-400 text-center">
@@ -162,13 +162,13 @@ const HostingPermissions: React.FC = () => {
         </div>
       </div>
 
-      {/* NFT Collection */}
+      {/* DI₲M Coin Collection */}
       {evmAddress && (
         <div className="card">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Your DIGM NFTs</h3>
+            <h3 className="text-lg font-semibold">Your DI₲M Coins</h3>
             <button
-              onClick={fetchDigmNfts}
+              onClick={fetchDigmCoins}
               disabled={isLoading}
               className="btn-secondary text-sm"
             >
@@ -176,32 +176,32 @@ const HostingPermissions: React.FC = () => {
             </button>
           </div>
 
-          {digmNfts.length === 0 ? (
+          {digmCoins.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-slate-400">No DIGM NFTs found</p>
+              <p className="text-slate-400">No DI₲M coins found</p>
               <p className="text-sm text-slate-500 mt-2">
-                Mint an NFT or earn one through contributions to get hosting permissions
+                Mint a DI₲M coin or earn one through contributions to get hosting permissions
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {digmNfts.map((nft) => (
+              {digmCoins.map((coin) => (
                 <div
-                  key={nft.tokenId}
+                  key={coin.tokenId}
                   className="bg-slate-700 border border-slate-600 rounded-lg p-4"
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-medium text-white">
-                      DIGM #{nft.tokenId}
+                      DI₲M #{coin.tokenId}
                     </span>
-                    <span className={`px-2 py-1 rounded text-xs text-white ${getTierColor(nft.tier)}`}>
-                      {nft.tier.toUpperCase()}
+                    <span className={`px-2 py-1 rounded text-xs text-white ${getTierColor(coin.tier)}`}>
+                      {coin.tier.toUpperCase()}
                     </span>
                   </div>
                   <div className="text-sm text-slate-400 space-y-1">
-                    <p>Type: {nft.mintType === 'curve' ? 'Bonding Curve' : 'Contribution'}</p>
-                    {nft.contributionPoints && (
-                      <p>Points: {nft.contributionPoints.toLocaleString()}</p>
+                    <p>Type: {coin.mintType === 'curve' ? 'Bonding Curve' : 'Contribution'}</p>
+                    {coin.contributionPoints && (
+                      <p>Points: {coin.contributionPoints.toLocaleString()}</p>
                     )}
                   </div>
                 </div>
@@ -218,7 +218,7 @@ const HostingPermissions: React.FC = () => {
           <div className="flex items-start space-x-3">
             <span className="text-blue-400 font-bold">1.</span>
             <div>
-              <p className="font-medium">Acquire a DIGM NFT</p>
+              <p className="font-medium">Acquire a DI₲M Coin</p>
               <p className="text-slate-400">Mint via bonding curve or earn through contributions</p>
             </div>
           </div>
@@ -226,7 +226,7 @@ const HostingPermissions: React.FC = () => {
             <span className="text-blue-400 font-bold">2.</span>
             <div>
               <p className="font-medium">Get Hosting Rights</p>
-              <p className="text-slate-400">NFT tier determines your hosting capabilities</p>
+              <p className="text-slate-400">DI₲M coin tier determines your hosting capabilities</p>
             </div>
           </div>
           <div className="flex items-start space-x-3">
