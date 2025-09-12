@@ -24,12 +24,12 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
     setIsChecking(true);
     try {
       // Mock balance check - in real implementation this would query the blockchain
-      const mockHeatBalance = Math.random() * 10000; // Random balance between 0-10000 HEAT for demo
+      const mockHeatBalance = Math.random() * 2000000; // Random balance between 0-2M HEAT for demo
       
       setHeatBalance(mockHeatBalance);
       
-      // Premium status: user has premium if they hold >= 8000 HEAT
-      const premium = mockHeatBalance >= 8000;
+      // Premium status: user has premium if they hold >= 1,000,000 HEAT
+      const premium = mockHeatBalance >= 1000000;
       
       setHasPremium(premium);
       
@@ -95,7 +95,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="text-6xl gradient-text-queen" style={{ fontSize: 'xxx-large' }}>♛</div>
         <h1 className="text-4xl font-bold gradient-text">Premium Access</h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          Unlock premium features by holding 8,000 HEAT tokens
+          Unlock premium features by holding 1M HEAT tokens (or 0.1 XFG)
         </p>
       </div>
 
@@ -104,7 +104,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-white">Your HEAT Balance</h2>
-            <p className="text-gray-400 text-sm">Hold 8,000 HEAT tokens for premium access</p>
+            <p className="text-gray-400 text-sm">Hold 1M HEAT tokens (or 0.1 XFG) for premium access</p>
           </div>
           <button
             onClick={refreshBalance}
@@ -130,7 +130,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                   <p className="text-gray-400 text-sm">
                     {hasPremium 
                       ? 'You qualify with HEAT tokens'
-                      : 'Hold 8,000 HEAT tokens to unlock premium features'
+                      : 'Hold 1M HEAT tokens (or 0.1 XFG) to unlock premium features'
                     }
                   </p>
                 </div>
@@ -163,22 +163,22 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                 <div className="text-center">
                   <div className="text-4xl font-bold gradient-text mb-2">{heatBalance.toLocaleString()} HEAT</div>
                   <div className={`text-sm px-3 py-1 rounded-full inline-block ${
-                    heatBalance >= 8000 
+                    heatBalance >= 1000000 
                       ? 'bg-green-600/20 text-green-400' 
                       : 'bg-red-600/20 text-red-400'
                   }`}>
-                    {heatBalance >= 8000 ? '✅ HEAT Premium' : '❌ Need 8,000 HEAT'}
+                    {heatBalance >= 1000000 ? '✅ HEAT Premium' : '❌ Need 1M HEAT'}
                   </div>
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-sm text-gray-400 mb-2">Required: 8,000 HEAT</div>
+                  <div className="text-sm text-gray-400 mb-2">Required: 1M HEAT (or 0.1 XFG)</div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div 
                       className={`h-2 rounded-full transition-all duration-500 ${
-                        heatBalance >= 8000 ? 'bg-green-500' : 'bg-yellow-500'
+                        heatBalance >= 1000000 ? 'bg-green-500' : 'bg-yellow-500'
                       }`}
-                      style={{ width: `${Math.min((heatBalance / 8000) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((heatBalance / 1000000) * 100, 100)}%` }}
                     ></div>
                   </div>
                 </div>
@@ -202,7 +202,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-yellow-400">•</span>
-                    <span className="text-gray-300">Hold 8,000+ HEAT tokens</span>
+                    <span className="text-gray-300">Hold 1M+ HEAT tokens (or 0.1 XFG)</span>
                   </div>
                 </div>
               </div>
@@ -286,7 +286,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Premium Requirement:</span>
-              <span className="text-white">8,000 HEAT</span>
+              <span className="text-white">1M HEAT (or 0.1 XFG)</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Use Case:</span>
@@ -340,7 +340,7 @@ const PremiumAccess: React.FC<PremiumAccessProps> = ({ onClose, isModal = false 
           <div className="max-w-md mx-auto">
             <div className="glass p-6 rounded-xl border border-yellow-500/20">
               <h4 className="text-yellow-400 font-semibold mb-2">HEAT Minting</h4>
-              <p className="text-gray-400 text-sm mb-4">Mint 8,000+ HEAT tokens</p>
+              <p className="text-gray-400 text-sm mb-4">Mint 1M+ HEAT tokens (or 0.1 XFG)</p>
               <button className="btn-secondary w-full" onClick={() => setShowMintModal(true)}>
                 🔥 Start Minting HEAT
               </button>
