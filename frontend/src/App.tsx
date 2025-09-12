@@ -11,18 +11,6 @@ import AudioMarketplace from './components/AudioMarketplace';
 import ArtistPage from './components/ArtistPage';
 import AlbumPage from './components/AlbumPage';
 import PremiumAccess from './components/PremiumAccess';
-import UploadCenter from './components/UploadCenter';
-import StorageManager from './components/StorageManager';
-import PlaylistCreator from './components/PlaylistCreator';
-import PlaylistDiscovery from './components/PlaylistDiscovery';
-import CurationDashboard from './components/CurationDashboard';
-import RealTimePlaylistSync from './components/RealTimePlaylistSync';
-import AdvancedCurationStation from './components/AdvancedCurationStation';
-import PerformanceAnalytics from './components/PerformanceAnalytics';
-import RevenueManagement from './components/RevenueManagement';
-import CollaborativeRadioStations from './components/CollaborativeRadioStations';
-import SystemOptimization from './components/SystemOptimization';
-import UploadDownloadTest from './components/UploadDownloadTest';
 import { WalletProvider, useWallet } from './hooks/useWallet';
 
 function AppContent() {
@@ -69,18 +57,6 @@ function AppContent() {
     if (path === '/premium') return 'premium';
     if (path === '/hosting') return 'hosting';
     if (path === '/xfg') return 'xfg';
-    if (path === '/upload') return 'upload';
-    if (path === '/storage') return 'storage';
-    if (path === '/playlist/create') return 'playlist-create';
-    if (path === '/playlist/discover') return 'playlist-discover';
-    if (path === '/curation/dashboard') return 'curation-dashboard';
-    if (path === '/curation/sync') return 'curation-sync';
-    if (path === '/curation/advanced') return 'curation-advanced';
-    if (path === '/analytics/performance') return 'analytics-performance';
-    if (path === '/revenue/management') return 'revenue-management';
-    if (path === '/collaborative/stations') return 'collaborative-stations';
-    if (path === '/system/optimization') return 'system-optimization';
-    if (path === '/test/upload-download') return 'upload-download-test';
     return 'marketplace';
   };
 
@@ -90,19 +66,7 @@ function AppContent() {
     { id: 'marketplace', label: 'Discover', icon: '►', description: 'Audio Marketplace', path: '/' },
     ...(hasDigmHosting ? [
       { id: 'artist', label: 'Profile', icon: '⭑', description: 'Artist Profile', path: '/artist/profile' },
-      { id: 'dashboard', label: 'Dashboard', icon: '♪', description: 'Artist Dashboard', path: '/artist/dashboard' },
-      { id: 'upload', label: 'Upload', icon: '📤', description: 'Upload Center', path: '/upload' },
-      { id: 'storage', label: 'Storage', icon: '💾', description: 'Storage Manager', path: '/storage' },
-      { id: 'playlist-create', label: 'Create Playlist', icon: '🎵', description: 'Create Playlist for Curation', path: '/playlist/create' },
-      { id: 'playlist-discover', label: 'Discover Playlists', icon: '🔍', description: 'Browse Playlists for Curation', path: '/playlist/discover' },
-      { id: 'curation-dashboard', label: 'Curation Dashboard', icon: '📊', description: 'Review and Manage Playlists', path: '/curation/dashboard' },
-      { id: 'curation-sync', label: 'Real-Time Sync', icon: '🔄', description: 'Live Playlist Synchronization', path: '/curation/sync' },
-      { id: 'curation-advanced', label: 'Advanced Station', icon: '🎛️', description: 'Advanced Curation & Revenue', path: '/curation/advanced' },
-      { id: 'analytics-performance', label: 'Performance Analytics', icon: '📊', description: 'System Performance & Optimization', path: '/analytics/performance' },
-      { id: 'revenue-management', label: 'Revenue Management', icon: '💰', description: 'PARA Token Management & Analytics', path: '/revenue/management' },
-      { id: 'collaborative-stations', label: 'Collaborative Stations', icon: '🎙️', description: 'Multi-DJ Radio Collaboration', path: '/collaborative/stations' },
-      { id: 'system-optimization', label: 'System Optimization', icon: '⚙️', description: 'Performance & Cache Management', path: '/system/optimization' },
-      { id: 'upload-download-test', label: 'Upload/Download Test', icon: '🧪', description: 'Test Upload, Download & Streaming', path: '/test/upload-download' }
+      { id: 'dashboard', label: 'Dashboard', icon: '♪', description: 'Artist Dashboard', path: '/artist/dashboard' }
     ] : []),
     { id: 'paradio', label: 'Paradio', icon: '📻', description: 'P2P Radio Station', path: '/paradio' },
     { id: 'bridge', label: 'Bridge', icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-5 h-5 md:w-6 md:h-6 rounded-full align-middle" />, description: 'PARA bridge & vouchers', path: '/bridge' },
@@ -116,7 +80,7 @@ function AppContent() {
   };
 
   // Check if current route requires DIGM hosting
-  const requiresDigmHosting = location.pathname === '/artist/profile' || location.pathname === '/artist/dashboard' || location.pathname === '/upload' || location.pathname === '/storage' || location.pathname === '/playlist/create' || location.pathname === '/playlist/discover' || location.pathname === '/curation/dashboard' || location.pathname === '/curation/sync' || location.pathname === '/curation/advanced' || location.pathname === '/analytics/performance' || location.pathname === '/revenue/management' || location.pathname === '/collaborative/stations' || location.pathname === '/system/optimization' || location.pathname === '/test/upload-download';
+  const requiresDigmHosting = location.pathname === '/artist/profile' || location.pathname === '/artist/dashboard';
 
   if (requiresDigmHosting && !hasDigmHosting) {
   return (
@@ -263,18 +227,6 @@ function AppContent() {
                 <Route path="/album/:albumId" element={<AlbumPage />} />
                 <Route path="/artist/profile" element={<ArtistProfile />} />
                 <Route path="/artist/dashboard" element={<ArtistDashboard />} />
-                <Route path="/upload" element={<UploadCenter />} />
-                <Route path="/storage" element={<StorageManager />} />
-                <Route path="/playlist/create" element={<PlaylistCreator />} />
-                <Route path="/playlist/discover" element={<PlaylistDiscovery />} />
-                <Route path="/curation/dashboard" element={<CurationDashboard />} />
-                <Route path="/curation/sync" element={<RealTimePlaylistSync />} />
-                <Route path="/curation/advanced" element={<AdvancedCurationStation />} />
-                <Route path="/analytics/performance" element={<PerformanceAnalytics />} />
-                <Route path="/revenue/management" element={<RevenueManagement />} />
-                <Route path="/collaborative/stations" element={<CollaborativeRadioStations />} />
-                <Route path="/system/optimization" element={<SystemOptimization />} />
-                <Route path="/test/upload-download" element={<UploadDownloadTest />} />
                 <Route path="/paradio" element={<Paradio />} />
                 <Route path="/bridge" element={<ParaBridge />} />
                 <Route path="/premium" element={<PremiumAccess />} />
