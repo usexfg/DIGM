@@ -5,30 +5,31 @@
 
 The modern music industry, for all its convenience, has a fundamental problem: it is a centralized system that has devalued music and disenfranchised its creators. Artists, the lifeblood of the industry, are often the last to be compensated, receiving mere fractions of a penny per stream after a labyrinth of intermediaries take their cut.
 
-DIGM (Decentralized Independent ₲roove Marketplace) is a direct response to this broken model. It is not another streaming service; it is a foundational, peer-to-peer protocol for the new music economy— one built on principles of ownership in audio, transparency in metrics, and privacy in value exchange.
+DIGM (Decentralized Independent ₲roove Marketplace) is a direct response to this broken model. It is not another streaming service; it is a foundational, peer-to-peer protocol for the new music economy— one built on principles of ownership in audio, transparency in metrics, and user privacy in data & value exchange.
 
-Our vision is simple: **empower artists to preserve control of the their work and keep 100% of their earnings, while rewarding listeners for their engagement and support.**
+Our vision is simple: **empower artists to preserve control of the their works and keep 100% of earnings, while rewarding listeners for their engagement and support.**
 
 ## **2. Technology: Peer-2-Peer 2 the Core**
 
-DIGM is built on a decentralized network of **Elder Nodes**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
+DIGM is built on a decentralized network of Fuego **Elderfiers**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
 
-Instead of uploading music to a central server owned by a corporation, artists host their encrypted audio catalogue across this distributed network. When a listener buys or streams a track, the data is delivered directly from peers. This architecture eliminates central points of failure and control, ensuring that the platform remains resilient, open, and censorship-resistant.
+Instead of entrusting your music to a centralized corporation, artists make use of these corporations by uploading their *encrypted* audio album catalogue to github & other source code platforms ( public, yes, but useless w/o encryption key;) ) then, Elderfiers pull & distribute it across the Fuego/DIGM P2P network. When a listener buys or streams a track, the audio is decrypted and delivered directly to/from peers. This architecture eliminates central points of failure (and control), ensuring that DIGM platform remains resilient, open-source, and censorship-resistant.
 
-## **3. DIGM Ecosystem: A Symphony of 3**
+## **3. DIGM Ecosystem: Symphony of 3**
 
 DIGM is a comprehensive platform that integrates three core components into a single, user-friendly web application (with mobile to follow).
 
 *   **The Marketplace:** A decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are private & peer-to-peer, using the Fuego (XF₲) cryptocurrency, ensuring artists retain the full value of every sale. (XF₲ also enables the preservation of **future** purchasing power on any value earned, unlike fiat currencies)
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
-    *   Fuego (XFG) for purchasing albums.
-    *    DI₲M for catalogue hosting rights.
-    *    PARA for listener and artist rewards.
+    *    Fuego (**XFG**): for purchasing albums.
+    *    DI₲M: for catalogue hosting rights.
+    *    CURA: for playlist curation rights.
+    * and PARA: for listener and artist rewards.
 *   **Paradio+:** A revolutionary P2P streaming radio that rewards both artists & listeners for their participation.
 
 ## **4. Tokenomics: Powering the New Music Economy**
 
-Two distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
+Three distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
 
 ### **DI₲M Token: The Right to Host**
 
@@ -43,6 +44,13 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock freemium without ads! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
 *   **The Artist/Listener Economy:** PARA is designed to be the defacto currency for audio streaming. Ofc, para can also be used for tipping, platform features, and even non-platform features. Users are encouraged to build or integrate their own novel ways to use their para tokens for their own purposes- expanding the artist/listener economy to be utilized & enjoyed by music communities worldwide. 
+
+### **CURA Token: The Currency of Curation**
+
+The CURA token is designed to provide curators with the ability to create an income simply by curating DIGM platform playlists.
+*   **Earned by Listening:** - to earn a CURA token, curators must first earn enough Para to be able to burn (x amount) in order to create a CURA token.
+*   Both artists and listeners share a small percentage of their PARA when added / listening to curators' playlists.
+*   More info soon. ;)
 
 ## **5. For the Artist: Reclaim Your Art**
 
@@ -70,23 +78,24 @@ The PARA token is designed to reward activity and bootstrap a thriving micro-eco
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
 | Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT -Lifetime (not monthly) |
-| Lossless Audio | ❌ | ✅ | ❌ | ✅ WAV/FLAC albums | 
+| Lossless Audio | ✅ | ✅ | ❌ | ✅ FLAC downloads, Opus streaming | 
 | Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
 | Sells your privacy | 👁️‍🗨️✅ | 👁️‍🗨️✅ | ✅👁️‍🗨️ | 🔒🥷nah bruh. financial & personal data **REMAIN** private |
-| Own the Music | ❌ | ❌ | ✅ mp3s | ✅ WAV/FLAC albums &/or physical delivery |
-| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity via Paradio Soapbox + Curator Stations (playlists)|
+| Own the Music | ❌ | ❌ | ✅ mp3s | ✅ FLAC albums &/or physical delivery |
+| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity via Paradio + Curator playlists|
 | Artist Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Listener Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
+| Curator Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Decentralized | 😂 | 😂 | ❌ | **AF**✅  The Future Is Decentralized, D.Ekhead |
 | P2P Payments | ❌ | ❌ | ❌ | ✅ XF₲, Fuego Ξmbers (HEAT), PARA |
-| Freemium | Ads | ❌ | Ads | ✅ no ads. cpu-power |
+| Freemium | Ads | ❌ | Ads | ✅ 0 ads. cpu-power |
 | Open Source | ❌ | ❌ | ❌ | ✅FOSSM | 
 
 <sub>(*) user's wallet must meet/exceed 0.1 XF₲ threshold (1M HEAT) for premium access when using DIGM platform.</sub>
 
 
-Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of *VOX POPULI* that is, itself, also part of a much larger & diverse ecosystem as a whole. Not as 'the ad-revenue' for a CEO, or a big-data consumer profile to be exploited.
-DIGM platform is just an open-source software framework; the true power of this movement is it's community of super cool people supporting one another using the platform. Vive la révolution!
+Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of **VOX POPULI**- that is, in itself, part of the larger ecosystem as a whole. Not merely 'ad-revenue' for a CEO, or some big-data consumer profile to be exploited.
+DIGM platform is an open-source software framework- the true power of this movement is the community of ultra cool people supporting one another & making use of the platform. Vive la révolution!
 
 **Join us in building the sustainable future of music.** 
 
