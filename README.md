@@ -78,23 +78,24 @@ The CURA token is designed to provide curators with the ability to create an inc
 | Feature | Spotify | Apple Music | SoundCloud | **DIGM** |
 |---------|---------|-------------|------------|----------|
 | Monthly Fee | $10.99 | $10.99 | $9.99 | **Free** when holding* XFG or HEAT -Lifetime (not monthly) |
-| Lossless Audio | ❌ | ✅ | ❌ | ✅ WAV/FLAC albums | 
+| Lossless Audio | ✅ | ✅ | ❌ | ✅ FLAC downloads, Opus streaming | 
 | Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
 | Sells your privacy | 👁️‍🗨️✅ | 👁️‍🗨️✅ | ✅👁️‍🗨️ | 🔒🥷nah bruh. financial & personal data **REMAIN** private |
-| Own the Music | ❌ | ❌ | ✅ mp3s | ✅ WAV/FLAC albums &/or physical delivery |
-| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity via Paradio Soapbox + Curator Stations (playlists)|
+| Own the Music | ❌ | ❌ | ✅ mp3s | ✅ FLAC albums &/or physical delivery |
+| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity via Paradio + Curator playlists|
 | Artist Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Listener Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
+| Curator Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Decentralized | 😂 | 😂 | ❌ | **AF**✅  The Future Is Decentralized, D.Ekhead |
 | P2P Payments | ❌ | ❌ | ❌ | ✅ XF₲, Fuego Ξmbers (HEAT), PARA |
-| Freemium | Ads | ❌ | Ads | ✅ no ads. cpu-power |
+| Freemium | Ads | ❌ | Ads | ✅ 0 ads. cpu-power |
 | Open Source | ❌ | ❌ | ❌ | ✅FOSSM | 
 
 <sub>(*) user's wallet must meet/exceed 0.1 XF₲ threshold (1M HEAT) for premium access when using DIGM platform.</sub>
 
 
-Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of *VOX POPULI* that is, itself, also part of a much larger & diverse ecosystem as a whole. Not as 'the ad-revenue' for a CEO, or a big-data consumer profile to be exploited.
-DIGM platform is just an open-source software framework; the true power of this movement is it's community of super cool people supporting one another using the platform. Vive la révolution!
+Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of **VOX POPULI**- that is, in itself, part of the larger ecosystem as a whole. Not merely 'ad-revenue' for a CEO, or some big-data consumer profile to be exploited.
+DIGM platform is an open-source software framework- the true power of this movement is the community of ultra cool people supporting one another & making use of the platform. Vive la révolution!
 
 **Join us in building the sustainable future of music.** 
 
