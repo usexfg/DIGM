@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-27T12:00:00Z",
+  "albums": [
+    {
+      "albumId": "album_001",
+      "artist": "Headphone Son",
+      "title": "Digital Dreams",
+      "description": "A collection of electronic and ambient tracks exploring the intersection of technology and music.",
+      "coverArt": "/assets/covers/album_001.jpg",
+      "releaseDate": "2025-01-15",
+      "priceAtomic": 1000000000,
+      "currency": "XFG",
+      "contentHash": "sha256:abc123def456...",
+      "paymentCommitment": "0x1234567890abcdef...",
+      "resolverPubKey": "fire1234567890abcdef...",
+      "signature": "0x9876543210fedcba...",
+      "tracks": [
+        {
+          "trackId": "track_001",
+          "title": "Midnight City",
+          "duration": 272,
+          "isPreview": true,
+          "trackNumber": 1,
+          "previewAudio": "/assets/audio/preview-singles/album_001_track_001_preview.mp3",
+          "magnetURI": "magnet:?xt=urn:btih:xyz789...",
+          "contentHash": "sha256:def456...",
+          "fileSize": 4194304
+        },
+        {
+          "trackId": "track_002",
+          "title": "Bitcoin",
+          "duration": 260,
+          "isPreview": true,
+          "trackNumber": 2,
+          "previewAudio": "/assets/audio/preview-singles/album_002_track_002_preview.mp3",
+          "magnetURI": "magnet:?xt=urn:btih:abc123...",
+          "contentHash": "sha256:ghi012...",
+          "fileSize": 3932160
+        },
+        {
+          "trackId": "track_003",
+          "title": "Recording 2018-04-19",
+          "duration": 315,
+          "isPreview": false,
+          "trackNumber": 3,
+          "magnetURI": "magnet:?xt=urn:btih:def456...",
+          "contentHash": "sha256:jkl345...",
+          "fileSize": 4718592
+        },
+        {
+          "trackId": "track_004",
+          "title": "Blockchain Blues",
+          "duration": 210,
+          "isPreview": false,
+          "trackNumber": 4,
+          "magnetURI": "magnet:?xt=urn:btih:mno678...",
+          "contentHash": "sha256:pqr901...",
+          "fileSize": 3145728
+        }
+      ]
+    }
+  ]
+}
