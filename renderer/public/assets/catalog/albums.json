@@ -9,7 +9,7 @@
       "description": "A collection of electronic and ambient tracks exploring the intersection of technology and music.",
       "coverArt": "/assets/covers/album_001.jpg",
       "releaseDate": "2025-01-15",
-      "priceAtomic": 1000000000,
+      "priceAtomic": 10000000,
       "currency": "XFG",
       "contentHash": "sha256:abc123def456...",
       "paymentCommitment": "0x1234567890abcdef...",
