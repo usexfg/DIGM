@@ -1,8 +1,8 @@
-# DST Loan System Design
+# UDST Loan System Design
 ## Dynamic Interest Rate System for Prompt Repayment Incentives
 
 ### Overview
-A decentralized lending system built on DST collateralization that rewards prompt repayment with reduced interest rates, creating a sustainable lending ecosystem within the DIGM platform.
+A decentralized lending system built on UDST collateralization that rewards prompt repayment with reduced interest rates, creating a sustainable lending ecosystem within the DIGM platform.
 
 ---
 
@@ -11,8 +11,8 @@ A decentralized lending system built on DST collateralization that rewards promp
 ### **Dynamic Interest Rate Model**
 - **Base Rate**: Standard interest rate for loans
 - **Prompt Payment Discount**: Reduced interest for early repayment
-- **Collateral-Based**: Loans backed by DST collateral
-- **Community Governed**: Interest rates managed by DST holders
+- **Collateral-Based**: Loans backed by UDST collateral
+- **Community Governed**: Interest rates managed by UDST holders
 - **Risk-Adjusted**: Interest rates based on collateral quality and borrower history
 
 ---
@@ -21,11 +21,11 @@ A decentralized lending system built on DST collateralization that rewards promp
 
 ### **1. Loan Structure**
 ```rust
-struct DSTLoan {
+struct UDSTLoan {
     loan_id: u64,
     borrower: String,
     collateral_amount: u64,        // XFG amount locked as collateral
-    loan_amount: u64,              // DST amount borrowed
+    loan_amount: u64,              // UDST amount borrowed
     interest_rate: u64,            // Annual interest rate (basis points)
     term_length: u64,              // Loan term in days
     created_at: u64,              // Loan creation timestamp

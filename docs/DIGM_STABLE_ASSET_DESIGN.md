@@ -8,7 +8,7 @@ A decentralized stable asset built on Fuego blockchain using colored-coin techno
 
 ## 🎯 **Core Concept**
 
-### **DIGM Stable Token (DST)**
+### **Universal DIGM Stable Token (UDST)**
 - **Type**: Colored-coin on Fuego blockchain
 - **Purpose**: Stable pricing for album purchases
 - **Backing**: Multi-asset collateralization
@@ -24,9 +24,9 @@ A decentralized stable asset built on Fuego blockchain using colored-coin techno
 // Fuego Core Integration
 struct DIGMStableToken {
     uint64_t tokenId;           // Unique colored-coin identifier
-    uint64_t totalSupply;       // Total DST supply
+    uint64_t totalSupply;       // Total UDST supply
     uint64_t collateralRatio;   // Current collateralization ratio
-    uint64_t targetPrice;       // Target price in XFG (e.g., 1 DST = 0.1 XFG)
+    uint64_t targetPrice;       // Target price in XFG (e.g., 1 UDST = 0.1 XFG)
     uint64_t lastRebalance;     // Last rebalancing timestamp
     std::vector<CollateralAsset> collateral;
 };
@@ -60,11 +60,11 @@ interface CollateralBasket {
 ## 💰 **Economic Model**
 
 ### **1. Price Stability Mechanism**
-- **Target Price**: 1 DST = 0.1 XFG (stable reference)
+- **Target Price**: 1 UDST = 0.1 XFG (stable reference)
 - **Collateral Ratio**: 150% minimum (over-collateralized)
 - **Rebalancing**: Automatic when ratio deviates >5%
-- **Minting**: Users deposit collateral to mint DST
-- **Redemption**: Users burn DST to reclaim collateral
+- **Minting**: Users deposit collateral to mint UDST
+- **Redemption**: Users burn UDST to reclaim collateral
 
 ### **2. Collateral Sources**
 ```typescript
@@ -127,7 +127,7 @@ interface DSTGovernance {
 
 ### **1. Minting Process**
 ```typescript
-async function mintDST(collateralAmount: number, assetType: string): Promise<number> {
+async function mintUDST(collateralAmount: number, assetType: string): Promise<number> {
   // 1. Validate collateral
   const collateralValue = await validateCollateral(collateralAmount, assetType);
   
@@ -137,27 +137,27 @@ async function mintDST(collateralAmount: number, assetType: string): Promise<num
     throw new Error('Insufficient collateralization');
   }
   
-  // 3. Calculate DST to mint (with fee)
-  const dstToMint = (collateralValue * 0.95) / targetPrice; // 5% fee
+  // 3. Calculate UDST to mint (with fee)
+  const udstToMint = (collateralValue * 0.95) / targetPrice; // 5% fee
   
   // 4. Lock collateral in smart contract
   await lockCollateral(collateralAmount, assetType);
   
-  // 5. Mint DST tokens
-  await mintDSTTokens(dstToMint);
+  // 5. Mint UDST tokens
+  await mintUDSTTokens(udstToMint);
   
-  return dstToMint;
+  return udstToMint;
 }
 ```
 
 ### **2. Redemption Process**
 ```typescript
-async function redeemDST(dstAmount: number, preferredAsset?: string): Promise<Collateral> {
-  // 1. Burn DST tokens
-  await burnDSTTokens(dstAmount);
+async function redeemUDST(udstAmount: number, preferredAsset?: string): Promise<Collateral> {
+  // 1. Burn UDST tokens
+  await burnUDSTTokens(udstAmount);
   
   // 2. Calculate collateral to return
-  const collateralValue = dstAmount * targetPrice;
+  const collateralValue = udstAmount * targetPrice;
   
   // 3. Determine asset mix (or use preferred)
   const assetMix = preferredAsset ? 

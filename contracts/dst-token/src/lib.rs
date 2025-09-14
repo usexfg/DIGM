@@ -1,5 +1,5 @@
 /**
- * DIGM Stable Token (DST) - Colored Coin Implementation
+ * Universal DIGM Stable Token (UDST) - Colored Coin Implementation
  * 
  * A decentralized stable asset built on Fuego blockchain using colored-coin technology
  * to provide price stability for album purchases while maintaining decentralization.
@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use std::string::String;
 use std::vec::Vec;
 
-// DST Token Structure
+// UDST Token Structure
 #[derive(Debug, Clone)]
 pub struct DIGMStableToken {
     pub token_id: u64,
@@ -70,7 +70,7 @@ pub struct GovernanceProposal {
     pub executed: bool,
 }
 
-// DST Token Implementation
+// UDST Token Implementation
 impl DIGMStableToken {
     pub fn new(token_id: u64, governance: String) -> Self {
         Self {
@@ -121,9 +121,9 @@ impl DIGMStableToken {
     }
 
     /**
-     * Mint DST tokens by depositing collateral
+     * Mint UDST tokens by depositing collateral
      */
-    pub fn mint_dst(
+    pub fn mint_udst(
         &mut self,
         collateral_amount: u64,
         asset_type: String,
@@ -152,28 +152,28 @@ impl DIGMStableToken {
             return Err("Insufficient collateralization ratio".to_string());
         }
 
-        // Calculate DST to mint (with 5% fee)
-        let dst_to_mint = (collateral_value_xfg * 95) / 100; // 5% fee
-        let dst_amount = dst_to_mint / self.target_price_xfg;
+        // Calculate UDST to mint (with 5% fee)
+        let udst_to_mint = (collateral_value_xfg * 95) / 100; // 5% fee
+        let udst_amount = udst_to_mint / self.target_price_xfg;
 
         // Update collateral
         self.update_collateral(&asset_type, collateral_amount, collateral_value_xfg);
 
         // Update total supply
-        self.total_supply += dst_amount;
+        self.total_supply += udst_amount;
 
         // Update collateralization ratio
         self.update_collateral_ratio();
 
-        Ok(dst_amount)
+        Ok(udst_amount)
     }
 
     /**
-     * Burn DST tokens to redeem collateral
+     * Burn UDST tokens to redeem collateral
      */
-    pub fn burn_dst(
+    pub fn burn_udst(
         &mut self,
-        dst_amount: u64,
+        udst_amount: u64,
         preferred_asset: Option<String>,
         user_address: String,
         price_oracle: &PriceOracle,
@@ -183,13 +183,13 @@ impl DIGMStableToken {
             return Err("Emergency halt is active".to_string());
         }
 
-        // Validate DST amount
-        if dst_amount > self.total_supply {
-            return Err("Insufficient DST supply".to_string());
+        // Validate UDST amount
+        if udst_amount > self.total_supply {
+            return Err("Insufficient UDST supply".to_string());
         }
 
         // Calculate collateral value to return
-        let collateral_value_xfg = dst_amount * self.target_price_xfg;
+        let collateral_value_xfg = udst_amount * self.target_price_xfg;
 
         // Determine asset mix for redemption
         let asset_mix = if let Some(asset) = preferred_asset {
@@ -210,7 +210,7 @@ impl DIGMStableToken {
         }
 
         // Update total supply
-        self.total_supply -= dst_amount;
+        self.total_supply -= udst_amount;
 
         // Update collateralization ratio
         self.update_collateral_ratio();

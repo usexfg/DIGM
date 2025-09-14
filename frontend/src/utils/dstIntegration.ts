@@ -1,16 +1,16 @@
 /**
- * DIGM Stable Token (DST) Integration
- * Frontend integration for DST colored-coin functionality
+ * Universal DIGM Stable Token (UDST) Integration
+ * Frontend integration for UDST colored-coin functionality
  */
 
-export interface DSTBalance {
+export interface UDSTBalance {
   address: string;
-  balance: number;           // DST balance in atomic units
+  balance: number;           // UDST balance in atomic units
   lockedCollateral: { [asset: string]: number };
   lastActivity: number;
 }
 
-export interface DSTTransaction {
+export interface UDSTTransaction {
   id: string;
   type: 'mint' | 'burn' | 'transfer';
   amount: number;
@@ -31,34 +31,34 @@ export interface CollateralInfo {
   lastUpdate: number;
 }
 
-export interface DSTMintingOptions {
+export interface UDSTMintingOptions {
   collateralAmount: number;
   assetType: string;
-  expectedDST: number;
+  expectedUDST: number;
   fee: number;
   collateralizationRatio: number;
 }
 
-export interface DSTBurningOptions {
-  dstAmount: number;
+export interface UDSTBurningOptions {
+  udstAmount: number;
   preferredAsset?: string;
   expectedCollateral: { [asset: string]: number };
   fee: number;
 }
 
-class DSTIntegration {
+class UDSTIntegration {
   private contractAddress: string;
   private fuegoRpcUrl: string;
   private priceOracle: any;
   private isInitialized = false;
 
   constructor() {
-    this.contractAddress = process.env.REACT_APP_DST_CONTRACT_ADDRESS || '';
+    this.contractAddress = process.env.REACT_APP_UDST_CONTRACT_ADDRESS || '';
     this.fuegoRpcUrl = process.env.REACT_APP_FUEGO_RPC_URL || 'http://localhost:8080';
   }
 
   /**
-   * Initialize DST integration
+   * Initialize UDST integration
    */
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
@@ -71,9 +71,9 @@ class DSTIntegration {
       await this.verifyContractConnection();
       
       this.isInitialized = true;
-      console.log('DST Integration initialized successfully');
+      console.log('UDST Integration initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize DST integration:', error);
+      console.error('Failed to initialize UDST integration:', error);
       throw error;
     }
   }
