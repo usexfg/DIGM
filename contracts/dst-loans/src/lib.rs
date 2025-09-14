@@ -35,8 +35,8 @@ pub struct Repayment {
 pub struct DSTLoan {
     pub loan_id: u64,
     pub borrower: String,
-    pub collateral_amount: u64,        // DST amount locked as collateral
-    pub loan_amount: u64,              // XFG amount borrowed
+    pub collateral_amount: u64,        // XFG amount locked as collateral
+    pub loan_amount: u64,              // DST amount borrowed
     pub base_interest_rate: u64,      // Base annual interest rate (basis points)
     pub current_interest_rate: u64,    // Current interest rate after discounts
     pub term_length: u64,              // Loan term in days
@@ -133,6 +133,7 @@ impl DSTLoanSystem {
         }
 
         // Check minimum collateralization ratio (120%)
+        // XFG collateral / DST loan amount (both in atomic units)
         let collateral_ratio = (collateral_amount * 100) / loan_amount;
         if collateral_ratio < 120 {
             return Err("Insufficient collateral: minimum 120% required".to_string());

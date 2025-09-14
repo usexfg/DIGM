@@ -19,8 +19,8 @@ export interface LoanApplication {
 export interface DSTLoan {
   loanId: number;
   borrower: string;
-  collateralAmount: number;
-  loanAmount: number;
+  collateralAmount: number;        // XFG amount locked as collateral
+  loanAmount: number;              // DST amount borrowed
   baseInterestRate: number;
   currentInterestRate: number;
   termLength: number;

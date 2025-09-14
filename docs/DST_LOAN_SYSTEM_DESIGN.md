@@ -24,8 +24,8 @@ A decentralized lending system built on DST collateralization that rewards promp
 struct DSTLoan {
     loan_id: u64,
     borrower: String,
-    collateral_amount: u64,        // DST amount locked as collateral
-    loan_amount: u64,              // XFG amount borrowed
+    collateral_amount: u64,        // XFG amount locked as collateral
+    loan_amount: u64,              // DST amount borrowed
     interest_rate: u64,            // Annual interest rate (basis points)
     term_length: u64,              // Loan term in days
     created_at: u64,              // Loan creation timestamp
@@ -222,8 +222,8 @@ async function createLoan(
     borrowerRep
   );
   
-  // 3. Lock collateral
-  await lockDSTCollateral(borrower, collateralAmount);
+  // 3. Lock XFG collateral
+  await lockXFGCollateral(borrower, collateralAmount);
   
   // 4. Create loan
   const loan = await createLoanRecord({
@@ -235,8 +235,8 @@ async function createLoan(
     dueDate: Date.now() + (termLength * 24 * 60 * 60 * 1000)
   });
   
-  // 5. Transfer loan amount to borrower
-  await transferXFG(loanAmount, borrower);
+  // 5. Transfer DST loan amount to borrower
+  await transferDST(loanAmount, borrower);
   
   return loan;
 }
@@ -275,8 +275,8 @@ async function repayLoan(
   // Update borrower reputation
   await updateBorrowerReputation(borrower, repayment);
   
-  // Unlock collateral
-  await unlockDSTCollateral(borrower, loan.collateralAmount);
+  // Unlock XFG collateral
+  await unlockXFGCollateral(borrower, loan.collateralAmount);
   
   return repayment;
 }
@@ -465,22 +465,24 @@ interface DefaultManagement {
 ## 💡 **Benefits**
 
 ### **For Borrowers:**
+- **Access to Stable Assets**: Borrow DST (stable) using XFG collateral
 - **Lower Interest**: Prompt repayment reduces interest charges
 - **Flexible Terms**: Various loan types for different needs
 - **Credit Building**: Reputation system rewards good borrowers
 - **Transparent Rates**: Clear interest rate calculation
 
 ### **For Lenders:**
-- **Collateralized Loans**: DST collateral reduces risk
+- **Collateralized Loans**: XFG collateral reduces risk
 - **Predictable Returns**: Interest rates based on risk
 - **Liquidity**: Easy entry/exit from lending positions
 - **Diversification**: Multiple loan types and borrowers
 
 ### **For Platform:**
-- **Liquidity**: Increased DST usage and circulation
+- **DST Circulation**: Increased DST usage and circulation
 - **User Engagement**: Incentivizes active participation
 - **Risk Management**: Automated risk assessment
 - **Revenue**: Platform fees from loan operations
+- **Stability**: DST becomes more widely used and accepted
 
 ---
 

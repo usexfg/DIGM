@@ -347,7 +347,7 @@ const LoanManager: React.FC<LoanManagerProps> = ({ userAddress, onClose }) => {
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     <div>
                       <span className="text-gray-400">Amount:</span>
-                      <div className="text-white">{formatAmount(loan.loanAmount)} XFG</div>
+                      <div className="text-white">{formatAmount(loan.loanAmount)} DST</div>
                     </div>
                     <div>
                       <span className="text-gray-400">Interest Rate:</span>
@@ -386,7 +386,7 @@ const LoanManager: React.FC<LoanManagerProps> = ({ userAddress, onClose }) => {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-gray-400 mb-1">Requested Amount (XFG)</label>
+                <label className="text-sm text-gray-400 mb-1">Requested Amount (DST)</label>
                 <input
                   type="number"
                   step="0.0001"
@@ -401,7 +401,7 @@ const LoanManager: React.FC<LoanManagerProps> = ({ userAddress, onClose }) => {
               </div>
 
               <div>
-                <label className="text-sm text-gray-400 mb-1">Collateral Amount (DST)</label>
+                <label className="text-sm text-gray-400 mb-1">Collateral Amount (XFG)</label>
                 <input
                   type="number"
                   step="0.0001"
@@ -518,7 +518,7 @@ const LoanManager: React.FC<LoanManagerProps> = ({ userAddress, onClose }) => {
                   <div className="grid md:grid-cols-4 gap-4 text-sm mb-4">
                     <div>
                       <span className="text-gray-400">Amount:</span>
-                      <div className="text-white">{formatAmount(loan.loanAmount)} XFG</div>
+                      <div className="text-white">{formatAmount(loan.loanAmount)} DST</div>
                     </div>
                     <div>
                       <span className="text-gray-400">Interest Rate:</span>
@@ -530,7 +530,7 @@ const LoanManager: React.FC<LoanManagerProps> = ({ userAddress, onClose }) => {
                     </div>
                     <div>
                       <span className="text-gray-400">Collateral:</span>
-                      <div className="text-white">{formatAmount(loan.collateralAmount)} DST</div>
+                      <div className="text-white">{formatAmount(loan.collateralAmount)} XFG</div>
                     </div>
                   </div>
                   
@@ -581,7 +581,7 @@ const LoanManager: React.FC<LoanManagerProps> = ({ userAddress, onClose }) => {
             </div>
 
             <div>
-              <label className="text-sm text-gray-400 mb-1">Repayment Amount (XFG)</label>
+              <label className="text-sm text-gray-400 mb-1">Repayment Amount (DST)</label>
               <input
                 type="number"
                 step="0.0001"
