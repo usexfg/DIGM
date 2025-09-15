@@ -19,7 +19,7 @@ Instead of entrusting your music to a centralized corporation, artists make use 
 
 DIGM is a comprehensive MuFi (music & finance) platform that integrates 3 core components into a single, user-friendly web application (with mobile to follow).
 
-*   **The Marketplace:** A decentralized bazaar where artists can sell their audio albums directly to fans. All payments are private & peer-to-peer, using the secure Fuego (XF₲) privacy cryptocurrency, ensuring artists retain the full value of every sale. Using XF₲ also enables users to inherit Fuego's hard money attributes (like preservation of **future** purchasing power) on any sale earned, unlike fiat currencies)
+*   **The Marketplace:** A decentralized bazaar where artists sell their audio albums directly to fans. All payments are secure & peer-to-peer, using Fuego network's privacy cryptocurrency, XF₲. This allows DIGM users to inherite the hard money attributes of XF₲ (like preservation of purchasing power) on any sale made, unlike with fiat currencies.
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
     *    Fuego (**XFG**): for marketplace purchases.
     *    DI₲M: for catalogue (10 albums) hosting rights.
