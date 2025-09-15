@@ -17,14 +17,14 @@ Instead of entrusting your music to a centralized corporation, artists make use 
 
 ## **3. DIGM Ecosystem: A Symphony of 3**
 
-DIGM is a comprehensive platform that integrates three core components into a single, user-friendly web application (with mobile to follow).
+DIGM is a comprehensive MuFi (music & finance) platform that integrates 3 core components into a single, user-friendly web application (with mobile to follow).
 
-*   **The Marketplace:** A decentralized bazaar where artists can sell their audio albums directly to listeners. All payments are private & peer-to-peer, using the Fuego (XF₲) cryptocurrency, ensuring artists retain the full value of every sale. (XF₲ also enables the preservation of **future** purchasing power on any value earned, unlike fiat currencies)
+*   **The Marketplace:** A decentralized bazaar where artists can sell their audio albums directly to fans. All payments are private & peer-to-peer, using the secure Fuego (XF₲) privacy cryptocurrency, ensuring artists retain the full value of every sale. Using XF₲ also enables users to inherit Fuego's hard money attributes (like preservation of **future** purchasing power) on any sale earned, unlike fiat currencies)
 *   **The Wallet:** A built-in, non-custodial wallet that seamlessly manages a user's digital assets:
-    *    Fuego (**XFG**): for purchasing albums.
-    *    DI₲M: for catalogue hosting rights.
+    *    Fuego (**XFG**): for marketplace purchases.
+    *    DI₲M: for catalogue (10 albums) hosting rights.
+    *    PARA: for listener and artist rewards.
     *    CURA: for playlist curation rights.
-    * and PARA: for listener and artist rewards.
 *   **Paradio+:** A revolutionary P2P streaming radio that rewards both artists & listeners for their participation.
 
 ## **4. Tokenomics: Powering the New Music Economy**
@@ -40,7 +40,7 @@ Three distinct tokens power the DIGM ecosystem, each with a specific and crucial
 
 ### **PARA Token(s): The Currency of Streaming**
 
-**PARA** : designed to reward activity and bootstrap a thriving micro-economy around listening.
+**PARA** : (Para1:Stellar asset | Para2:zkC0DL3 token) designed to reward activity and bootstrap a thriving micro-economy around listening.
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock freemium without ads! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
 *   **The Artist/Listener Economy:** PARA is designed to be the defacto currency for audio streaming. Ofc, para can also be used for tipping, platform features, and even non-platform features. Users are encouraged to build or integrate their own novel ways to use their para tokens for their own purposes- expanding the artist/listener economy to be utilized & enjoyed by music communities worldwide. 
