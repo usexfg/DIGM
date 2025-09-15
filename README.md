@@ -31,25 +31,25 @@ DIGM is a comprehensive platform that integrates three core components into a si
 
 Three distinct tokens power the DIGM ecosystem, each with a specific and crucial role.
 
-### **DI₲M Token: The Right to Host**
+### **DI₲M Coin: The Right to Host**
 
-The DI₲M token (XFG-colored coin) is the key that unlocks an artist's ability to participate in the marketplace. To sell music on the platform, an artist must hold a DI₲M token. This mechanism serves several purposes:
-*   It creates a stable, committed base of established (or upcoming) artists/labels who wish to host their audio albums on DIGM.
-*   With a **fixed maximum supply of only 100,000**, it ensures DIGM platform's growth is organic and prevents oversaturation while preserving value for participating artists.
-*   Also acts as a quality-control and anti-spam measure, as catalogue hosting rights have tangible value.
+**DI₲M** : (XFG-colored coin) key that unlocks the artist's ability to offer albums for sale in the DIGM audio marketplace. To sell music on the platform, it must be an album, publishing artist must hold sole copyrights, and must hold a DI₲M coin. This mechanism serves several purposes:
+*   It creates a stable, committed base of established & upcoming artists/labels who wish to host their audio catalogue on DIGM.
+*   With a **fixed maximum supply of only 100,000**, it ensures DIGM platform growth is organic and prevents oversaturation while preserving value for participating artists.
+*   Also acts as quality-control and anti-spam measure to an extent, as catalogue hosting rights have tangible value.
 
-### **PARA Token: The Currency of Streaming**
+### **PARA Token(s): The Currency of Streaming**
 
-The PARA token is designed to reward activity and bootstrap a thriving micro-economy around listening.
+**PARA** : designed to reward activity and bootstrap a thriving micro-economy around listening.
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock freemium without ads! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
 *   **The Artist/Listener Economy:** PARA is designed to be the defacto currency for audio streaming. Ofc, para can also be used for tipping, platform features, and even non-platform features. Users are encouraged to build or integrate their own novel ways to use their para tokens for their own purposes- expanding the artist/listener economy to be utilized & enjoyed by music communities worldwide. 
 
-### **CURA Token: The Currency of Curation**
+### **CURA : The Curation Nation**
 
-The CURA token is designed to provide curators with the ability to create an income simply by curating DIGM platform playlists.
-*   **Earned by Listening:** - to earn a CURA token, curators must first earn enough Para to be able to burn (x amount) in order to create a CURA token.
-*   Both artists and listeners share a small percentage of their PARA when added / listening to curators' playlists.
+**CURA** : (XFG-colored coin) designed to provide curators with the ability to create playlists by curating DIGM platform artist's singles via Paradio curation stations.
+*   "**Are You Experienced?**" - to mint a CURA coin, curators must first own enough Para to stake _x_ amount as a show of platform experience.
+*   **Earn An Income:** Both artist and listener each share 30% from their PARA streaming rewards with curator when song* is played on/ when listening to a playlist created by curator. (*)song as in: album preview tracks (up to 2 tracks per album) used for Paradio & artist-browsable streaming (premium)
 *   More info soon. ;)
 
 ## **5. For the Artist: Reclaim Your Art**
