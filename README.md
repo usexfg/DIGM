@@ -43,7 +43,7 @@ Three distinct tokens power the DIGM ecosystem, each with a specific and crucial
 **PARA** : (Para1:Stellar asset | Para2:zkC0DL3 token) designed to reward activity and bootstrap a thriving micro-economy around listening.
 *   **Earned by Listening:** Both artists and listeners earn PARA for every second of airtime on Paradio.
 *   **Freemium Access:** The platform introduces a novel "Proof-of-Listener" system. By contributing a minimal amount of computational hashpower through a built-in, opt-in proxy miner, listeners can unlock premium features without being accosted adverts! Or enhanced earning of para rewards for premium users. This creates a sustainable freemium model without relying on tired, invasive ads or costly subscriptions.
-*   **The Artist/Listener Economy:** PARA is designed to be the de-facto currency for audio streaming. Para may also be used for other platform-specific features like exclusivity requirements / fan clubs (pay in Para for exclusive access), and even non-platform uses. Users are encouraged to build & integrate their own novel uses & purposes for their para to strengthen & expand the streaming economy to be utilized by music communities worldwide. 
+*   **The Artist/Listener Economy:** PARA is designed to be the de-facto currency for audio streaming. Para may also be used for other platform-specific features like exclusivity requirements / fan clubs (pay in Para per-tier of exclusive access), and even non-platform uses. Users are encouraged to build & integrate their own novel uses & purposes for their para to strengthen & expand the streaming economy to be utilized by music communities worldwide. 
 
 ### **CURA : The Curation Nation**
 
