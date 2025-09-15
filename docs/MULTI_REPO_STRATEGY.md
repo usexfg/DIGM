@@ -113,7 +113,7 @@ const mvpStrategy = {
     ],
     constraints: [
       "100MB file size limit per track",
-      "2GB album size limit (20 songs max)",
+      "1.5GB album size limit (15 songs max)",
       "5GB repository size limit"
     ]
   },
@@ -251,8 +251,8 @@ const audioStorageStrategy = {
 
     // Size management
     sizeManagement: {
-      perAlbum: "~2GB maximum (20 songs max)",
-      perRepo: "~5GB maximum (2-3 albums per repo)",
+      perAlbum: "~1.5GB maximum (15 songs max)",
+      perRepo: "~5GB maximum (3-4 albums per repo)",
       maxSize: "5GB per repo (GitHub limit)",
       solution: "Multiple audio repos for scalability"
     }
@@ -271,12 +271,12 @@ const multipleAudioRepos = {
     "usexfg/digm-audio-preview": "Preview singles for Paradio"
   },
 
-  // Split by size (2GB per album, 2-3 albums per repo)
+  // Split by size (1.5GB per album, 3-4 albums per repo)
   sizeSplit: {
-    "usexfg/digm-audio-1": "Albums 1-3 (6GB max)",
-    "usexfg/digm-audio-2": "Albums 4-6 (6GB max)",
-    "usexfg/digm-audio-3": "Albums 7-9 (6GB max)",
-    "usexfg/digm-audio-n": "Albums n+1-n+3 (6GB max)"
+    "usexfg/digm-audio-1": "Albums 1-4 (6GB max)",
+    "usexfg/digm-audio-2": "Albums 5-8 (6GB max)",
+    "usexfg/digm-audio-3": "Albums 9-12 (6GB max)",
+    "usexfg/digm-audio-n": "Albums n+1-n+4 (6GB max)"
   },
 
   // Split by genre
@@ -459,11 +459,11 @@ const recommendedStructure = {
     "usexfg/digm-elderfiers": "Elderfier services (200MB)"
   },
 
-  // Audio repositories (split by size - 2GB per album, 2-3 albums per repo)
+  // Audio repositories (split by size - 1.5GB per album, 3-4 albums per repo)
   audio: {
-    "usexfg/digm-audio-1": "Albums 1-3 (6GB max)",
-    "usexfg/digm-audio-2": "Albums 4-6 (6GB max)",
-    "usexfg/digm-audio-n": "Albums n+1-n+3 (6GB max)"
+    "usexfg/digm-audio-1": "Albums 1-4 (6GB max)",
+    "usexfg/digm-audio-2": "Albums 5-8 (6GB max)",
+    "usexfg/digm-audio-n": "Albums n+1-n+4 (6GB max)"
   },
 
   // Specialized repositories
