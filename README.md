@@ -13,9 +13,9 @@ Our vision is simple: **empower artists to preserve control of the their works a
 
 DIGM is built on a decentralized network of Fuego **Elderfiers**. These nodes, operated by artists, labels, or service providers, form the backbone of the platform.
 
-Instead of entrusting your music to a centralized corporation, artists make use of these corporations by uploading their *encrypted* audio album catalogue to github & other source code platforms ( public, yes, but useless w/o encryption key;) ) then, Elderfiers pull & distribute it across the Fuego/DIGM P2P network. When a listener buys or streams a track, the audio is decrypted and delivered directly to/from peers. This architecture eliminates central points of failure (and control), ensuring that DIGM platform remains resilient, open-source, and censorship-resistant.
+Instead of entrusting your music to a centralized corporation, artists make use of these corporations by uploading their *encrypted* audio album catalogue to github & other source code platforms ( public, yes, but useless w/o encryption key;) ) then, Elderfiers pull & distribute it across the Fuego P2P network/DIGM platform. When a listener buys or streams a track, the audio is decrypted and delivered directly to/from peers. This architecture eliminates central points of failure (and control), ensuring DIGM platform remains resilient, open-source, and censorship-resistant.
 
-## **3. DIGM Ecosystem: Symphony of 3**
+## **3. DIGM Ecosystem: A Symphony of 3**
 
 DIGM is a comprehensive platform that integrates three core components into a single, user-friendly web application (with mobile to follow).
 
