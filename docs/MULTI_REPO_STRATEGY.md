@@ -75,7 +75,7 @@ const repositoryStructure = {
 const githubLimits = {
   // Per repository limits
   perRepo: {
-    fileSize: "100MB per file",
+    fileSize: "100MB per file (via Git command line)",
     repoSize: "1GB soft limit, 5GB hard limit",
     bandwidth: "1GB/month free, then $0.50/GB",
     collaborators: "Unlimited for public repos"
@@ -95,6 +95,39 @@ const githubLimits = {
     privateRepos: "$4/month per user",
     bandwidth: "Free for public repos",
     storage: "Free for public repos"
+  }
+};
+```
+
+### **MVP Strategy: GitHub → IPFS Migration**
+```typescript
+const mvpStrategy = {
+  phase1: {
+    platform: "GitHub repositories",
+    timeline: "MVP launch",
+    benefits: [
+      "Free storage within limits",
+      "Familiar development workflow",
+      "Easy team collaboration",
+      "No external dependencies"
+    ],
+    constraints: [
+      "100MB file size limit per track",
+      "2GB album size limit (20 songs max)",
+      "5GB repository size limit"
+    ]
+  },
+  
+  phase2: {
+    platform: "IPFS + GitHub hybrid",
+    timeline: "When treasury becomes active",
+    benefits: [
+      "Decentralized storage",
+      "Better scalability",
+      "Reduced GitHub dependency",
+      "Lower long-term costs"
+    ],
+    migration: "Gradual migration of audio content"
   }
 };
 ```
@@ -218,10 +251,10 @@ const audioStorageStrategy = {
 
     // Size management
     sizeManagement: {
-      perAlbum: "~50MB average",
-      perRepo: "~10GB+ (200+ albums)",
+      perAlbum: "~2GB maximum (20 songs max)",
+      perRepo: "~5GB maximum (2-3 albums per repo)",
       maxSize: "5GB per repo (GitHub limit)",
-      solution: "Multiple audio repos if needed"
+      solution: "Multiple audio repos for scalability"
     }
   }
 };
@@ -238,12 +271,12 @@ const multipleAudioRepos = {
     "usexfg/digm-audio-preview": "Preview singles for Paradio"
   },
 
-  // Split by size
+  // Split by size (2GB per album, 2-3 albums per repo)
   sizeSplit: {
-    "usexfg/digm-audio-1": "Albums 1-200 (5GB)",
-    "usexfg/digm-audio-2": "Albums 201-400 (5GB)",
-    "usexfg/digm-audio-3": "Albums 401-600 (5GB)",
-    "usexfg/digm-audio-n": "Albums n+1-n+200 (5GB)"
+    "usexfg/digm-audio-1": "Albums 1-3 (6GB max)",
+    "usexfg/digm-audio-2": "Albums 4-6 (6GB max)",
+    "usexfg/digm-audio-3": "Albums 7-9 (6GB max)",
+    "usexfg/digm-audio-n": "Albums n+1-n+3 (6GB max)"
   },
 
   // Split by genre
@@ -426,11 +459,11 @@ const recommendedStructure = {
     "usexfg/digm-elderfiers": "Elderfier services (200MB)"
   },
 
-  // Audio repositories (split by size)
+  // Audio repositories (split by size - 2GB per album, 2-3 albums per repo)
   audio: {
-    "usexfg/digm-audio-1": "Albums 1-200 (5GB)",
-    "usexfg/digm-audio-2": "Albums 201-400 (5GB)",
-    "usexfg/digm-audio-n": "Albums n+1-n+200 (5GB)"
+    "usexfg/digm-audio-1": "Albums 1-3 (6GB max)",
+    "usexfg/digm-audio-2": "Albums 4-6 (6GB max)",
+    "usexfg/digm-audio-n": "Albums n+1-n+3 (6GB max)"
   },
 
   // Specialized repositories
