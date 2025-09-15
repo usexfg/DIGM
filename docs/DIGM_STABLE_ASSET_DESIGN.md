@@ -9,38 +9,33 @@ A decentralized stable asset built on Fuego blockchain using colored-coin techno
 ## 🎯 **Core Concept**
 
 ### **Universal DIGM Stable Token (UDST)**
-- **Type**: Collateral certificate colored-coin on Fuego blockchain
-- **Purpose**: Dollar-value certificate for XFG collateral deposits
-- **Backing**: XFG deposited at specific time/price point
-- **Function**: Debt collateralization and stable value reference
+- **Type**: Colored-coin on Fuego blockchain
+- **Purpose**: Stable pricing for album purchases
+- **Backing**: Multi-asset collateralization
+- **Governance**: Decentralized community control
 - **Integration**: Seamless with existing XFG ecosystem
 
 ---
 
 ## 🏗️ **Technical Architecture**
 
-### **1. Collateral Certificate Implementation**
+### **1. Colored-Coin Implementation**
 ```cpp
 // Fuego Core Integration
-struct UDSTCertificate {
-    uint64_t certificateId;    // Unique certificate identifier
-    uint64_t totalSupply;       // Total UDST certificates issued
-    uint64_t xfgDeposited;      // Total XFG deposited as collateral
-    uint64_t depositPriceUSD;   // XFG price at time of deposit (USD)
-    uint64_t certificateValue;  // Dollar value of certificate (USD)
-    uint64_t depositTimestamp;  // When XFG was deposited
-    uint64_t expiryTimestamp;   // When certificate expires (optional)
-    std::vector<CollateralDeposit> deposits;
+struct DIGMStableToken {
+    uint64_t tokenId;           // Unique colored-coin identifier
+    uint64_t totalSupply;       // Total UDST supply
+    uint64_t collateralRatio;   // Current collateralization ratio
+    uint64_t targetPrice;       // Target price in XFG (e.g., 1 UDST = 0.1 XFG)
+    uint64_t lastRebalance;     // Last rebalancing timestamp
+    std::vector<CollateralAsset> collateral;
 };
 
-struct CollateralDeposit {
-    std::string depositor;      // Address of depositor
-    uint64_t xfgAmount;         // XFG amount deposited
-    uint64_t depositPriceUSD;   // XFG price at deposit time (USD)
-    uint64_t certificateValue;  // Dollar value of certificate (USD)
-    uint64_t depositTimestamp;  // When deposit was made
-    uint64_t certificateId;     // Unique certificate ID
-    bool isActive;              // Whether certificate is still valid
+struct CollateralAsset {
+    std::string assetType;      // "XFG", "BTC", "ETH", "USDC"
+    uint64_t amount;            // Amount held as collateral
+    uint64_t valueInXFG;        // Value in XFG terms
+    uint64_t weight;            // Weight in collateral basket
 };
 ```
 
@@ -64,34 +59,41 @@ interface CollateralBasket {
 
 ## 💰 **Economic Model**
 
-### **1. Collateral Certificate Mechanism**
-- **Certificate Value**: Dollar value of XFG at deposit time
-- **Price Lock**: XFG price locked at deposit moment
-- **Stable Reference**: Certificate maintains dollar value regardless of XFG volatility
-- **Minting**: Users deposit XFG to mint UDST certificate
-- **Redemption**: Users burn UDST certificate to reclaim XFG
+### **1. Price Stability Mechanism**
+- **Target Price**: 1 UDST = 0.1 XFG (stable reference)
+- **Collateral Ratio**: 150% minimum (over-collateralized)
+- **Rebalancing**: Automatic when ratio deviates >5%
+- **Minting**: Users deposit collateral to mint UDST
+- **Redemption**: Users burn UDST to reclaim collateral
 
-### **2. Certificate Creation Process**
+### **2. Collateral Sources**
 ```typescript
-const certificateCreation = {
-  // Step 1: XFG Deposit
-  deposit: {
-    asset: 'XFG',
+const collateralSources = {
+  // Primary: Fuego ecosystem
+  XFG: {
     source: 'Fuego blockchain',
+    weight: 0.4,
     benefits: ['Native integration', 'Low fees', 'Fast settlement']
   },
   
-  // Step 2: Price Capture
-  priceCapture: {
-    method: 'Oracle price feed',
-    sources: ['CoinGecko', 'Binance', 'Kraken'],
-    benefits: ['Real-time pricing', 'Multiple sources', 'Median pricing']
+  // Secondary: Major cryptocurrencies
+  BTC: {
+    source: 'Bitcoin network',
+    weight: 0.3,
+    benefits: ['Store of value', 'Liquidity', 'Stability']
   },
   
-  // Step 3: Certificate Minting
-  certificateMinting: {
-    value: 'Dollar value of XFG at deposit time',
-    benefits: ['Price stability', 'Volatility protection', 'Debt collateralization']
+  ETH: {
+    source: 'Ethereum network',
+    weight: 0.2,
+    benefits: ['DeFi integration', 'Liquidity', 'Utility']
+  },
+  
+  // Tertiary: Stablecoins
+  USDC: {
+    source: 'Circle/USDC',
+    weight: 0.1,
+    benefits: ['USD peg', 'Liquidity', 'Stability']
   }
 };
 ```
@@ -123,53 +125,49 @@ interface DSTGovernance {
 
 ## 🔄 **Operational Mechanisms**
 
-### **1. Certificate Creation Process**
+### **1. Minting Process**
 ```typescript
-async function createUDSTCertificate(xfgAmount: number): Promise<number> {
-  // 1. Capture current XFG price
-  const currentXFGPrice = await getCurrentXFGPriceUSD();
+async function mintUDST(collateralAmount: number, assetType: string): Promise<number> {
+  // 1. Validate collateral
+  const collateralValue = await validateCollateral(collateralAmount, assetType);
   
-  // 2. Calculate certificate dollar value
-  const certificateValueUSD = xfgAmount * currentXFGPrice;
+  // 2. Check collateralization ratio
+  const currentRatio = await getCollateralRatio();
+  if (currentRatio < 150%) {
+    throw new Error('Insufficient collateralization');
+  }
   
-  // 3. Lock XFG collateral
-  await lockXFGCollateral(xfgAmount);
+  // 3. Calculate UDST to mint (with fee)
+  const udstToMint = (collateralValue * 0.95) / targetPrice; // 5% fee
   
-  // 4. Create certificate record
-  const certificate = await createCertificateRecord({
-    xfgAmount,
-    depositPriceUSD: currentXFGPrice,
-    certificateValueUSD,
-    depositTimestamp: Date.now(),
-    depositor: userAddress
-  });
+  // 4. Lock collateral in smart contract
+  await lockCollateral(collateralAmount, assetType);
   
-  // 5. Mint UDST certificate
-  await mintUDSTCertificate(certificate.id, certificateValueUSD);
+  // 5. Mint UDST tokens
+  await mintUDSTTokens(udstToMint);
   
-  return certificate.id;
+  return udstToMint;
 }
 ```
 
-### **2. Certificate Redemption Process**
+### **2. Redemption Process**
 ```typescript
-async function redeemUDSTCertificate(certificateId: number): Promise<number> {
-  // 1. Get certificate details
-  const certificate = await getCertificate(certificateId);
+async function redeemUDST(udstAmount: number, preferredAsset?: string): Promise<Collateral> {
+  // 1. Burn UDST tokens
+  await burnUDSTTokens(udstAmount);
   
-  // 2. Validate certificate ownership
-  if (certificate.depositor !== userAddress) {
-    throw new Error('Unauthorized certificate redemption');
-  }
+  // 2. Calculate collateral to return
+  const collateralValue = udstAmount * targetPrice;
   
-  // 3. Burn UDST certificate
-  await burnUDSTCertificate(certificateId);
+  // 3. Determine asset mix (or use preferred)
+  const assetMix = preferredAsset ? 
+    { [preferredAsset]: collateralValue } :
+    await calculateOptimalMix(collateralValue);
   
-  // 4. Unlock XFG collateral
-  await unlockXFGCollateral(certificate.xfgAmount);
+  // 4. Unlock and return collateral
+  const collateral = await unlockCollateral(assetMix);
   
-  // 5. Return XFG amount (regardless of current price)
-  return certificate.xfgAmount;
+  return collateral;
 }
 ```
 

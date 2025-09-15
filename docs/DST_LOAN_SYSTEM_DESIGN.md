@@ -2,7 +2,7 @@
 ## Dynamic Interest Rate System for Prompt Repayment Incentives
 
 ### Overview
-A decentralized lending system where users deposit XFG to create UDST collateral certificates, then use these certificates as collateral for loans. The system rewards prompt repayment with reduced interest rates, creating a sustainable lending ecosystem within the DIGM platform.
+A decentralized lending system built on UDST collateralization that rewards prompt repayment with reduced interest rates, creating a sustainable lending ecosystem within the DIGM platform.
 
 ---
 
@@ -11,9 +11,9 @@ A decentralized lending system where users deposit XFG to create UDST collateral
 ### **Dynamic Interest Rate Model**
 - **Base Rate**: Standard interest rate for loans
 - **Prompt Payment Discount**: Reduced interest for early repayment
-- **Collateral-Based**: Loans backed by UDST certificates (dollar-value locked)
-- **Community Governed**: Interest rates managed by UDST certificate holders
-- **Risk-Adjusted**: Interest rates based on certificate quality and borrower history
+- **Collateral-Based**: Loans backed by UDST collateral
+- **Community Governed**: Interest rates managed by UDST holders
+- **Risk-Adjusted**: Interest rates based on collateral quality and borrower history
 
 ---
 
