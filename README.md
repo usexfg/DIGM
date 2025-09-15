@@ -1,7 +1,7 @@
 
 # **Decentralized Independent Global Music Revolution**
 ### DIGM
-## 1. An Introduction: Tuning Out the Static 
+## 1. Introduction: Tuning Out the Static 
 
 The modern music industry, for all its convenience, has a fundamental problem: it is a centralized system that has devalued music and disenfranchised its creators. Artists, the lifeblood of the industry, are often the last to be compensated, receiving mere fractions of a penny per stream after a labyrinth of intermediaries take their cut.
 
