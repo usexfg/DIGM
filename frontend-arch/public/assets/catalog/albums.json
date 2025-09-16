@@ -7,10 +7,18 @@
       "artist": "Headphone Son",
       "title": "Digital Dreams",
       "description": "A collection of electronic and ambient tracks exploring the intersection of technology and music.",
-      "coverArt": "/assets/covers/album_001.jpg",
+      "coverArt": "/assets/covers/headphone-son-bitcoin.jpg",
       "releaseDate": "2025-01-15",
       "priceAtomic": 10000000,
       "currency": "XFG",
+      "pricingStrategy": {
+        "type": "usd_target",
+        "basePriceUSD": 9.99,
+        "volatilityTolerance": 0.1,
+        "updateFrequency": "daily",
+        "minPriceAtomic": 5000000,
+        "maxPriceAtomic": 20000000
+      },
       "contentHash": "sha256:abc123def456...",
       "paymentCommitment": "0x1234567890abcdef...",
       "resolverPubKey": "fire1234567890abcdef...",
@@ -33,10 +41,10 @@
           "duration": 260,
           "isPreview": true,
           "trackNumber": 2,
-          "previewAudio": "/assets/audio/preview-singles/album_001_track_002_preview.mp3",
+          "previewAudio": "/assets/audio/preview-singles/headphone-son-bitcoin.mp3",
           "magnetURI": "magnet:?xt=urn:btih:abc123...",
           "contentHash": "sha256:ghi012...",
-          "fileSize": 3932160
+          "fileSize": 5856000
         },
         {
           "trackId": "track_003",
@@ -69,6 +77,14 @@
       "releaseDate": "2025-01-20",
       "priceAtomic": 15000000,
       "currency": "XFG",
+      "pricingStrategy": {
+        "type": "fixed_xfg",
+        "fixedPriceAtomic": 15000000,
+        "volatilityTolerance": 0.05,
+        "updateFrequency": "weekly",
+        "minPriceAtomic": 10000000,
+        "maxPriceAtomic": 25000000
+      },
       "contentHash": "sha256:stu234vwx567...",
       "paymentCommitment": "0x2345678901bcdef0...",
       "resolverPubKey": "fire2345678901bcdef0...",
