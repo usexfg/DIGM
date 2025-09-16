@@ -39,6 +39,7 @@ export interface AlbumPricing {
   priceStability: 'stable' | 'volatile' | 'extreme';
   nextUpdateTime: number;
   canUpdate: boolean;
+  lastUpdated: number;
 }
 
 export interface XFGPriceData {
@@ -90,7 +91,8 @@ class DIGMPricingEngine {
       currentPriceUSD,
       priceStability: this.calculatePriceStability(strategy),
       nextUpdateTime: this.calculateNextUpdateTime(strategy),
-      canUpdate: true
+      canUpdate: true,
+      lastUpdated: Date.now()
     };
 
     this.albumPricing.set(albumId, albumPricing);
@@ -379,7 +381,8 @@ class DIGMPricingEngine {
    * Update all album prices that need updating
    */
   private async updateAllPrices(): Promise<void> {
-    for (const [albumId, pricing] of this.albumPricing.entries()) {
+    const entries = Array.from(this.albumPricing.entries());
+    for (const [albumId, pricing] of entries) {
       if (this.shouldUpdatePrice(pricing)) {
         await this.updateAlbumPrice(albumId);
       }
