@@ -30,10 +30,10 @@
           "duration": 272,
           "isPreview": true,
           "trackNumber": 1,
-          "previewAudio": "/assets/audio/preview-singles/headphone-son-midnight-city.m4a",
+          "previewAudio": "/assets/audio/preview-singles/headphone-son-midnight-city.opus",
           "magnetURI": "magnet:?xt=urn:btih:xyz789...",
           "contentHash": "sha256:def456...",
-          "fileSize": 4007388
+          "fileSize": 2801661
         },
         {
           "trackId": "track_002",
@@ -41,10 +41,10 @@
           "duration": 260,
           "isPreview": true,
           "trackNumber": 2,
-          "previewAudio": "/assets/audio/preview-singles/headphone-son-bitcoin.mp3",
+          "previewAudio": "/assets/audio/preview-singles/headphone-son-bitcoin.opus",
           "magnetURI": "magnet:?xt=urn:btih:abc123...",
           "contentHash": "sha256:ghi012...",
-          "fileSize": 5856000
+          "fileSize": 2556476
         },
         {
           "trackId": "track_003",
@@ -52,10 +52,10 @@
           "duration": 285,
           "isPreview": true,
           "trackNumber": 3,
-          "previewAudio": "/assets/audio/preview-singles/headphone-son-the-arbinger.m4a",
+          "previewAudio": "/assets/audio/preview-singles/headphone-son-the-arbinger.opus",
           "magnetURI": "magnet:?xt=urn:btih:arbinger123...",
           "contentHash": "sha256:arbinger456...",
-          "fileSize": 4596697
+          "fileSize": 4088235
         },
         {
           "trackId": "track_004",
