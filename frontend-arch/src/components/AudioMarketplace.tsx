@@ -96,7 +96,43 @@ const AudioMarketplace: React.FC = () => {
 
   const fetchTracks = async () => {
     try {
-      // Mock data since backend is not running
+      // Load tracks from the catalog
+      const response = await fetch('/assets/catalog/albums.json');
+      const catalogData = await response.json();
+      
+      // Transform catalog data to match the Track interface
+      const tracksFromCatalog: Track[] = [];
+      
+      catalogData.albums.forEach((album: any) => {
+        album.tracks.forEach((track: any) => {
+          if (track.isPreview) {
+            tracksFromCatalog.push({
+              id: track.trackId,
+              title: track.title,
+              artist: album.artist,
+              artistAddress: '0x' + Math.random().toString(16).substr(2, 40), // Mock address
+              duration: `${Math.floor(track.duration / 60)}:${(track.duration % 60).toString().padStart(2, '0')}`,
+              price: track.fileSize / 10000000, // Convert atomic units to XFG
+              genre: album.genre || 'Electronic',
+              coverArt: album.coverArt,
+              audioUrl: track.previewAudio,
+              sales: Math.floor(Math.random() * 500), // Mock sales data
+              description: album.description,
+              uploadDate: album.releaseDate,
+              serviceType: 'streaming-enabled' as const,
+              streamingEnabled: true,
+              paraEarnings: Math.floor(Math.random() * 200), // Mock PARA earnings
+              totalStreamTime: Math.floor(Math.random() * 5000) // Mock stream time
+            });
+          }
+        });
+      });
+      
+      setTracks(tracksFromCatalog);
+    } catch (error) {
+      console.error('Failed to fetch tracks from catalog:', error);
+      
+      // Fallback to mock data if catalog fails
       const mockTracks = [
         {
           id: '1',
@@ -106,10 +142,10 @@ const AudioMarketplace: React.FC = () => {
           duration: '4:32',
           price: 0.08,
           genre: 'Electronic',
-          coverArt: 'https://i1.sndcdn.com/artworks-000321337836-5zcudq-t500x500.jpg',
-          audioUrl: '/Midnight City.m4a',
+          coverArt: '/assets/covers/headphone-son-bitcoin.jpg',
+          audioUrl: '/assets/audio/preview-singles/headphone-son-midnight-city.opus',
           sales: 342,
-          description: 'A mesmerizing electronic journey through the neon-lit streets of a digital metropolis. Atmospheric synths and driving beats create an immersive soundscape perfect for late-night listening.',
+          description: 'A mesmerizing electronic journey through the neon-lit streets of a digital metropolis.',
           uploadDate: '2024-01-10',
           serviceType: 'streaming-enabled' as const,
           streamingEnabled: true,
@@ -123,84 +159,30 @@ const AudioMarketplace: React.FC = () => {
           artistAddress: '0x8765...4321',
           duration: '4:20',
           price: 0.08,
-          genre: 'Hip Hop',
-          coverArt: '',
-          audioUrl: '/bitcoin-headphone_son.mp3',
+          genre: 'Electronic',
+          coverArt: '/assets/covers/headphone-son-bitcoin.jpg',
+          audioUrl: '/assets/audio/preview-singles/headphone-son-bitcoin.opus',
           sales: 89,
           description: 'Hot beats with fire energy',
           uploadDate: '2024-01-20',
-          serviceType: 'album-only' as const,
-          streamingEnabled: false,
-          paraEarnings: 0,
-          totalStreamTime: 0
-        },
-        {
-          id: '3',
-          title: 'Recording 2018-04-19',
-          artist: 'Headphone Son',
-          artistAddress: '0x9999...8888',
-          duration: '5:15',
-          price: 0.12,
-          genre: 'Ambient',
-          coverArt: '',
-          audioUrl: '/Recording 2018-04-19 03 00_35.m4a',
-          sales: 203,
-          description: 'Space-inspired ambient music',
-          uploadDate: '2024-01-10',
           serviceType: 'streaming-enabled' as const,
           streamingEnabled: true,
           paraEarnings: 78.9,
-          totalStreamTime: 2100
+          totalStreamTime: 1200
         },
         {
-          id: '4',
-          title: 'Blockchain Blues',
-          artist: 'Decentralized Soul',
-          artistAddress: '0x5555...6666',
-          duration: '3:30',
-          price: 0.06,
-          genre: 'Blues',
-          coverArt: '',
-          audioUrl: '#',
-          sales: 156,
-          description: 'Blues with a digital twist',
-          uploadDate: '2024-01-25',
-          serviceType: 'streaming-enabled' as const,
-          streamingEnabled: true,
-          paraEarnings: 32.1,
-          totalStreamTime: 890
-        },
-        {
-          id: '5',
-          title: 'Mining Melody',
-          artist: 'Hash Harmony',
-          artistAddress: '0x7777...8888',
-          duration: '4:05',
-          price: 0.09,
-          genre: 'Techno',
-          coverArt: '',
-          audioUrl: '#',
-          sales: 178,
-          description: 'Techno beats inspired by crypto mining',
-          uploadDate: '2024-01-18',
-          serviceType: 'album-only' as const,
-          streamingEnabled: false,
-          paraEarnings: 0,
-          totalStreamTime: 0
-        },
-        {
-          id: '6',
-          title: 'Token Tunes',
-          artist: 'NFT Noise',
-          artistAddress: '0xaaaa...bbbb',
-          duration: '3:55',
-          price: 0.07,
-          genre: 'Pop',
-          coverArt: '',
-          audioUrl: '#',
-          sales: 234,
-          description: 'Pop music for the token generation',
-          uploadDate: '2024-01-22',
+          id: '3',
+          title: 'The Arbinger',
+          artist: 'Headphone Son',
+          artistAddress: '0x9999...8888',
+          duration: '4:50',
+          price: 0.12,
+          genre: 'Electronic',
+          coverArt: '/assets/covers/headphone-son-the-arbinger.jpg',
+          audioUrl: '/assets/audio/preview-singles/headphone-son-the-arbinger.opus',
+          sales: 203,
+          description: 'Atmospheric electronic composition',
+          uploadDate: '2024-01-10',
           serviceType: 'streaming-enabled' as const,
           streamingEnabled: true,
           paraEarnings: 92.5,
@@ -209,8 +191,6 @@ const AudioMarketplace: React.FC = () => {
       ];
       
       setTracks(mockTracks);
-    } catch (error) {
-      console.error('Failed to fetch tracks:', error);
     }
   };
 
