@@ -30,10 +30,10 @@
           "duration": 272,
           "isPreview": true,
           "trackNumber": 1,
-          "previewAudio": "/assets/audio/preview-singles/album_001_track_001_preview.mp3",
+          "previewAudio": "/assets/audio/preview-singles/headphone-son-midnight-city.m4a",
           "magnetURI": "magnet:?xt=urn:btih:xyz789...",
           "contentHash": "sha256:def456...",
-          "fileSize": 4194304
+          "fileSize": 4007388
         },
         {
           "trackId": "track_002",
@@ -48,20 +48,31 @@
         },
         {
           "trackId": "track_003",
+          "title": "The Arbinger",
+          "duration": 285,
+          "isPreview": true,
+          "trackNumber": 3,
+          "previewAudio": "/assets/audio/preview-singles/headphone-son-the-arbinger.m4a",
+          "magnetURI": "magnet:?xt=urn:btih:arbinger123...",
+          "contentHash": "sha256:arbinger456...",
+          "fileSize": 4596697
+        },
+        {
+          "trackId": "track_004",
           "title": "Recording 2018-04-19",
           "duration": 315,
           "isPreview": false,
-          "trackNumber": 3,
+          "trackNumber": 4,
           "magnetURI": "magnet:?xt=urn:btih:def456...",
           "contentHash": "sha256:jkl345...",
           "fileSize": 4718592
         },
         {
-          "trackId": "track_004",
+          "trackId": "track_005",
           "title": "Blockchain Blues",
           "duration": 210,
           "isPreview": false,
-          "trackNumber": 4,
+          "trackNumber": 5,
           "magnetURI": "magnet:?xt=urn:btih:mno678...",
           "contentHash": "sha256:pqr901...",
           "fileSize": 3145728
