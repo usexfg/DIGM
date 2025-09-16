@@ -225,7 +225,7 @@ class DIGMPricingEngine {
   /**
    * Get current XFG price from multiple sources
    */
-  private async getCurrentXFGPrice(): Promise<XFGPriceData> {
+  async getCurrentXFGPrice(): Promise<XFGPriceData> {
     // Check cache first
     const cached = this.xfgPriceCache.get('current');
     if (cached && Date.now() - cached.timestamp < 60000) { // 1 minute cache
