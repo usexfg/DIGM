@@ -142,11 +142,11 @@ const AudioMarketplace: React.FC = () => {
           duration: '4:32',
           price: 0.08,
           genre: 'Electronic',
-          coverArt: '/assets/covers/headphone-son-bitcoin.jpg',
+          coverArt: '/assets/covers/headphone_zen_midnightcity.jpg',
           audioUrl: '/assets/audio/preview-singles/headphone-son-midnight-city.opus',
           sales: 342,
           description: 'A mesmerizing electronic journey through the neon-lit streets of a digital metropolis.',
-          uploadDate: '2024-01-10',
+          uploadDate: '2018-01-08',
           serviceType: 'streaming-enabled' as const,
           streamingEnabled: true,
           paraEarnings: 156.8,
@@ -164,7 +164,7 @@ const AudioMarketplace: React.FC = () => {
           audioUrl: '/assets/audio/preview-singles/headphone-son-bitcoin.opus',
           sales: 89,
           description: 'Hot beats with fire energy',
-          uploadDate: '2024-01-20',
+          uploadDate: '2019-01-08',
           serviceType: 'streaming-enabled' as const,
           streamingEnabled: true,
           paraEarnings: 78.9,
@@ -182,7 +182,25 @@ const AudioMarketplace: React.FC = () => {
           audioUrl: '/assets/audio/preview-singles/headphone-son-the-arbinger.opus',
           sales: 203,
           description: 'Atmospheric electronic composition',
-          uploadDate: '2024-01-10',
+          uploadDate: '2025-01-08',
+          serviceType: 'streaming-enabled' as const,
+          streamingEnabled: true,
+          paraEarnings: 92.5,
+          totalStreamTime: 1850
+        },
+        {
+          id: '3',
+          title: 'Pitchmont High',
+          artist: 'Headphone Son',
+          artistAddress: '0x9999...8888',
+          duration: '4:50',
+          price: 0.12,
+          genre: 'Electronic',
+          coverArt: '/assets/covers/headphone_zen-pitchmontcover.jpg',
+          audioUrl: '/assets/audio/preview-singles/headphone-son-the-arbinger.opus',
+          sales: 203,
+          description: 'Atmospheric electronic composition',
+          uploadDate: '2025-01-08',
           serviceType: 'streaming-enabled' as const,
           streamingEnabled: true,
           paraEarnings: 92.5,
@@ -305,7 +323,7 @@ const AudioMarketplace: React.FC = () => {
               <span className="text-2xl">♛</span>
               <div>
                 <h3 className="gradient-text-green font-semibold">Premium Access Active</h3>
-                <p className="text-gray-400 text-sm">You can stream music and earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA tokens!</p>
+                <p className="text-gray-400 text-sm">You can stream music & earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> PARA tokens!</p>
               </div>
             </div>
           </div>
@@ -353,7 +371,7 @@ const AudioMarketplace: React.FC = () => {
           </span>
         </h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-          Explore the future of music with 100% artist-owned tracks on the <span className="gradient-text-gold">Fuego L1</span> blockchain
+          Discover the future of music by streaming DIGM artist's album-preview tracks on the <span className="gradient-text-gold">Fuego L1</span> blockchain
         </p>
       </div>
 
@@ -637,28 +655,28 @@ const AudioMarketplace: React.FC = () => {
           <div className="text-center space-y-2">
             <div className="text-3xl">🎧</div>
                     <h4 className="font-semibold text-white">Artist & Listener Rewards</h4>
-        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens from listening to music, while the artist you are listening to earns Para as you stream their music.</p>
+        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens for streaming.  The artist who's music you are streaming, earns Para- while you, the listener, also earn Para for time spent listening.</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">⇆</div>
             <h4 className="font-semibold text-white">Direct P2P Payments</h4>
-            <p className="text-sm text-gray-300">Payments go directly from buyers to artists while inheriting all monetary privacy & security features of XF₲.</p>
+            <p className="text-sm text-gray-300">Payments go directly from buyer-2-artist. Allowing users to inherit all monetary features of XF₲- like fungibility, purchasing power, & security of Fuego L1 network.</p>
           </div>
 
           <div className="text-center space-y-2">
             <div className="text-3xl">䷍</div>
             <h4 className="font-semibold text-white">True Ownership</h4>
-            <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN (not 'suBScribe to') all audio they purchase, forever.</p>
+            <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN files (or physicals delivery possible via FuegoL1's private msgs) of all audio they purchase, forever.</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">⛨</div>
             <h4 className="font-semibold text-white">Purchasing Power + Privacy</h4>
-            <p className="text-sm text-gray-300">Upgrade your money & preserve value using XF₲ (or HEAT) while controlling privacy of your data, instead of it being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
+            <p className="text-sm text-gray-300">Time to upgrade your money. Preserve the value of your hard earned money using XF₲ (or HEAT). Plus keep control over your data privacy, instead of it being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">🜂</div>
             <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
-            <p className="text-sm text-gray-300">Built on the hottest L1 privacy blockchain in town, supporting the private commerce of a worldwide community of artists, musicians, developers, and music lovers alike.</p>
+            <p className="text-sm text-gray-300">Built on the hottest L1 privacy blockchain in town, Fuego's L1 network provides the public framework needed to achieve PRIVATE commerce for a worldwide community of artists, musicians, developers, and music lovers alike.</p>
           </div>
  
         </div>
