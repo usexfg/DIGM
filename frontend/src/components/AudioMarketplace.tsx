@@ -655,7 +655,7 @@ const AudioMarketplace: React.FC = () => {
           <div className="text-center space-y-2">
             <div className="text-3xl">🎧</div>
                     <h4 className="font-semibold text-white">Artist & Listener Rewards</h4>
-        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens for streaming.  The artist who's music you are streaming, earns Para- while you, the listener, also earn Para for time spent listening.</p>
+        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens for streaming.  The artist who's music you are streaming earns Para-  and you, the listener, also earn Para for time spent listening.</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">⇆</div>
