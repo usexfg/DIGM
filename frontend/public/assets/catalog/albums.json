@@ -42,6 +42,7 @@
           "isPreview": true,
           "trackNumber": 2,
           "previewAudio": "/assets/audio/preview-singles/headphone-son-bitcoin.opus",
+          "coverArt": "/assets/covers/headphone-son-bitcoin.jpg",
           "magnetURI": "magnet:?xt=urn:btih:abc123...",
           "contentHash": "sha256:ghi012...",
           "fileSize": 2556476
@@ -53,6 +54,7 @@
           "isPreview": true,
           "trackNumber": 3,
           "previewAudio": "/assets/audio/preview-singles/headphone-son-the-arbinger.opus",
+          "coverArt": "/assets/covers/headphone-son-the-arbinger.jpg",
           "magnetURI": "magnet:?xt=urn:btih:arbinger123...",
           "contentHash": "sha256:arbinger456...",
           "fileSize": 4088235

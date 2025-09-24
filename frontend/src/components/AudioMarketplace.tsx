@@ -114,7 +114,7 @@ const AudioMarketplace: React.FC = () => {
               duration: `${Math.floor(track.duration / 60)}:${(track.duration % 60).toString().padStart(2, '0')}`,
               price: track.fileSize / 10000000, // Convert atomic units to XFG
               genre: album.genre || 'Electronic',
-              coverArt: album.coverArt,
+              coverArt: (track.coverArt || album.coverArt),
               audioUrl: track.previewAudio,
               sales: Math.floor(Math.random() * 500), // Mock sales data
               description: album.description,
