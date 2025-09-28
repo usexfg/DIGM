@@ -125,6 +125,52 @@ const HostingPermissions: React.FC = () => {
           </div>
         </div>
 
+        {/* DIGM Economy Overview */}
+        <div className="card mt-8">
+          <h2 className="text-xl font-bold mb-4">DIGM Economy Overview</h2>
+
+          <div className="grid md:grid-cols-2 gap-6 text-sm text-slate-300">
+            {/* Token Ecosystem */}
+            <div>
+              <h3 className="font-semibold text-white mb-2">Tokens</h3>
+              <ul className="space-y-2">
+                <li className="flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-orange-500 mr-2" />
+                  <span className="font-medium text-white mr-1">XFG</span>
+                  – Primary payment token (album purchases, Elderfier staking)
+                </li>
+                <li className="flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2" />
+                  <span className="font-medium text-white mr-1">PARA</span>
+                  – Listener ↔ artist reward token (streaming & tips)
+                </li>
+                <li className="flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2" />
+                  <span className="font-medium text-white mr-1">CURA</span>
+                  – Curation & governance token (playlist staking, DAO voting)
+                </li>
+                <li className="flex items-center">
+                  <span className="inline-block w-3 h-3 rounded-full bg-yellow-500 mr-2" />
+                  <span className="font-medium text-white mr-1">DI₲M</span>
+                  – Hosting permission NFT (Bronze / Silver / Gold tiers)
+                </li>
+              </ul>
+            </div>
+
+            {/* Market Participants */}
+            <div>
+              <h3 className="font-semibold text-white mb-2">Participants</h3>
+              <ul className="space-y-2">
+                <li>🎤 <span className="font-medium text-white">Artists</span> earn XFG & PARA, stake CURA for visibility.</li>
+                <li>🎧 <span className="font-medium text-white">Listeners</span> spend XFG, earn PARA, tip PARA.</li>
+                <li>🛰️ <span className="font-medium text-white">Elderfiers</span> stake XFG, earn XFG & PARA for seeding.</li>
+                <li>🏷️ <span className="font-medium text-white">Labels</span> stake CURA to promote catalogs, share XFG sales.</li>
+                <li>📜 <span className="font-medium text-white">Curators</span> stake/earn CURA for playlists; receive PARA tips.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         {/* Benefits */}
         {canHost && (
           <div className="mb-6">
