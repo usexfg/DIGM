@@ -143,8 +143,10 @@ albums/
 
 **Curators / Playlist Creators**
 - **Role**: Curating poignant,custom themed playlists & Paradio's Curatioℕation Station takeovers that drive discovery
+- **CURA Requirement**: Must hold CURA token to create public playlists and be eligible to earn PARA rewards for playlist streams
 - **Earnings**:
-  - CURA coin owners (Curators) receive 20% tips from listeners
+  - When users listen via curated playlists: Artist and Listener each share 30% of their PARA rewards with the playlist curator
+- **CURA Minting**: Users must burn a large amount of PARA tokens to mint CURA
 - **Staking**:
   - Curators lock CURA against playlists; higher stake → higher algorithmic visibility
   - Slashing if playlists violate community guidelines (e.g., spam, infringing content)
@@ -158,8 +160,10 @@ albums/
 #### Economic Flows
 1. **Album Purchase**: Listener → Smart Contract → Artist (XFG)
 2. **Streaming Rewards**: Protocol → Listener (PARA) → Artist (PARA tips)
-3. **Elderfiers**: Artist/Listener → Elderfier (XFG fees)
-4. **Arbitrage**: Market → Price stability → Artist pricing maintained
+3. **Playlist Streaming**: Artist & Listener each share 30% of PARA rewards → Curator (CURA holders)
+4. **Elderfiers**: Artist/Listener → Elderfier (XFG fees)
+5. **CURA Minting**: User burns large amount of PARA → Mints CURA tokens
+6. **Arbitrage**: Market → Price stability → Artist pricing maintained
 
 #### Price Stability Mechanisms
 - **USD Target Pricing**: Artist sets USD price, XFG amount adjusts automatically
@@ -200,3 +204,41 @@ albums/
 - **Filecoin incentives**: Decentralized storage marketplace
 - **CDN optimization**: Global edge caching
 - **P2P improvements**: Direct artist-to-listener streaming
+
+## Web3 Distribution Alternatives
+
+### Overview
+Web3 platforms offer decentralized alternatives to traditional distributors like CD Baby, focusing on blockchain-based rights management, direct artist monetization, and token economies. DIGM can integrate with or compete against these platforms while maintaining compatibility with traditional distribution.
+
+### Key Web3 Distributors
+| Platform | Blockchain | Core Features | Monetization Model | Artist Share |
+|----------|------------|----------------|-------------------|--------------|
+| **Audius** | Solana | Streaming, discovery, direct uploads | AUDIO tokens, streaming payouts | 90% |
+| **Catalog** | Polygon | Streaming, NFTs, social features | Streaming rewards, NFT sales | 85% |
+| **Sound.xyz** | Ethereum | NFT marketplace, collectibles | NFT sales, royalties | 95% |
+| **Zora** | Ethereum | NFT minting, marketplace | NFT sales, secondary market | 95% |
+| **Mint Songs** | Polygon | NFT releases, fan engagement | NFT sales, streaming | 90% |
+| **Rally** | Ethereum | Crowdfunding, fan ownership | Fan equity, royalties | Variable |
+| **Opulous** | BSC | NFT marketplace, streaming | NFT sales, streaming | 85% |
+| **Noizd** | Ethereum | NFT platform, social | NFT sales, fan rewards | 90% |
+| **MusikGraph** | Ethereum | Rights management, distribution | Royalties, licensing | 80% |
+| **Tune.fm** | Polygon | NFT drops, streaming | NFT sales, fan tokens | 85% |
+
+### DIGM Integration Strategy
+1. **Multi-Platform Distribution**: Artists can opt-in to distribute to both traditional (Spotify) and web3 platforms
+2. **Hybrid Monetization**: Combine XFG album sales with PARA streaming rewards and NFT royalties
+3. **Cross-Platform Compatibility**: Encrypted audio can be decrypted for web3 distribution while maintaining web2 compatibility
+4. **Bridge to Web3**: Use DIGM as an entry point for artists transitioning from traditional to decentralized distribution
+
+### Comparative Advantages
+- **Higher Artist Share**: 80-95% vs 70-85% for traditional distributors
+- **Instant Payments**: Crypto settlements vs 6-18 month traditional payout cycles
+- **Transparent Royalties**: On-chain tracking vs opaque traditional systems
+- **NFT Integration**: Additional revenue streams through collectibles and limited editions
+- **Global Reach**: Decentralized platforms remove geographic barriers
+
+### Implementation Roadmap
+1. **Phase 1**: Integrate with 3-5 web3 platforms (Audius, Catalog, Sound.xyz)
+2. **Phase 2**: Build NFT minting tools within DIGM upload flow
+3. **Phase 3**: Create cross-platform royalty aggregator smart contract
+4. **Phase 4**: Launch "DIGM Web3 Distribution" service with traditional fallback
