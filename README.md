@@ -52,14 +52,14 @@ Three distinct tokens power the DIGM ecosystem, each with a specific and crucial
 *   **Earn An Income:** Both artist and listener each share 30% from their PARA streaming rewards with curator when song* is played on/ when listening to a playlist created by curator. (*)song as in: album preview tracks (up to 2 tracks per album) used for Paradio & artist-browsable streaming (premium)
 *   More info soon. ;)
 
-## **5. For the Artist: Reclaim Your Art**
+## **5. For Artists: Reclaim Your Art**
 
 *   **Keep 100% of Your Revenue:** Sell your albums and keep every. single. cent earned in XFG with no hidden fees, no opaque calculations.
 *   **True Ownership:** You control your music, your pricing, and your connection to your fans.
 *   **Earn More with Paradio:** Generate an actual, continuous revenue **stream** from Paradio airplay, paid in PARA.
 *   **Collaborate:** A single DIGM node can host content for multiple artists, allowing for the formation of decentralized "curator labels" or artist pools.
 
-## **6. For the Listener: Be Part of the Music**
+## **6. For Listeners: Be Part of the Music**
 
 *   **Directly Support Artists:** Know that your purchase goes directly to the creator.
 *   **Earn While You Listen:** Get rewarded with PARA tokens just for discovering new music by tuning into Paradio.
@@ -82,7 +82,7 @@ Three distinct tokens power the DIGM ecosystem, each with a specific and crucial
 | Upload Limits | pay per distro | pay per distro | free 100MB | 1 catalogue (10 albums) per DIGM; Lifetime |
 | Sells your privacy | 👁️‍🗨️✅ | 👁️‍🗨️✅ | ✅👁️‍🗨️ | 🔒🥷nah bruh. financial & personal data **REMAIN** private |
 | Own the Music | ❌ | ❌ | ✅ mp3s | ✅ FLAC albums &/or physical delivery |
-| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity via Paradio + Curator playlists|
+| *Prey* to an algorithm | 🙏 | 🙏 | 🔁Reposts |hell nah! 🗣📻📣 Equal opportunity w Paradio + Curator playlists|
 | Artist Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Listener Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Curator Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
@@ -94,10 +94,7 @@ Three distinct tokens power the DIGM ecosystem, each with a specific and crucial
 <sub>(*) user's wallet must meet/exceed 0.1 XF₲ threshold (1M HEAT) for premium access when using DIGM platform.</sub>
 
 
-Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of **VOX POPULI**- that is, in itself, part of the larger ecosystem as a whole. Not merely 'ad-revenue' for a CEO, or some big-data consumer profile to be exploited.
-DIGM platform is an open-source software framework- the true power of this movement is the community of ultra cool people supporting one another & making use of the platform. Vive la révolution!
-
-**Join us in building the sustainable future of music.** 
+Welcome back to an economy where art is valued, creators are respected, curators are trusted, and fans all **participate** as their own valuable feedback role of **VOX POPULI**- that is, in itself, part of the larger ecosystem as a whole. Not merely 'ad-revenue' for some CEO, nor a dragnet for consumer data profiles to exploit. Decentralized systems allow us to bypass all the shady low-level shortcuts taken by centralized companies for profit, at the expense of the customer.  The true power of this movement is our strength in community. DIGM platform itself is only an open-source software framework- it doesn't have _customers_- it instead has a **community** of awesome & cool people supporting each other by making use of the platform. Join us in the sustainable future of music. Vive la révolution!
 
 
 <sub>2025 © DIGM contributors</sub>
