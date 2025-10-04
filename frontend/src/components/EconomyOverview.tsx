@@ -43,7 +43,7 @@ const EconomyOverview: React.FC = () => {
       percentage: 45,
       supply: '18.4M',
       marketCap: '$2.3M',
-      description: 'Primary payment token for album purchases and Elderfier staking'
+      description: 'L1 Native asset, DIGM platform is built on top of Fuego p2p blockchain network. Required holdings by Premium Users is 0.1 XFG at log in. Primary payment method for DIGM marketplace purchases. Required in Elderfier staking (800 XFG) etc.'
     },
     {
       name: 'PARA (Stellar)',
