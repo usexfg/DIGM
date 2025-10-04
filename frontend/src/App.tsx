@@ -11,6 +11,7 @@ import AudioMarketplace from './components/AudioMarketplace';
 import ArtistPage from './components/ArtistPage';
 import AlbumPage from './components/AlbumPage';
 import PremiumAccess from './components/PremiumAccess';
+import EconomyOverview from './components/EconomyOverview';
 import { WalletProvider, useWallet } from './hooks/useWallet';
 
 function AppContent() {
@@ -57,6 +58,7 @@ function AppContent() {
     if (path === '/premium') return 'premium';
     if (path === '/hosting') return 'hosting';
     if (path === '/xfg') return 'xfg';
+    if (path === '/economy') return 'economy';
     return 'marketplace';
   };
 
@@ -64,6 +66,7 @@ function AppContent() {
 
   const navigationItems = [
     { id: 'marketplace', label: 'Discover', icon: '►', description: 'Audio Marketplace', path: '/' },
+    { id: 'economy', label: 'Economy', icon: '💰', description: 'Token Economy Overview', path: '/economy' },
     ...(hasDigmHosting ? [
       { id: 'artist', label: 'Profile', icon: '⭑', description: 'Artist Profile', path: '/artist/profile' },
       { id: 'dashboard', label: 'Dashboard', icon: '♪', description: 'Artist Dashboard', path: '/artist/dashboard' }
@@ -223,6 +226,7 @@ function AppContent() {
             <div className="max-w-6xl mx-auto">
               <Routes>
                 <Route path="/" element={<AudioMarketplace />} />
+                <Route path="/economy" element={<EconomyOverview />} />
                 <Route path="/artist/:artistId" element={<ArtistPage />} />
                 <Route path="/album/:albumId" element={<AlbumPage />} />
                 <Route path="/artist/profile" element={<ArtistProfile />} />
