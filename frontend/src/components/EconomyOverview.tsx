@@ -64,13 +64,13 @@ const EconomyOverview: React.FC = () => {
       description: 'Curation & governance token for playlist creation and DAO voting'
     },
     {
-      name: 'Fable (Fuego Stable)',
+      name: 'Fable - Fuego (colored)',
       value: 10,
       color: '#96CEB4',
       percentage: 10,
       supply: 'Variable',
       marketCap: '$500K',
-      description: 'Fuego-based stable asset for price-stable album purchases'
+      description: 'Fuego stable coin from a time-lock receipt basically, using XFG value capture for price-stable album purchase options. DIGM artist can choose to get paid by a \'fable\'. Fable always represents an album sale, therefore while being created for short-term price fluctuations, but since fable are single colored-coins, in the long-term each fable could effectively represent the average selling price of all albums listed on DIGM marketplace at any given time. But its basically a receipt.'
     }
   ];
 
