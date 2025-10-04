@@ -106,7 +106,7 @@ const EconomyOverview: React.FC = () => {
       revenue: 8500,
       color: '#96CEB4',
       role: 'Content Discovery',
-      incentives: ['CURA staking rewards', 'PARA playlist bonuses', 'Algorithm influence']
+      incentives: ['CURA staking rewards', 'PARA playlist bonuses', 'Paradio Stations']
     },
   ];
 
