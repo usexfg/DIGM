@@ -64,13 +64,13 @@ const EconomyOverview: React.FC = () => {
       description: 'Curation & governance token for playlist creation and DAO voting'
     },
     {
-      name: 'DST (Stable)',
+      name: 'Fable (Fuego Stable)',
       value: 10,
       color: '#96CEB4',
       percentage: 10,
       supply: 'Variable',
       marketCap: '$500K',
-      description: 'Decentralized stable asset for price-stable album purchases'
+      description: 'Fuego-based stable asset for price-stable album purchases'
     }
   ];
 
@@ -161,17 +161,24 @@ const EconomyOverview: React.FC = () => {
       amount: 2000,
       token: 'PARA',
       description: 'CURA minting fees'
+    },
+    {
+      from: 'Artists',
+      to: 'Listeners',
+      amount: 1500,
+      token: 'Fable',
+      description: 'Stable album purchases'
     }
   ];
 
   // Analytics data for charts
   const analyticsData = [
-    { month: 'Jan', xfgVolume: 12000, paraEarned: 8500, albumsSold: 45, activeUsers: 3200 },
-    { month: 'Feb', xfgVolume: 18500, paraEarned: 12200, albumsSold: 68, activeUsers: 4200 },
-    { month: 'Mar', xfgVolume: 22100, paraEarned: 15800, albumsSold: 89, activeUsers: 5100 },
-    { month: 'Apr', xfgVolume: 28900, paraEarned: 19800, albumsSold: 112, activeUsers: 6200 },
-    { month: 'May', xfgVolume: 35200, paraEarned: 24100, albumsSold: 135, activeUsers: 7300 },
-    { month: 'Jun', xfgVolume: 41800, paraEarned: 28900, albumsSold: 158, activeUsers: 8500 }
+    { month: 'Jan', xfgVolume: 12000, paraEarned: 8500, fableVolume: 2500, albumsSold: 45, activeUsers: 3200 },
+    { month: 'Feb', xfgVolume: 18500, paraEarned: 12200, fableVolume: 3800, albumsSold: 68, activeUsers: 4200 },
+    { month: 'Mar', xfgVolume: 22100, paraEarned: 15800, fableVolume: 4200, albumsSold: 89, activeUsers: 5100 },
+    { month: 'Apr', xfgVolume: 28900, paraEarned: 19800, fableVolume: 5200, albumsSold: 112, activeUsers: 6200 },
+    { month: 'May', xfgVolume: 35200, paraEarned: 24100, fableVolume: 6800, albumsSold: 135, activeUsers: 7300 },
+    { month: 'Jun', xfgVolume: 41800, paraEarned: 28900, fableVolume: 8200, albumsSold: 158, activeUsers: 8500 }
   ];
 
 
@@ -458,6 +465,7 @@ const EconomyOverview: React.FC = () => {
                 />
                 <Area type="monotone" dataKey="xfgVolume" stackId="1" stroke="#FF6B6B" fill="#FF6B6B" fillOpacity={0.6} />
                 <Area type="monotone" dataKey="paraEarned" stackId="1" stroke="#4ECDC4" fill="#4ECDC4" fillOpacity={0.6} />
+                <Area type="monotone" dataKey="fableVolume" stackId="1" stroke="#96CEB4" fill="#96CEB4" fillOpacity={0.6} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -489,7 +497,7 @@ const EconomyOverview: React.FC = () => {
       {/* Key Metrics */}
       <div className="card">
         <h3 className="text-xl font-bold text-white mb-4">Key Performance Indicators</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="text-center p-4 rounded-lg bg-black/20 border border-fuchsia-500/20">
             <div className="text-2xl font-bold text-white">$68.7K</div>
             <div className="text-sm text-gray-400">Total Volume</div>
@@ -509,6 +517,11 @@ const EconomyOverview: React.FC = () => {
             <div className="text-2xl font-bold text-white">$28.9K</div>
             <div className="text-sm text-gray-400">PARA Distributed</div>
             <div className="text-xs text-green-400 mt-1">+22% this month</div>
+          </div>
+          <div className="text-center p-4 rounded-lg bg-black/20 border border-fuchsia-500/20">
+            <div className="text-2xl font-bold text-white">$8.2K</div>
+            <div className="text-sm text-gray-400">Fable Volume</div>
+            <div className="text-xs text-green-400 mt-1">+19% this month</div>
           </div>
         </div>
       </div>
