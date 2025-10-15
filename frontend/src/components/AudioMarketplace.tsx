@@ -650,33 +650,33 @@ const AudioMarketplace: React.FC = () => {
           <div className="text-center space-y-2">
             <div className="text-3xl">₲</div>
             <h4 className="font-semibold text-white">100% Artist Revenue</h4>
-            <p className="text-sm text-gray-300">Artists keep every single XFG from their sales. No 60/40 split, no $0.000001 per stream- One. Hundred. Percent. </p>
+            <p className="text-sm text-gray-300">Artists keep every single dime from sales. No 60/40 split, no $0.000001 per stream - One. Hundred. Percent. </p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">🎧</div>
                     <h4 className="font-semibold text-white">Artist & Listener Rewards</h4>
-        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens for streaming.  The artist who's music you are streaming earns Para-  and you, the listener, also earn Para for time spent listening.</p>
+        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para for streaming.  The artist who's music is being streamed earns Para-  while the listener, also earn Para for time spent streaming music.</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">⇆</div>
             <h4 className="font-semibold text-white">Direct P2P Payments</h4>
-            <p className="text-sm text-gray-300">Payments go directly from buyer-2-artist. Allowing users to inherit all monetary features of XF₲- like fungibility, purchasing power, & security of Fuego L1 network.</p>
+            <p className="text-sm text-gray-300">Using Fuego for all purchases allows money to go directly from buyer-2-artist without middlemen, while automatically inheriting all the superior monetary qualities of XFG- like privacy, fungibility, decentralized savings, & the full security of Fuego L1 network.</p>
           </div>
 
           <div className="text-center space-y-2">
             <div className="text-3xl">䷍</div>
             <h4 className="font-semibold text-white">True Ownership</h4>
-            <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN files (or physicals delivery possible via FuegoL1's private msgs) of all audio they purchase, forever.</p>
+            <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN files (or physicals delivery via Fuego L1's private msgs) of all audio they purchase, forever.</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">⛨</div>
-            <h4 className="font-semibold text-white">Purchasing Power + Privacy</h4>
-            <p className="text-sm text-gray-300">Time to upgrade your money. Preserve the value of your hard earned money using XF₲ (or HEAT). Plus keep control over your data privacy, instead of it being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
+            <h4 className="font-semibold text-white">Keep Your Privacy</h4>
+            <p className="text-sm text-gray-300">Retain control over the privacy of your data, instead of having it tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
           </div>
           <div className="text-center space-y-2">
             <div className="text-3xl">🜂</div>
             <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
-            <p className="text-sm text-gray-300">Built on the hottest L1 privacy blockchain in town, Fuego's L1 network provides the public framework needed to achieve PRIVATE commerce for a worldwide community of artists, musicians, developers, and music lovers alike.</p>
+            <p className="text-sm text-gray-300">Built on the hottest L1 privacy blockchain in town, Fuego's L1 network provides the PUBLIC infrastructure needed to achieve openly PRIVATE commerce for a worldwide community of artists, musicians, service providers, curators, and music lovers alike.</p>
           </div>
  
         </div>
