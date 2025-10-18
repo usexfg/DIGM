@@ -59,7 +59,7 @@ const AudioMarketplace: React.FC = () => {
   useEffect(() => {
     const D = ['Decentralized', 'Digital', 'Dynamic', 'Distributed', 'Direct', 'Diverse', 'Dual', 'Deeply', 'Dope', 'Driven'];
     const I = ['Independent', 'Innovative', 'Indie', 'Inspired', 'Interactive', 'Iconic', 'Inclusive', 'Infinite', 'Intuitive', 'Intense'];
-    const G = ['Groove', 'Genre', 'Glorious', 'Gathering', 'Growth', 'Genius'];
+    const G = ['Groove', 'Genre', 'Glorious', 'Gathering', 'Gratuity', 'Guild', 'Gallant', 'Growth', 'Genius'];
     const M = ['Marketplace', 'Machine', 'Media', 'Music', 'Movement', 'Mining', 'Mission', 'Model', 'Matrix', 'Magic'];
 
     // Safety check: reset any out-of-bounds indices
@@ -289,9 +289,10 @@ const AudioMarketplace: React.FC = () => {
   };
 
   const availableGenres = [
-    'All Genres', 'Electronic', 'Hip Hop', 'Rock', 'Pop', 'Jazz', 'Classical',
-    'Country', 'R&B', 'Reggae', 'Folk', 'Blues', 'Metal', 'Ambient', 'Techno',
-    'House', 'Drum & Bass', 'Trap', 'Lo-fi'
+    'All Genres', 'AI-Generated', 'Acoustic', 'Ambient', 'Americana', 'Alternative', 'Blues', 'Bluegrass', 'Country', 'Classical',
+    'Dance', 'Drums & Bass','Electronic','Experimental', 'Folk', 'Gospel', 'Guitar & Drums', 'Hip Hop', 'Holiday', 'House',
+    'Industrial', 'Instrumental', 'Jazz', 'Jam Band', 'J-pop', 'K-pop', 'Latin', 'Lo-fi', 'Metal', 'New Age', 'Opera', 'Pop',
+    'Punk', 'R&B Soul', 'Reggae', 'Rock', 'Ska', 'Techno', 'Trap', 'Vocals', 'Singer-Songwriter', 'Soundtrack', 'World'
   ];
 
   return (
@@ -354,7 +355,7 @@ const AudioMarketplace: React.FC = () => {
           }`}>
             <span className="gradient-text">
               {(() => {
-                const G = ['Groove', 'Genre', 'Gateway', 'Gathering', 'Growth', 'Genius'];
+                const G = ['Groove', 'Genre', 'Gallant', 'Gratuity','Gateway', 'Guild', 'Gathering', 'Growth', 'Genius'];
                 return G[currentG];
               })()}
             </span>
