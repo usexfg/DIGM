@@ -8,7 +8,7 @@ set -e
 echo "Creating Xcode project for DIGM ◉rigins..."
 
 # Check if Xcode project already exists
-if [ -d "DIGMVoiceMemo.xcodeproj" ]; then
+if [ -d "DIGMOrigins.xcodeproj" ]; then
     echo "Xcode project already exists. Remove it first to recreate."
     exit 1
 fi
@@ -18,7 +18,7 @@ if command -v xcodegen &> /dev/null; then
     echo "Using xcodegen to create project..."
     xcodegen generate
     echo "✅ Xcode project created successfully!"
-    echo "Open DIGMVoiceMemo.xcodeproj in Xcode"
+    echo "Open DIGMOrigins.xcodeproj in Xcode"
     exit 0
 fi
 
@@ -30,16 +30,16 @@ echo "1. Open Xcode"
 echo "2. File → New → Project"
 echo "3. Choose 'iOS' → 'App'"
 echo "4. Fill in:"
-echo "   - Product Name: DIGMVoiceMemo"
+echo "   - Product Name: DIGMOrigins"
 echo "   - Interface: SwiftUI"
 echo "   - Language: Swift"
 echo "   - Organization Identifier: org.digm"
-echo "   - Bundle Identifier: org.digm.voicememo"
+echo "   - Bundle Identifier: org.digm.digmorigins"
 echo "5. Save to: $(pwd)"
 echo "6. Add source files:"
 echo "   - DigmRecorderApp.swift"
-echo "   - VoiceMemoView.swift"
-echo "   - VoiceMemoRecorder.swift"
+echo "   - DigmOriginsView.swift"
+echo "   - DigmOriginsRecorder.swift"
 echo "   - Recorder.swift"
 echo "   - SecureEnclaveKey.swift"
 echo "   - ContentView.swift"

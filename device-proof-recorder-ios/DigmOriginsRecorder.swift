@@ -2,7 +2,7 @@ import SwiftUI
 import AVFoundation
 import CryptoKit
 
-class VoiceMemoRecorder: ObservableObject {
+class DigmOriginsRecorder: ObservableObject {
     @Published var isRecording = false
     @Published var duration: Int?
     @Published var fileSize: String?
@@ -144,7 +144,7 @@ class VoiceMemoRecorder: ObservableObject {
         isRecording = false
         isProcessing = false
         errorMessage = error.localizedDescription
- ConstructorshowError = true
+        showError = true
     }
     
     func share(_ recording: Recording) {
@@ -214,4 +214,5 @@ class VoiceMemoRecorder: ObservableObject {
         // In production, would use CoreData or CloudKit
     }
 }
+
 

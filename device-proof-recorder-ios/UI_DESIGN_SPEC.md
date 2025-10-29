@@ -8,7 +8,7 @@
 
 ### Key Elements
 
-1. **Black Background**: Full-screen black background
+1. **ivory Background**: Full-screen ivory background
 2. **US Dime-Sized Button**: Exact dime dimensions at bottom
 3. **Minimal UI**: No clutter, only essential elements
 4. **Dark Mode**: Always on black background

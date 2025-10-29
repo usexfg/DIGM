@@ -7,8 +7,8 @@ import AVFoundation
 // Round to 51 points for exact dime size
 let DIME_DIAMETER: CGFloat = 51
 
-struct VoiceMemoView: View {
-    @StateObject private var recorder = VoiceMemoRecorder()
+struct DigmOriginsView: View {
+    @StateObject private var recorder = DigmOriginsRecorder()
     
     var body: some View {
         NavigationView {
@@ -172,7 +172,7 @@ struct VoiceMemoView: View {
 
 // Recordings List View
 struct RecordingsListView: View {
-    @ObservedObject var recorder: VoiceMemoRecorder
+    @ObservedObject var recorder: DigmOriginsRecorder
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -224,7 +224,7 @@ struct RecordingsListView: View {
 // Recording Card
 struct RecordingCard: View {
     let recording: Recording
-    let recorder: VoiceMemoRecorder
+    let recorder: DigmOriginsRecorder
     
     var body: some View {
         HStack(spacing: 12) {
@@ -360,5 +360,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    VoiceMemoView()
+    DigmOriginsView()
 }

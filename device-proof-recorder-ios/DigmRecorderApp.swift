@@ -4,7 +4,7 @@ import SwiftUI
 struct DigmRecorderApp: App {
     var body: some Scene {
         WindowGroup {
-            VoiceMemoView()
+            DigmOriginsView()
                 .preferredColorScheme(.dark)
         }
     }

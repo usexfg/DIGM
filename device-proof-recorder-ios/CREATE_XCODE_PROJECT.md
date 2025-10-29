@@ -28,10 +28,10 @@ Launch Xcode on your Mac.
 Fill in the project details:
 
 ```
-Product Name: DIGMVoiceMemo
+Product Name: DIGMOrigins
 Team: (Select your team)
 Organization Identifier: org.digm
-Bundle Identifier: org.digm.voicememo
+Bundle Identifier: org.digm.digmorigins
 Interface: SwiftUI
 Language: Swift
 Storage: None
@@ -52,13 +52,13 @@ Click **"Create"**.
 
 The project is created with `ContentView.swift`. Add our files:
 
-1. **Right-click** on the project in Xcode (DIGMVoiceMemo folder)
-2. Select **"Add Files to DIGMVoiceMemo..."**
+1. **Right-click** on the project in Xcode (DIGMOrigins folder)
+2. Select **"Add Files to DIGMOrigins..."**
 3. Navigate to `device-proof-recorder-ios/`
 4. Select these files:
    - `DigmRecorderApp.swift`
-   - `VoiceMemoView.swift`
-   - `VoiceMemoRecorder.swift`
+   - `DigmOriginsView.swift`
+   - `DigmOriginsRecorder.swift`
    - `Recorder.swift`
    - `SecureEnclaveKey.swift`
    - `RecorderViewModel.swift`
@@ -83,8 +83,8 @@ The project is created with `ContentView.swift`. Add our files:
 
 ### Step 8: Configure Build Settings
 
-1. Select project **DIGMVoiceMemo** in navigator
-2. Select **DIGMVoiceMemo** target
+1. Select project **DIGMOrigins** in navigator
+2. Select **DIGMOrigins** target
 3. Go to **"General"** tab:
    - Set **Deployment Target** to `iOS 15.0`
    - Set **Supported Destinations** to iPhone only
@@ -125,7 +125,7 @@ brew install xcodegen
 xcodegen generate
 
 # Open in Xcode
-open DIGMVoiceMemo.xcodeproj
+open DIGMOrigins.xcodeproj
 ```
 
 ## Verification
@@ -172,7 +172,7 @@ Once project is created, uncomment iOS build steps in:
 - name: Build iOS App
   working-directory: device-proof-recorder-ios
   run: |
-    xcodebuild -scheme DIGMVoiceMemo \
+    xcodebuild -scheme DIGMOrigins \
       -configuration Release \
       -destination 'generic/platform=iOS' \
       clean build

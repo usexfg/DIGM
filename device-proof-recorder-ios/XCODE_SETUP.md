@@ -1,4 +1,4 @@
-# DIGM Voice Memo - Xcode Setup Guide
+# DIGM ◉rigins - Xcode Setup Guide
 
 ## Quick Start
 
@@ -8,7 +8,7 @@
 2. File → New → Project
 3. Choose "App" under iOS
 4. Fill in:
-   - Product Name: `DIGMVoiceMemo`
+   - Product Name: `DIGMOrigins`
    - Interface: SwiftUI
    - Language: Swift
    - Organization Identifier: `org.digm`
@@ -18,8 +18,8 @@
 
 Copy these files into your Xcode project:
 - `DigmRecorderApp.swift` → Project Root
-- `VoiceMemoView.swift` → Project Root
-- `VoiceMemoRecorder.swift` → Project Root
+- `DigmOriginsView.swift` → Project Root
+- `DigmOriginsRecorder.swift` → Project Root
 - `Recorder.swift` → Project Root
 - `SecureEnclaveKey.swift` → Project Root
 - `RecorderViewModel.swift` → Project Root (base file)
@@ -40,7 +40,7 @@ Copy these files into your Xcode project:
 Already configured in `Info.plist`:
 ```xml
 <key>NSMicrophoneUsageDescription</key>
-<string>DIGM Voice Memo needs microphone access...</string>
+<string>DIGM ◉rigins needs microphone access...</string>
 ```
 
 ### 4. Build Settings
@@ -64,15 +64,15 @@ Already configured in `Info.plist`:
 Your Xcode project should look like:
 
 ```
-DIGMVoiceMemo/
-├── DIGMVoiceMemo/
+DIGMOrigins/
+├── DIGMOrigins/
 │   ├── DigmRecorderApp.swift       # @main
-│   ├── VoiceMemoView.swift
-│   ├── VoiceMemoRecorder.swift
+│   ├── DigmOriginsView.swift
+│   ├── DigmOriginsRecorder.swift
 │   ├── Recorder.swift
 │   ├── SecureEnclaveKey.swift
 │   └── RecorderViewModel.swift     # Base file (update as needed)
-├── DIGMVoiceMemo.xcodeproj
+├── DIGMOrigins.xcodeproj
 └── Info.plist
 ```
 
@@ -182,8 +182,8 @@ Make sure your files are in the correct locations:
 ```bash
 device-proof-recorder-ios/
 ├── DigmRecorderApp.swift       # App entry point
-├── VoiceMemoView.swift         # Main UI
-├── VoiceMemoRecorder.swift    # Recording logic
+├── DigmOriginsView.swift         # Main UI
+├── DigmOriginsRecorder.swift    # Recording logic
 ├── Recorder.swift              # Audio capture
 ├── SecureEnclaveKey.swift     # Hardware keys
 ├── RecorderViewModel.swift    # State (update as needed)
@@ -209,7 +209,7 @@ For issues:
 
 ## Ready to Build!
 
-Your DIGM Voice Memo app is ready to build and test.
+Your DIGM ◉rigins app is ready to build and test.
 
 **Status**: ✅ All source files complete  
 **Next**: Build in Xcode and test on physical device

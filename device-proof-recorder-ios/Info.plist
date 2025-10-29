@@ -9,7 +9,7 @@
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
-    <string>org.digm.voicememo</string>
+    <string>org.digm.digmorigins</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
@@ -53,7 +53,7 @@
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>NSMicrophoneUsageDescription</key>
-    <string>DIGM Voice Memo needs microphone access to record audio with cryptographic proof. All recordings use only your device's built-in microphone.</string>
+    <string>DIGM ◉rigins needs microphone access to record audio with cryptographic proof. All recordings use only your device's built-in microphone.</string>
     <key>UIBackgroundModes</key>
     <array>
         <string>audio</string>
