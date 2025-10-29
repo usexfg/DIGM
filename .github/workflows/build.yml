@@ -88,19 +88,18 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-        working-directory: device-proof-recorder-ios
       
       - name: Install Fastlane
-        working-directory: device-proof-recorder-ios
         run: |
+          cd device-proof-recorder-ios
           bundle install
           
       - name: Build iOS App
-        working-directory: device-proof-recorder-ios
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           CI: 'true'
         run: |
+          cd device-proof-recorder-ios
           bundle exec fastlane ci
           
       - name: Upload Artifacts

@@ -25,27 +25,26 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-        working-directory: device-proof-recorder-android
       
       - name: Install Fastlane
-        working-directory: device-proof-recorder-android
         run: |
+          cd device-proof-recorder-android
           bundle install
       
       - name: Setup Google Play API
-        working-directory: device-proof-recorder-android
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
+          cd device-proof-recorder-android
           if [ -n "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" ]; then
             echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > fastlane/google_play_api_key.json
           fi
       
       - name: Build and Upload to Google Play
-        working-directory: device-proof-recorder-android
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
+          cd device-proof-recorder-android
           bundle exec fastlane beta
       
       - name: Upload Release Artifacts

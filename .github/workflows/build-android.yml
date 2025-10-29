@@ -30,24 +30,23 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-        working-directory: device-proof-recorder-android
       
       - name: Install Fastlane
-        working-directory: device-proof-recorder-android
         run: |
+          cd device-proof-recorder-android
           bundle install
       
       - name: Grant execute permission for gradlew
-        working-directory: device-proof-recorder-android
         run: |
-          chmod +x gradlew
+          cd device-proof-recorder-android
+          chmod +x gradlew || true
       
       - name: Build Android App
-        working-directory: device-proof-recorder-android
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           CI: 'true'
         run: |
+          cd device-proof-recorder-android
           bundle exec fastlane ci
       
       - name: Upload Debug APK
@@ -88,7 +87,7 @@ jobs:
           chmod +x gradlew
       
       - name: Run tests
-        working-directory: device-proof-recorder-android
         run: |
+          cd device-proof-recorder-android
           ./gradlew test --no-daemon
 
