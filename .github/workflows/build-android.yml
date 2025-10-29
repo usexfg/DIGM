@@ -30,7 +30,7 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-      
+
       - name: Install Fastlane
         run: |
           cd device-proof-recorder-android
