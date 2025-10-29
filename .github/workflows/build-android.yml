@@ -82,9 +82,9 @@ jobs:
           cache: 'gradle'
       
       - name: Grant execute permission for gradlew
-        working-directory: device-proof-recorder-android
         run: |
-          chmod +x gradlew
+          cd device-proof-recorder-android
+          chmod +x gradlew || true
       
       - name: Run tests
         run: |
