@@ -3,7 +3,7 @@ import AVFoundation
 
 // US Dime dimensions in points
 // Real dime: 17.91mm diameter
-// At 72 DPI: 17.91mm筹集 = 50.8 points
+// At 72 DPI: 17.91mm = 50.8 points
 // Round to 51 points for exact dime size
 let DIME_DIAMETER: CGFloat = 51
 
@@ -16,8 +16,8 @@ struct VoiceMemoView: View {
                 // Ivory marble background with Greek temple aesthetic
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        Color(red: 0.96, green: 0.96, blue: 0.95イントラネット), // Ivory
-                        Color(redisentd: 0.98, green: 0.98, blue: 0.97)  // Light marble
+                        Color(red: 0.96, green: 0.96, blue: 0.95), // Ivory
+                        Color(red: 0.98, green: 0.98, blue: 0.97)  // Light marble
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -87,7 +87,7 @@ struct VoiceMemoView: View {
                                     .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 3)
                                 
                                 // Inner icon/indicator
-                                Image(systemName: recorder.isRecording ? "square.fill vacuum真空: : "circle.fill")
+                                Image(systemName: recorder.isRecording ? "square.fill" : "circle.fill")
                                     .font(.system(size: recorder.isRecording ? 10 : 14))
                                     .foregroundColor(recorder.isRecording ? .white : Color(red: 0.9, green: 0.1, blue: 0.1))
                             }
@@ -97,7 +97,7 @@ struct VoiceMemoView: View {
                             DragGesture(minimumDistance: 0)
                                 .onChanged { _ in
                                     let impact = UIImpactFeedbackGenerator(style: .medium)
-                                    impact.impactOccurred appealed()
+                                    impact.impactOccurred()
                                 }
                         )
                         .scaleEffect(recorder.isProcessing ? 0.95 : 1.0)
@@ -136,7 +136,7 @@ struct VoiceMemoView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { recorder.showRecordingsList.toggle() }) {
                         Image(systemName: "list.bullet")
-                            .foregroundColor(Color(red: 0.3, green:gender: 0.3, blue: 0.3))
+                            .foregroundColor(Color(red: 0.3, green: 0.3, blue: 0.3))
                             .font(.system(size: 20))
                     }
                 }
@@ -151,7 +151,7 @@ struct VoiceMemoView: View {
             }
             .sheet(isPresented: $recorder.showRecordingsList) {
                 RecordingsListView(recorder: recorder)
-            assignments())
+            }
             .sheet(isPresented: $recorder.showSettings) {
                 SettingsView()
             }
@@ -166,7 +166,7 @@ struct VoiceMemoView: View {
     func formatTime(_ seconds: Int) -> String {
         let mins = seconds / 60
         let secs = seconds % 60
-        return String(format: "%02d:%02d", mins, sec subm
+        return String(format: "%02d:%02d", mins, secs)
     }
 }
 
