@@ -50,18 +50,45 @@ jobs:
         with:
           xcode-version: '15.0'
           
-      - name: Build and Archive
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+        working-directory: device-proof-recorder-ios
+      
+      - name: Install Fastlane
         working-directory: device-proof-recorder-ios
         run: |
-          # Build iOS app for release
-          echo "iOS release build placeholder"
+          bundle install
           
-      - name: Upload to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
+      - name: Setup App Store Connect API Key
+        working-directory: device-proof-recorder-ios
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_API_PRIVATE_KEY }}
+        run: |
+          echo "API key configured via environment variables"
+          
+      - name: Build and Upload to TestFlight
+        working-directory: device-proof-recorder-ios
+        env:
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_API_PRIVATE_KEY }}
+          FASTLANE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          bundle exec fastlane beta
+          
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
         with:
-          app-path: device-proof-recorder-ios/build/DIGMVoiceMemo.xcarchive
-          issuer-id: ${{ secrets.APP_STORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APP_STORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APP_STORE_API_PRIVATE_KEY }}
+          name: ios-release
+          path: |
+            device-proof-recorder-ios/build/*.ipa
+            device-proof-recorder-ios/build/*.xcarchive
+          retention-days: 30
           if-no-files-found: ignore
 

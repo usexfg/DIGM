@@ -1,4 +1,4 @@
-# DIGM ◉rigins - Xcode Setup Guide
+# DIGM 🅞rigins - Xcode Setup Guide
 
 ## Quick Start
 
@@ -8,10 +8,10 @@
 2. File → New → Project
 3. Choose "App" under iOS
 4. Fill in:
-   - Product Name: `DIGMOrigins`
+   - Product Name: `DIGM 🅞rigins`
    - Interface: SwiftUI
    - Language: Swift
-   - Organization Identifier: `org.digm`
+   - Organization Identifier: `org.usexfg`
 5. Save to: `digm-platform/device-proof-recorder-ios/`
 
 ### 2. Add Source Files
@@ -40,7 +40,7 @@ Copy these files into your Xcode project:
 Already configured in `Info.plist`:
 ```xml
 <key>NSMicrophoneUsageDescription</key>
-<string>DIGM ◉rigins needs microphone access...</string>
+<string>DIGM 🅞rigins needs microphone access...</string>
 ```
 
 ### 4. Build Settings
@@ -209,7 +209,7 @@ For issues:
 
 ## Ready to Build!
 
-Your DIGM ◉rigins app is ready to build and test.
+Your DIGM 🅞rigins app is ready to build and test.
 
 **Status**: ✅ All source files complete  
 **Next**: Build in Xcode and test on physical device

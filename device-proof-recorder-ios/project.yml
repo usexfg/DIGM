@@ -1,12 +1,12 @@
-name: DIGMOrigins
+name: 🅞rigins
 options:
-  bundleIdPrefix: org.digm
+  bundleIdPrefix: org.usexfg.digm
   deploymentTarget:
     iOS: "15.0"
   developmentLanguage: en
 
 targets:
-  DIGMOrigins:
+  DIGM_Origins:
     type: application
     platform: iOS
     deploymentTarget: "15.0"
@@ -22,18 +22,18 @@ targets:
     info:
       path: Info.plist
       properties:
-        CFBundleDisplayName: "DIGM ◉rigins"
-        CFBundleName: "DIGMOrigins"
-        CFBundleIdentifier: "org.digm.digmorigins"
+        CFBundleDisplayName: "DIGM 🅞rigins"
+        CFBundleName: "DIGM_Origins"
+        CFBundleIdentifier: "org.usexfg.digmorigins"
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIRequiredDeviceCapabilities: [armv7, secure-element]
-        NSMicrophoneUsageDescription: "DIGM ◉rigins needs microphone access to record audio with cryptographic proof. All recordings use only your device's built-in microphone."
+        NSMicrophoneUsageDescription: "🅞rigins needs microphone access to record audio with cryptographic proof. All recordings use only your device's built-in microphone."
         UIBackgroundModes: [audio]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.digm.digmorigins
+        PRODUCT_BUNDLE_IDENTIFIER: org.usexfg.digmorigins
         TARGETED_DEVICE_FAMILY: iPhone
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES

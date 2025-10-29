@@ -83,15 +83,25 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-swift-
       
-      - name: Build iOS App
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+        working-directory: device-proof-recorder-ios
+      
+      - name: Install Fastlane
         working-directory: device-proof-recorder-ios
         run: |
-          # Note: This assumes an Xcode project exists
-          # xcodebuild -scheme DIGMVoiceMemo \
-          #   -configuration Release \
-          #   -destination 'generic/platform=iOS' \
-          #   clean build
-          echo "iOS build placeholder - needs Xcode project file"
+          bundle install
+          
+      - name: Build iOS App
+        working-directory: device-proof-recorder-ios
+        env:
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          CI: 'true'
+        run: |
+          bundle exec fastlane ci
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
