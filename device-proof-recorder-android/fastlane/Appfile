@@ -1,0 +1,13 @@
+# Appfile for DIGM ◉rigins Android App
+
+# Google Play package name
+package_name("org.usexfg.digmorigins")
+
+# Path to the service account JSON file (for Google Play API access)
+# json_key_file("./fastlane/google_play_api_key.json")
+
+# For manual uploads, you can authenticate with OAuth
+# Uncomment if using OAuth instead of service account:
+# oauth2_client_id("your_client_id")
+# oauth2_client_secret("your_client_secret")
+

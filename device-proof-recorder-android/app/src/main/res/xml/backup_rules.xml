@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Exclude recordings and proof files from backup -->
+    <exclude domain="files" path="recordings/" />
+    <exclude domain="files" path="proofs/" />
+</full-backup-content>
+

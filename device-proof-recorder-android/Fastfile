@@ -1,0 +1,190 @@
+# Fastfile for DIGM ◉rigins Android App
+# Documentation: https://docs.fastlane.tools
+
+default_platform(:android)
+
+platform :android do
+  # Variables
+  PACKAGE_NAME = "org.usexfg.digmorigins"
+  APP_NAME = "DIGM ◉rigins"
+  KEYSTORE_PATH = ENV["KEYSTORE_PATH"] || "./keystore.jks"
+  KEYSTORE_ALIAS = ENV["KEYSTORE_ALIAS"] || "digmorigins"
+
+  desc "Run tests"
+  lane :test do
+    gradle(
+      task: "test",
+      flags: "--no-daemon"
+    )
+  end
+
+  desc "Build debug APK"
+  lane :build do
+    gradle(
+      task: "assembleDebug",
+      flags: "--no-daemon"
+    )
+  end
+
+  desc "Build release APK"
+  lane :build_release do
+    gradle(
+      task: "assembleRelease",
+      flags: "--no-daemon"
+    )
+  end
+
+  desc "Build release AAB (App Bundle) for Play Store"
+  lane :build_bundle do
+    gradle(
+      task: "bundleRelease",
+      flags: "--no-daemon"
+    )
+  end
+
+  desc "Sign APK"
+  lane :sign_apk do
+    apk_path = lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH] || find_apk_path
+    
+    if apk_path.nil?
+      UI.user_error!("Could not find APK to sign")
+    end
+    
+    UI.message("Signing APK: #{apk_path}")
+    
+    # Use fastlane's sign_apk action
+    sign_apk(
+      apk_path: apk_path,
+      keystore_path: KEYSTORE_PATH,
+      keystore_password: ENV["KEYSTORE_PASSWORD"],
+      key_alias: KEYSTORE_ALIAS,
+      key_password: ENV["KEY_PASSWORD"]
+    )
+  end
+
+  desc "Build and upload to Google Play Internal Testing"
+  lane :internal do
+    build_bundle
+    
+    upload_to_play_store(
+      track: "internal",
+      aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false
+    )
+  end
+
+  desc "Build and upload to Google Play Alpha"
+  lane :alpha do
+    build_bundle
+    
+    upload_to_play_store(
+      track: "alpha",
+      aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+  end
+
+  desc "Build and upload to Google Play Beta"
+  lane :beta do
+    build_bundle
+    
+    upload_to_play_store(
+      track: "beta",
+      aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    )
+    
+    slack(
+      message: "✅ Successfully uploaded #{APP_NAME} to Google Play Beta",
+      success: true
+    )
+  rescue => e
+    slack(
+      message: "❌ Failed to upload #{APP_NAME} to Google Play Beta: #{e.message}",
+      success: false
+    )
+    raise
+  end
+
+  desc "Build and upload to Google Play Production"
+  lane :release do
+    build_bundle
+    
+    upload_to_play_store(
+      track: "production",
+      aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      submit_for_review: false,
+      changelogs: {
+        "en-US" => changelog_from_git_commits
+      }
+    )
+    
+    slack(
+      message: "🚀 Successfully uploaded #{APP_NAME} to Google Play Production",
+      success: true
+    )
+  rescue => e
+    slack(
+      message: "❌ Failed to upload #{APP_NAME} to Google Play Production: #{e.message}",
+      success: false
+    )
+    raise
+  end
+
+  desc "Increment version code"
+  lane :increment_version_code do
+    increment_version_code(
+      gradle_file_path: "app/build.gradle.kts"
+    )
+  end
+
+  desc "Increment version name"
+  lane :increment_version_name do
+    increment_version_name(
+      gradle_file_path: "app/build.gradle.kts",
+      version_name: ENV["VERSION_NAME"] # e.g., "1.0.1"
+    )
+  end
+
+  desc "CI/CD lane for GitHub Actions"
+  lane :ci do
+    # Build debug for CI testing
+    gradle(
+      task: "assembleDebug",
+      flags: "--no-daemon"
+    )
+    
+    # Build release bundle if it's a release tag
+    if ENV["GITHUB_REF"]&.include?("refs/tags/") || ENV["GITHUB_REF"] == "refs/heads/main"
+      build_bundle
+    end
+  end
+
+  desc "Clean build artifacts"
+  lane :clean do
+    gradle(
+      task: "clean",
+      flags: "--no-daemon"
+    )
+  end
+
+  # Helper method to find APK path
+  def find_apk_path
+    debug_apk = File.join(Dir.pwd, "app", "build", "outputs", "apk", "debug", "app-debug.apk")
+    release_apk = File.join(Dir.pwd, "app", "build", "outputs", "apk", "release", "app-release.apk")
+    
+    return release_apk if File.exist?(release_apk)
+    return debug_apk if File.exist?(debug_apk)
+    nil
+  end
+end
+
