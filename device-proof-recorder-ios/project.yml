@@ -1,0 +1,48 @@
+name: DIGMVoiceMemo
+options:
+  bundleIdPrefix: org.digm
+  deploymentTarget:
+    iOS: "15.0"
+  developmentLanguage: en
+
+targets:
+  DIGMVoiceMemo:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: .
+        includes:
+          - "*.swift"
+        excludes:
+          - "ContentView.swift"
+          - "RecorderViewModel.swift"
+    resources:
+      - Info.plist
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: "DIGM ◉rigins"
+        CFBundleName: "DIGMVoiceMemo"
+        CFBundleIdentifier: "org.digm.voicememo"
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIRequiredDeviceCapabilities: [armv7, secure-element]
+        NSMicrophoneUsageDescription: "DIGM ◉rigins needs microphone access to record audio with cryptographic proof. All recordings use only your device's built-in microphone."
+        UIBackgroundModes: [audio]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.digm.voicememo
+        TARGETED_DEVICE_FAMILY: iPhone
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+        SWIFT_VERSION: "5.0"
+    capabilities:
+      device-identity:
+        enabled: true
+        type: apple-app-capability
+      secure-element:
+        enabled: true
+        type: apple-app-capability
+

@@ -297,6 +297,74 @@ Acceptance:
 - Content moderation workflow for uploads and preview selection.
 - Automated backups and disaster recovery for catalog and media.
 
+### Phase 8 — Fuego Audio Torrent Network Implementation (4-6 weeks)
+
+Transform Fuego into a privacy-focused, token-incentivized torrent network specifically optimized for DIGM audio distribution.
+
+#### 8.1 Protocol Extensions
+- **New Message Types**: Add torrent-specific commands to P2P protocol:
+  - `COMMAND_TORRENT_ANNOUNCE` (ID: 1100) - Content availability announcements
+  - `COMMAND_TORRENT_REQUEST` (ID: 1101) - Chunk request/response protocol
+  - `COMMAND_TORRENT_STATS` (ID: 1102) - Bandwidth and seeding statistics
+
+- **Content Addressing**: Use SHA-256 hashes for torrent identification (aligned with existing contentHash system)
+- **Chunk Size**: Standardize on 512KB chunks for audio streaming optimization
+
+#### 8.2 Torrent Manager Integration
+- **NetNode Extension**: Add `TorrentManager` class to existing NetNode architecture
+- **Content Discovery**: Leverage existing peer discovery for torrent swarm formation
+- **Bandwidth Management**: Implement quality-of-service for audio streaming prioritization
+
+#### 8.3 Privacy Enhancements
+- **CryptoNote Integration**: Use existing encryption for private torrent swarms
+- **Stealth Seeding**: Anonymous content sharing using Fuego's privacy features
+- **Zero-Knowledge Proofs**: Verify content availability without revealing specifics
+
+#### 8.4 Token Incentives
+- **PARA Rewards**: Automatic PARA distribution for seeding and bandwidth contribution
+  - Base reward: 10 PARA per GB seeded
+  - Bonus: 5x multiplier for Elder-Node stakers
+  - Time-based: Higher rewards for long-term seeding
+
+- **XFG Staking**: Stake XFG for premium seeding privileges and guaranteed slots
+- **DIGM Requirements**: DIGM coin holders get priority in content distribution
+
+#### 8.5 Smart Contract Integration
+- **Content Registration**: On-chain registration of torrent metadata and hashes
+- **Royalty Automation**: Smart contracts for automatic artist payments
+- **Audit Proofs**: On-chain verification of content availability and seeding
+
+#### 8.6 Cross-Platform Clients
+- **Browser Integration**: WebRTC-based torrent client for browser streaming
+- **Mobile Support**: Lightweight mobile clients with background seeding
+- **Desktop Apps**: Native integration with Fuego wallet and full node
+
+#### 8.7 Economic Model
+- **Seeding Economy**: PARA rewards create sustainable seeding ecosystem
+- **Bandwidth Markets**: Dynamic pricing for premium bandwidth allocation
+- **Storage Staking**: XFG/DIGM staking for guaranteed storage capacity
+
+#### 8.8 Implementation Steps
+1. **Week 1-2**: Protocol extensions and basic torrent messaging
+2. **Week 3-4**: Torrent manager integration with NetNode
+3. **Week 5**: Privacy enhancements and encryption integration
+4. **Week 6**: Token incentives and smart contract integration
+
+#### 8.9 Acceptance Criteria
+- Fuego nodes can announce and discover torrent content
+- Audio streaming works via torrent protocol with fallback support
+- PARA rewards automatically distributed for seeding activity
+- Privacy features maintain anonymous content sharing
+- Cross-platform clients support browser, mobile, and desktop
+
+#### 8.10 Advantages Over Traditional Torrents
+- **Built-in Privacy**: CryptoNote encryption for anonymous sharing
+- **Token Incentives**: PARA rewards create sustainable ecosystem
+- **Blockchain Integration**: On-chain content verification and payments
+- **Quality of Service**: Prioritized audio streaming capabilities
+- **Censorship Resistance**: Truly decentralized content distribution
+
+This transformation positions Fuego as the world's first privacy-focused, token-incentivized torrent network - perfectly aligned with DIGM's audio distribution needs while maintaining Fuego's core privacy philosophy.
 
 ## Checklists
 

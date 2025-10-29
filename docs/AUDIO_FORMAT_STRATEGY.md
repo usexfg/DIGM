@@ -103,6 +103,12 @@ albums/
   - Distribution: Earned by curators for engagement (playlist plays, follows, shares)
   - Utility: Boost playlist visibility, stake in curation markets, delegate voting power
 
+- **FABLE (Fuego colored-coin)**: Stable coin from a time-lock receipt
+  - **Purpose**: Price-stable album purchase option using XFG value capture
+  - **Mechanism**: DIGM artist can choose to be paid by a 'fable'. Each Fable is a single colored-coin, representing not 1 dollar, but rather the sale of an album
+  - **Long-term value**: While created as a solution for short-term price fluctuations, each Fable could theoretically represent a value equal to the average selling price for all DIGM albums sold in marketplace at any given time
+  - **Function**: Basically a receipt - provides price stability for album purchases while maintaining decentralization
+
 #### Market Participants
 
 **Artists**
@@ -204,41 +210,3 @@ albums/
 - **Filecoin incentives**: Decentralized storage marketplace
 - **CDN optimization**: Global edge caching
 - **P2P improvements**: Direct artist-to-listener streaming
-
-## Web3 Distribution Alternatives
-
-### Overview
-Web3 platforms offer decentralized alternatives to traditional distributors like CD Baby, focusing on blockchain-based rights management, direct artist monetization, and token economies. DIGM can integrate with or compete against these platforms while maintaining compatibility with traditional distribution.
-
-### Key Web3 Distributors
-| Platform | Blockchain | Core Features | Monetization Model | Artist Share |
-|----------|------------|----------------|-------------------|--------------|
-| **Audius** | Solana | Streaming, discovery, direct uploads | AUDIO tokens, streaming payouts | 90% |
-| **Catalog** | Polygon | Streaming, NFTs, social features | Streaming rewards, NFT sales | 85% |
-| **Sound.xyz** | Ethereum | NFT marketplace, collectibles | NFT sales, royalties | 95% |
-| **Zora** | Ethereum | NFT minting, marketplace | NFT sales, secondary market | 95% |
-| **Mint Songs** | Polygon | NFT releases, fan engagement | NFT sales, streaming | 90% |
-| **Rally** | Ethereum | Crowdfunding, fan ownership | Fan equity, royalties | Variable |
-| **Opulous** | BSC | NFT marketplace, streaming | NFT sales, streaming | 85% |
-| **Noizd** | Ethereum | NFT platform, social | NFT sales, fan rewards | 90% |
-| **MusikGraph** | Ethereum | Rights management, distribution | Royalties, licensing | 80% |
-| **Tune.fm** | Polygon | NFT drops, streaming | NFT sales, fan tokens | 85% |
-
-### DIGM Integration Strategy
-1. **Multi-Platform Distribution**: Artists can opt-in to distribute to both traditional (Spotify) and web3 platforms
-2. **Hybrid Monetization**: Combine XFG album sales with PARA streaming rewards and NFT royalties
-3. **Cross-Platform Compatibility**: Encrypted audio can be decrypted for web3 distribution while maintaining web2 compatibility
-4. **Bridge to Web3**: Use DIGM as an entry point for artists transitioning from traditional to decentralized distribution
-
-### Comparative Advantages
-- **Higher Artist Share**: 80-95% vs 70-85% for traditional distributors
-- **Instant Payments**: Crypto settlements vs 6-18 month traditional payout cycles
-- **Transparent Royalties**: On-chain tracking vs opaque traditional systems
-- **NFT Integration**: Additional revenue streams through collectibles and limited editions
-- **Global Reach**: Decentralized platforms remove geographic barriers
-
-### Implementation Roadmap
-1. **Phase 1**: Integrate with 3-5 web3 platforms (Audius, Catalog, Sound.xyz)
-2. **Phase 2**: Build NFT minting tools within DIGM upload flow
-3. **Phase 3**: Create cross-platform royalty aggregator smart contract
-4. **Phase 4**: Launch "DIGM Web3 Distribution" service with traditional fallback
