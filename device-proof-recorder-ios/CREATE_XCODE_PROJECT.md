@@ -28,10 +28,10 @@ Launch Xcode on your Mac.
 Fill in the project details:
 
 ```
-Product Name: DIGMOrigins
-Team: (Select your team)
-Organization Identifier: org.digm
-Bundle Identifier: org.digm.digmorigins
+Product Name: DIGM Origins
+Team: USEXFG | DIGM platform
+Organization Identifier: org.usexfg
+Bundle Identifier: org.usexfg.dimgorigins
 Interface: SwiftUI
 Language: Swift
 Storage: None
@@ -83,8 +83,8 @@ The project is created with `ContentView.swift`. Add our files:
 
 ### Step 8: Configure Build Settings
 
-1. Select project **DIGMOrigins** in navigator
-2. Select **DIGMOrigins** target
+1. Select project **DIGM_Origins** in navigator
+2. Select **DIGM_Origins** target
 3. Go to **"General"** tab:
    - Set **Deployment Target** to `iOS 15.0`
    - Set **Supported Destinations** to iPhone only
