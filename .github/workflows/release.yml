@@ -19,13 +19,13 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         
       - name: Build Release
-        working-directory: digm_ref
         run: |
+          cd digm_ref
           cargo build --release
           
       - name: Build CLI Tools
-        working-directory: digm_ref
         run: |
+          cd digm_ref
           cargo build --release --bin digm-encode
           cargo build --release --bin digm-info
           
@@ -35,7 +35,7 @@ jobs:
           files: |
             digm_ref/target/release/libdigm_ref.*
             digm_ref/target/release/digm-encode*
-            digm_ref/target/re ولیlease/digm-info*
+            digm_ref/target/release/digm-info*
           token: ${{ secrets.GITHUB_TOKEN }}
 
   release-ios:
@@ -70,7 +70,7 @@ jobs:
           cd device-proof-recorder-ios
           echo "API key configured via environment variables"
           
-      - name: Build and Upload to TestFlight
+      - name: Build and Submit to App Store (via Fastlane release)
         env:
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_API_KEY_ID }}
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_API_ISSUER_ID }}
@@ -79,7 +79,7 @@ jobs:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
           cd device-proof-recorder-ios
-          bundle exec fastlane beta
+          bundle exec fastlane release
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3

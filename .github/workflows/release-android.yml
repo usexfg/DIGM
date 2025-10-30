@@ -40,12 +40,12 @@ jobs:
             echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > fastlane/google_play_api_key.json
           fi
       
-      - name: Build and Upload to Google Play
+      - name: Build and Upload to Google Play (Production)
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
           cd device-proof-recorder-android
-          bundle exec fastlane beta
+          bundle exec fastlane release
       
       - name: Upload Release Artifacts
         uses: actions/upload-artifact@v3
