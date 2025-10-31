@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line, Area, AreaChart } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, Area, AreaChart } from 'recharts';
+import { PARATotalDistributionChart } from './PARATotalDistributionChart';
+import { PARAEmissionScheduleChart } from './PARAEmissionScheduleChart';
 
 interface TokenData {
   name: string;
@@ -38,21 +40,21 @@ const EconomyOverview: React.FC = () => {
   const tokenData: TokenData[] = [
     {
       name: 'XFG (Fuego)',
-      value: 45,
+      value: 40,
       color: '#FF6B6B',
-      percentage: 45,
+      percentage: 40,
       supply: '18.4M',
       marketCap: '$2.3M',
       description: 'L1 Native asset, DIGM platform is built on top of Fuego p2p blockchain network. Required holdings by Premium Users is 0.1 XFG at log in. Primary payment method for DIGM marketplace purchases. Required in Elderfier staking (800 XFG) etc.'
     },
     {
       name: 'PARA (Stellar)',
-      value: 30,
+      value: 25,
       color: '#4ECDC4',
-      percentage: 30,
+      percentage: 25,
       supply: 'Inflationary',
       marketCap: '$850K',
-      description: 'Listener/artist reward token earned through Paradio engagement'
+      description: 'Reward token for artist streaming royalties, Paradio listener rewards, curator rewards, Elderfier uptime rewards, & liquidity providers for Fable redemption (ABLE/DAI pools)'
     },
     {
       name: 'CURA (Fuego)',
@@ -64,13 +66,22 @@ const EconomyOverview: React.FC = () => {
       description: 'Curation & governance token for playlist creation and DAO voting'
     },
     {
-      name: 'Fable - Fuego (colored)',
-      value: 10,
+      name: 'FABLE - Fuego (colored)',
+      value: 15,
       color: '#96CEB4',
-      percentage: 10,
+      percentage: 15,
       supply: 'Variable',
       marketCap: '$500K',
-      description: 'Fuego stable coin from a time-lock receipt basically, using XFG value capture for price-stable album purchase options. DIGM artist can choose to get paid by a \'fable\'. Fable always represents an album sale, therefore while being created for short-term price fluctuations, but since fable are single colored-coins, in the long-term each fable could effectively represent the average selling price of all albums listed on DIGM marketplace at any given time. But its basically a receipt.'
+      description: 'Fuego stable coin based on the time-locked value capture of XFG for price-stable album purchases. When purchasing an album, buyer burns XFG in amounts equivalent to pricing amount in USD (or any fiat currency) value, (giftDeposit) so that artists receive a FABLE - a zkSTARK proof of collateral stored in the tx_extra tag of transaction recording XFG amount burned to match (artist-set) USD pricing of album.'
+    },
+    {
+      name: 'ABLE - COLD L3',
+      value: 5,
+      color: '#E74C3C',
+      percentage: 5,
+      supply: 'Variable',
+      marketCap: '$300K',
+      description: 'AbleST stable token on C0DL3 blockchain. Used in ABLE/DAI liquidity pools for FABLE stability. The tx_extra tag carries information sufficient to decrypt messages stored in C0LD L3 contracts stating \'user burned x amount of XFG equaling y amount of USD value\'. FABLE is just a zk-proof of collateral, while ABLE are the actual tokens. Liquidity providers earn PARA rewards for maintaining stable token arbitrage and price stability mechanisms.'
     }
   ];
 
@@ -82,7 +93,7 @@ const EconomyOverview: React.FC = () => {
       revenue: 45000,
       color: '#FF6B6B',
       role: 'Content Creators',
-      incentives: ['100% revenue retention', 'PARA streaming rewards', 'Direct fan connection']
+      incentives: ['100% revenue retention', 'FABLE stable payments', 'Direct fan connection']
     },
     {
       type: 'Listeners',
@@ -90,7 +101,7 @@ const EconomyOverview: React.FC = () => {
       revenue: 0,
       color: '#4ECDC4',
       role: 'Music Consumers',
-      incentives: ['PARA earning for listening', 'Direct artist support', 'Premium features access']
+      incentives: ['FABLE stable purchases', 'Direct artist support', 'Premium features access']
     },
     {
       type: 'Elderfiers',
@@ -108,7 +119,22 @@ const EconomyOverview: React.FC = () => {
       role: 'Content Discovery',
       incentives: ['CURA staking rewards', 'PARA playlist bonuses', 'Paradio Stations']
     },
+    {
+      type: 'Liquidity Providers',
+      count: 95,
+      revenue: 15000,
+      color: '#9B59B6',
+      role: 'ABLE/DAI Pool Providers',
+      incentives: ['PARA rewards for LP incentives', 'ABLE/DAI trading fees', 'Stable token arbitrage']
+    },
   ];
+
+  // DIGMslots System - Paradio Artist Stations
+  // 16 DIGMslots per day (90min each in 24hr framework)
+  // Artists claim slots up to 8 days in advance
+  // Slot selection priority: lowest last_time_artist_used_Paradio_DIGM_slot
+  // XFG stake option: claim up to 6 months in advance, no competition
+  // Alternative: 9 DIGMslots (30min each) integrated into main Paradio programming
 
   // Economic flow data
   const economicFlows: EconomicFlow[] = [
@@ -121,10 +147,10 @@ const EconomyOverview: React.FC = () => {
     },
     {
       from: 'Protocol',
-      to: 'Listeners',
+      to: 'Liquidity Providers',
       amount: 15000,
       token: 'PARA',
-      description: 'Listening rewards'
+      description: 'PARA rewards for LP incentives'
     },
     {
       from: 'Listeners',
@@ -155,11 +181,18 @@ const EconomyOverview: React.FC = () => {
       description: 'CURA minting fees'
     },
     {
-      from: 'Artists',
-      to: 'Listeners',
-      amount: 1500,
-      token: 'Fable',
-      description: 'Stable album purchases'
+      from: 'Fable Buyers',
+      to: 'Artists',
+      amount: 12000,
+      token: 'FABLE',
+      description: 'Stable album purchases (XFG burned for USD value)'
+    },
+    {
+      from: 'Fable Buyers',
+      to: 'ABLE/DAI LP',
+      amount: 8000,
+      token: 'ABLE',
+      description: 'Liquidity provision for AbleST stable token'
     }
   ];
 
@@ -254,9 +287,9 @@ const EconomyOverview: React.FC = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="type" stroke="#9CA3AF" />
                 <YAxis stroke="#9CA3AF" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
                     border: '1px solid #D946EF',
                     borderRadius: '8px'
                   }}
@@ -343,7 +376,7 @@ const EconomyOverview: React.FC = () => {
           </div>
 
           {/* Flow Connections */}
-          <div className="grid grid-cols-3 gap-8 h-96">
+          <div className="grid grid-cols-4 gap-6 h-96">
             {/* Artists */}
             <div className="flex flex-col items-center justify-center space-y-4">
               <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
@@ -351,9 +384,9 @@ const EconomyOverview: React.FC = () => {
               </div>
               <div className="text-center">
                 <div className="text-sm text-white font-semibold">Revenue Sources</div>
-                <div className="text-xs text-gray-400">Album Sales: $25K</div>
+                <div className="text-xs text-gray-400">FABLE Stable: $12K</div>
+                <div className="text-xs text-gray-400">XFG Direct: $25K</div>
                 <div className="text-xs text-gray-400">PARA Tips: $8K</div>
-                <div className="text-xs text-gray-400">Streaming: $12K</div>
               </div>
             </div>
 
@@ -363,10 +396,10 @@ const EconomyOverview: React.FC = () => {
                 <span className="text-white font-bold text-xs">Listeners</span>
               </div>
               <div className="text-center">
-                <div className="text-sm text-white font-semibold">Earnings</div>
-                <div className="text-xs text-gray-400">PARA Rewards: $15K</div>
+                <div className="text-sm text-white font-semibold">Purchases</div>
+                <div className="text-xs text-gray-400">FABLE Stable: $12K</div>
+                <div className="text-xs text-gray-400">XFG Direct: $25K</div>
                 <div className="text-xs text-gray-400">Premium Access</div>
-                <div className="text-xs text-gray-400">Direct Support</div>
               </div>
             </div>
 
@@ -382,6 +415,19 @@ const EconomyOverview: React.FC = () => {
                 <div className="text-xs text-gray-400">Governance</div>
               </div>
             </div>
+
+            {/* Liquidity Providers */}
+            <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-xs">LP</span>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-white font-semibold">ABLE/DAI Pool</div>
+                <div className="text-xs text-gray-400">PARA Rewards: $15K</div>
+                <div className="text-xs text-gray-400">Trading Fees</div>
+                <div className="text-xs text-gray-400">Arbitrage</div>
+              </div>
+            </div>
           </div>
 
           {/* Flow Arrows */}
@@ -389,11 +435,11 @@ const EconomyOverview: React.FC = () => {
             {/* Artists to Center */}
             <div className="absolute top-1/2 left-1/4 w-1/4 h-0.5 bg-gradient-to-r from-red-500 to-fuchsia-500 transform -translate-y-1/2"></div>
             <div className="absolute top-1/2 left-1/4 w-0 h-0 border-l-4 border-l-fuchsia-500 border-t-2 border-t-transparent border-b-2 border-b-transparent transform -translate-y-1/2 translate-x-1/4"></div>
-            
+
             {/* Listeners to Center */}
             <div className="absolute top-1/2 left-1/2 w-1/4 h-0.5 bg-gradient-to-r from-teal-500 to-fuchsia-500 transform -translate-y-1/2 -translate-x-1/2"></div>
             <div className="absolute top-1/2 left-1/2 w-0 h-0 border-l-4 border-l-fuchsia-500 border-t-2 border-t-transparent border-b-2 border-b-transparent transform -translate-y-1/2 translate-x-1/4"></div>
-            
+
             {/* Infrastructure to Center */}
             <div className="absolute top-1/2 right-1/4 w-1/4 h-0.5 bg-gradient-to-r from-blue-500 to-fuchsia-500 transform -translate-y-1/2"></div>
             <div className="absolute top-1/2 right-1/4 w-0 h-0 border-l-4 border-l-fuchsia-500 border-t-2 border-t-transparent border-b-2 border-b-transparent transform -translate-y-1/2 translate-x-1/4"></div>
@@ -438,8 +484,8 @@ const EconomyOverview: React.FC = () => {
 
   const renderAnalytics = () => (
     <div className="space-y-6">
-      {/* Growth Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Volume Growth */}
         <div className="card">
           <h3 className="text-xl font-bold text-white mb-4">Volume Growth</h3>
           <div className="h-80">
@@ -448,9 +494,9 @@ const EconomyOverview: React.FC = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="month" stroke="#9CA3AF" />
                 <YAxis stroke="#9CA3AF" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
                     border: '1px solid #D946EF',
                     borderRadius: '8px'
                   }}
@@ -463,6 +509,7 @@ const EconomyOverview: React.FC = () => {
           </div>
         </div>
 
+        {/* User Growth */}
         <div className="card">
           <h3 className="text-xl font-bold text-white mb-4">User Growth</h3>
           <div className="h-80">
@@ -471,9 +518,9 @@ const EconomyOverview: React.FC = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="month" stroke="#9CA3AF" />
                 <YAxis stroke="#9CA3AF" />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
                     border: '1px solid #D946EF',
                     borderRadius: '8px'
                   }}
@@ -483,6 +530,37 @@ const EconomyOverview: React.FC = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
+        </div>
+
+        {/* PARA Token Distribution Chart */}
+        <div className="card">
+          <h3 className="text-xl font-bold text-white mb-4">PARA Token Distribution</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={tokenData.filter(t => t.name.includes('PARA'))}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, value }: any) => `${name}: ${value}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {tokenData.filter(t => t.name.includes('PARA')).map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* PARA Emission Schedule Chart */}
+        <div className="card col-span-full">
+          <PARAEmissionScheduleChart />
         </div>
       </div>
 

@@ -5,13 +5,13 @@ import ParaBridge from './components/ParaBridge';
 import HostingPermissions from './components/HostingPermissions';
 import XfgWallet from './components/XfgWallet';
 import Paradio from './components/Paradio';
+import EconomyOverview from './components/EconomyOverview';
 import ArtistProfile from './components/ArtistProfile';
 import ArtistDashboard from './components/ArtistDashboard';
 import AudioMarketplace from './components/AudioMarketplace';
 import ArtistPage from './components/ArtistPage';
 import AlbumPage from './components/AlbumPage';
 import PremiumAccess from './components/PremiumAccess';
-import EconomyOverview from './components/EconomyOverview';
 import { WalletProvider, useWallet } from './hooks/useWallet';
 
 function AppContent() {
@@ -57,8 +57,8 @@ function AppContent() {
     if (path === '/bridge') return 'bridge';
     if (path === '/premium') return 'premium';
     if (path === '/hosting') return 'hosting';
-    if (path === '/xfg') return 'xfg';
     if (path === '/economy') return 'economy';
+    if (path === '/xfg') return 'xfg';
     return 'marketplace';
   };
 
@@ -66,7 +66,6 @@ function AppContent() {
 
   const navigationItems = [
     { id: 'marketplace', label: 'Discover', icon: '►', description: 'Audio Marketplace', path: '/' },
-    { id: 'economy', label: 'Economy', icon: '💰', description: 'Token Economy Overview', path: '/economy' },
     ...(hasDigmHosting ? [
       { id: 'artist', label: 'Profile', icon: '⭑', description: 'Artist Profile', path: '/artist/profile' },
       { id: 'dashboard', label: 'Dashboard', icon: '♪', description: 'Artist Dashboard', path: '/artist/dashboard' }
@@ -74,6 +73,7 @@ function AppContent() {
     { id: 'paradio', label: 'Paradio', icon: '📻', description: 'P2P Radio Station', path: '/paradio' },
     { id: 'bridge', label: 'Bridge', icon: <img src="/assets/para.png" alt="PARA" className="inline-block w-5 h-5 md:w-6 md:h-6 rounded-full align-middle" />, description: 'PARA bridge & vouchers', path: '/bridge' },
     { id: 'hosting', label: 'Hosting', icon: '🖥️', description: 'Hosting Permissions', path: '/hosting' },
+    { id: 'economy', label: 'Economy', icon: '💰', description: 'Token Economy Overview', path: '/economy' },
     { id: 'premium', label: 'Premium', icon: '♛', description: 'Premium Access', path: '/premium' },
     { id: 'xfg', label: 'Freemium', icon: '🆓', description: 'CPU-Powered Freemium Access', path: '/xfg' },
   ];
@@ -226,7 +226,6 @@ function AppContent() {
             <div className="max-w-6xl mx-auto">
               <Routes>
                 <Route path="/" element={<AudioMarketplace />} />
-                <Route path="/economy" element={<EconomyOverview />} />
                 <Route path="/artist/:artistId" element={<ArtistPage />} />
                 <Route path="/album/:albumId" element={<AlbumPage />} />
                 <Route path="/artist/profile" element={<ArtistProfile />} />
@@ -235,6 +234,7 @@ function AppContent() {
                 <Route path="/bridge" element={<ParaBridge />} />
                 <Route path="/premium" element={<PremiumAccess />} />
                 <Route path="/hosting" element={<HostingPermissions />} />
+                <Route path="/economy" element={<EconomyOverview />} />
                 <Route path="/xfg" element={<XfgWallet />} />
               </Routes>
           </div>

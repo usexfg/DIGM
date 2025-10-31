@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
+import { profileStore } from '../utils/profile';
+import { GENRES } from '../constants/genres';
 
 interface ArtistProfile {
   id: string;
@@ -72,24 +74,36 @@ const ArtistProfile: React.FC = () => {
 
   const fetchArtistProfile = async () => {
     if (!evmAddress) return;
-    
     try {
-      const response = await fetch(`/api/artist/profile/${evmAddress}`);
-      const data = await response.json();
-      setProfile(data.profile);
-      
-      // Initialize form data
-      setFormData({
-        name: data.profile?.name || '',
-        bio: data.profile?.bio || '',
-        genres: data.profile?.genres || [],
-        socialLinks: data.profile?.socialLinks || {
-          twitter: '',
-          instagram: '',
-          youtube: '',
-          spotify: ''
-        }
-      });
+      const stored = profileStore.get(evmAddress);
+      if (stored) {
+        setProfile({
+          id: stored.address,
+          name: stored.name,
+          bio: stored.bio,
+          avatar: '',
+          genres: stored.genres,
+          socialLinks: stored.socialLinks,
+          totalSales: 0,
+          totalTracks: 0,
+          followers: 0,
+          verified: false
+        });
+        setFormData({
+          name: stored.name,
+          bio: stored.bio,
+          genres: stored.genres,
+          socialLinks: stored.socialLinks as any
+        });
+      } else {
+        setProfile(null);
+        setFormData({
+          name: '',
+          bio: '',
+          genres: [],
+          socialLinks: { twitter: '', instagram: '', youtube: '', spotify: '' }
+        });
+      }
     } catch (error) {
       console.error('Failed to fetch artist profile:', error);
     }
@@ -152,18 +166,13 @@ const ArtistProfile: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/artist/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          address: evmAddress,
-          ...formData
-        })
+      profileStore.set({
+        address: evmAddress,
+        name: formData.name,
+        bio: formData.bio,
+        genres: formData.genres,
+        socialLinks: formData.socialLinks
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to save profile');
-      }
 
       await fetchArtistProfile();
       setIsEditing(false);
@@ -272,11 +281,7 @@ const ArtistProfile: React.FC = () => {
     return tokens[tokenType];
   };
 
-  const availableGenres = [
-    'Electronic', 'Hip Hop', 'Rock', 'Pop', 'Jazz', 'Classical',
-    'Country', 'R&B', 'Reggae', 'Folk', 'Blues', 'Metal',
-    'Ambient', 'Techno', 'House', 'Drum & Bass', 'Trap', 'Lo-fi'
-  ];
+  const availableGenres = GENRES;
 
   if (!evmAddress) {
     return (

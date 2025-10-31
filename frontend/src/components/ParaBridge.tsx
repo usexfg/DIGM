@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useWallet } from '../hooks/useWallet';
 import { STELLAR_CONFIG, PARA_UTILS } from '../config/stellar';
+import { PARATotalDistributionChart } from './PARATotalDistributionChart';
+import { PARAEmissionScheduleChart } from './PARAEmissionScheduleChart';
 
 interface ClaimableBalance {
   id: string;
@@ -376,6 +378,16 @@ const ParaBridge: React.FC = () => {
               <p>• <strong>Time:</strong> Bridge typically completes within 1-2 minutes</p>
             </div>
           </div>
+
+          {/* New Charts Section */}
+          <section className="mt-12 grid md:grid-cols-2 gap-8">
+            <div className="bg-gray-800 rounded-lg p-6">
+              <PARATotalDistributionChart />
+            </div>
+            <div className="bg-gray-800 rounded-lg p-6">
+              <PARAEmissionScheduleChart />
+            </div>
+          </section>
         </>
       )}
 

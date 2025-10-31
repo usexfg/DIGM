@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import { Link } from 'react-router-dom';
 import PremiumAccess from './PremiumAccess';
+import { GENRES_WITH_ALL } from '../constants/genres';
+import { api } from '../utils/api';
 
 interface Track {
   id: string;
@@ -128,7 +130,28 @@ const AudioMarketplace: React.FC = () => {
         });
       });
       
-      setTracks(tracksFromCatalog);
+      // Merge in uploaded tracks from local mock API (published only)
+      const uploaded = await api.tracks.getAllTracks();
+      const uploadedAsMarketplace: Track[] = uploaded.map(u => ({
+        id: u.id,
+        title: u.title,
+        artist: u.artist,
+        artistAddress: u.artist,
+        duration: u.duration,
+        price: u.price,
+        genre: u.genre || 'Electronic',
+        coverArt: u.coverArt,
+        audioUrl: u.audioUrl,
+        sales: u.sales,
+        description: '',
+        uploadDate: u.uploadDate,
+        serviceType: 'album-only',
+        streamingEnabled: false,
+        paraEarnings: 0,
+        totalStreamTime: 0
+      }));
+
+      setTracks([...tracksFromCatalog, ...uploadedAsMarketplace]);
     } catch (error) {
       console.error('Failed to fetch tracks from catalog:', error);
       
@@ -288,11 +311,7 @@ const AudioMarketplace: React.FC = () => {
     setSelectedTrack(track);
   };
 
-  const availableGenres = [
-    'All Genres', 'Electronic', 'Hip Hop', 'Rock', 'Pop', 'Jazz', 'Classical',
-    'Country', 'R&B', 'Reggae', 'Folk', 'Blues', 'Metal', 'Ambient', 'Techno',
-    'House', 'Drum & Bass', 'Trap', 'Lo-fi'
-  ];
+  const availableGenres = GENRES_WITH_ALL;
 
   return (
     <div className="space-y-8">

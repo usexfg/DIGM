@@ -1,5 +1,228 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '../hooks/useWallet';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+
+// Enhanced Economy Overview Component with Visualizations
+interface EconomyVisualizationProps {
+  title?: string;
+  showMindMap?: boolean;
+  className?: string;
+}
+
+const EconomyVisualization: React.FC<EconomyVisualizationProps> = ({
+  title = "DIGM Economy Overview",
+  showMindMap = true,
+  className = ""
+}) => {
+  // Token distribution data
+  const tokenDistributionData = [
+    { name: 'XFG', value: 35, color: '#ff6b35', description: 'Primary payment token for album purchases and Elderfier staking' },
+    { name: 'PARA', value: 20, color: '#06b6d4', description: 'Listener ↔ artist reward token for streaming and tips' },
+    { name: 'CURA', value: 20, color: '#8b5cf6', description: 'Curation token minted by burning PARA for curator rewards' },
+    { name: 'DI₲M', value: 10, color: '#eab308', description: 'Hosting permission NFT with Bronze/Silver/Gold tiers' },
+    { name: 'FABLE', value: 15, color: '#10b981', description: 'Stable coin from time-lock receipt for price-stable album purchases' }
+  ];
+
+  // Participant activity data
+  const participantFlowData = [
+    { participant: 'Artists', earnings: 85, contributions: 90 },
+    { participant: 'Listeners', earnings: 60, contributions: 70 },
+    { participant: 'Elderfiers', earnings: 75, contributions: 95 },
+    { participant: 'Labels', earnings: 80, contributions: 85 },
+    { participant: 'Curators', earnings: 70, contributions: 60 }
+  ];
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-lg">
+          <p className="text-white font-medium">{`${label}`}</p>
+          <p className="text-slate-300 text-sm">{payload[0].payload.description}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className={`card ${className}`}>
+      <h2 className="text-xl font-bold mb-6">🎯 {title}</h2>
+
+      {/* Visual Dashboard */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Token Distribution Pie Chart */}
+        <div className="card bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <span className="mr-2">🪙</span>
+            Token Ecosystem Distribution
+          </h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={tokenDistributionData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={2}
+                  dataKey="value"
+                >
+                  {tokenDistributionData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} stroke="#1e293b" strokeWidth={2} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-4">
+            {tokenDistributionData.map((token, index) => (
+              <div key={index} className="flex items-center text-sm">
+                <span
+                  className="inline-block w-3 h-3 rounded-full mr-2"
+                  style={{ backgroundColor: token.color }}
+                />
+                <span className="text-slate-300">
+                  <span className="font-medium text-white">{token.name}</span> ({token.value}%)
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Participant Activity Chart */}
+        <div className="card bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <span className="mr-2">📊</span>
+            Participant Activity Levels
+          </h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={participantFlowData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="participant" stroke="#9ca3af" fontSize={12} />
+                <YAxis stroke="#9ca3af" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1e293b',
+                    border: '1px solid #475569',
+                    borderRadius: '8px',
+                    color: '#fff'
+                  }}
+                />
+                <Bar dataKey="earnings" fill="#06b6d4" name="Earnings %" />
+                <Bar dataKey="contributions" fill="#8b5cf6" name="Contributions %" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex justify-center space-x-4 mt-4 text-xs">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-cyan-500 rounded mr-2"></div>
+              <span className="text-slate-300">Earnings %</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-indigo-500 rounded mr-2"></div>
+              <span className="text-slate-300">Contributions %</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Interactive Mind Map - Participant Relationships */}
+      {showMindMap && (
+        <div className="card bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <span className="mr-2">🧠</span>
+            Ecosystem Interaction Mind Map
+          </h3>
+
+          {/* Central Platform Node */}
+          <div className="relative mb-8">
+            <div className="flex justify-center">
+              <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-full w-20 h-20 flex items-center justify-center shadow-lg border-4 border-slate-700">
+                <span className="text-white font-bold text-lg">🎵</span>
+              </div>
+            </div>
+            <div className="text-center mt-2">
+              <h4 className="font-semibold text-white">DIGM Platform</h4>
+              <p className="text-slate-400 text-sm">Central hub connecting all participants</p>
+            </div>
+          </div>
+
+          {/* Participant Nodes */}
+          <div className="grid grid-cols-5 gap-4 mb-6">
+            {[
+              { name: 'Artists', icon: '🎤', color: 'from-orange-600 to-red-600', flows: ['85% to Listeners', '60% to Elderfiers'] },
+              { name: 'Listeners', icon: '🎧', color: 'from-cyan-600 to-blue-600', flows: ['75% back to Artists'] },
+              { name: 'Elderfiers', icon: '🛰️', color: 'from-green-600 to-emerald-600', flows: ['70% to Artists'] },
+              { name: 'Labels', icon: '🏷️', color: 'from-pink-600 to-purple-600', flows: ['65% to Artists'] },
+              { name: 'Curators', icon: '📜', color: 'from-indigo-600 to-violet-600', flows: ['80% to Artists'] }
+            ].map((participant, index) => (
+              <div key={index} className="text-center group">
+                <div className={`bg-gradient-to-br ${participant.color} rounded-full w-16 h-16 flex items-center justify-center shadow-lg border-2 border-slate-700 mx-auto mb-2 group-hover:scale-110 transition-transform`}>
+                  <span className="text-white text-lg">{participant.icon}</span>
+                </div>
+                <h5 className="font-medium text-white text-sm">{participant.name}</h5>
+                <p className="text-slate-400 text-xs">Role & Interactions</p>
+                <div className="mt-2 space-y-1">
+                  {participant.flows.map((flow, flowIndex) => (
+                    <div key={flowIndex} className="bg-slate-700 rounded px-2 py-1 text-xs">
+                      <span className="text-green-400">→</span> {flow}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Connection Visualization */}
+          <div className="relative h-32 bg-slate-700/30 rounded-lg p-4 mb-4">
+            <div className="absolute inset-0">
+              <svg className="w-full h-full" viewBox="0 0 100 32">
+                {/* Flow lines between participants */}
+                <path d="M 15 16 Q 25 8 35 16" stroke="#ff6b35" strokeWidth="2" fill="none" opacity="0.7" />
+                <path d="M 15 16 Q 25 24 35 16" stroke="#06b6d4" strokeWidth="2" fill="none" opacity="0.7" />
+                <path d="M 15 16 Q 25 8 45 16" stroke="#8b5cf6" strokeWidth="2" fill="none" opacity="0.7" />
+                <path d="M 35 16 Q 25 8 15 16" stroke="#10b981" strokeWidth="2" fill="none" opacity="0.7" />
+                <path d="M 45 16 Q 35 24 15 16" stroke="#059669" strokeWidth="2" fill="none" opacity="0.7" />
+                <path d="M 55 16 Q 45 8 15 16" stroke="#f59e0b" strokeWidth="2" fill="none" opacity="0.7" />
+                <path d="M 75 16 Q 65 24 15 16" stroke="#6366f1" strokeWidth="2" fill="none" opacity="0.7" />
+              </svg>
+            </div>
+
+            {/* Flow Indicators */}
+            <div className="absolute top-2 left-4 text-xs text-slate-400">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                <span>Revenue Flow</span>
+              </div>
+            </div>
+            <div className="absolute bottom-2 right-4 text-xs text-slate-400">
+              <div className="flex items-center space-x-2">
+                <span>Interaction Strength</span>
+                <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Token Flow Summary */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            {tokenDistributionData.map((token, index) => (
+              <div key={index} className="bg-slate-700/50 rounded-lg p-3 text-center">
+                <div className="text-2xl font-bold mb-1" style={{ color: token.color }}>
+                  {token.value}%
+                </div>
+                <div className="text-slate-300">{token.name}</div>
+                <div className="text-slate-400 text-xs">{token.description.split(' ').slice(0, 2).join(' ')}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface DigmCoin {
   tokenId: string;
@@ -100,6 +323,7 @@ const HostingPermissions: React.FC = () => {
 
   const canHost = hostingStatus !== 'none';
 
+
   return (
     <div className="space-y-6">
       {/* Current Status */}
@@ -126,50 +350,7 @@ const HostingPermissions: React.FC = () => {
         </div>
 
         {/* DIGM Economy Overview */}
-        <div className="card mt-8">
-          <h2 className="text-xl font-bold mb-4">DIGM Economy Overview</h2>
-
-          <div className="grid md:grid-cols-2 gap-6 text-sm text-slate-300">
-            {/* Token Ecosystem */}
-            <div>
-              <h3 className="font-semibold text-white mb-2">Tokens</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full bg-orange-500 mr-2" />
-                  <span className="font-medium text-white mr-1">XFG</span>
-                  – Primary payment token (album purchases, Elderfier staking)
-                </li>
-                <li className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full bg-cyan-500 mr-2" />
-                  <span className="font-medium text-white mr-1">PARA</span>
-                  – Listener ↔ artist reward token (streaming & tips)
-                </li>
-                <li className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2" />
-                  <span className="font-medium text-white mr-1">CURA</span>
-                  – Curation & governance token (playlist staking, DAO voting)
-                </li>
-                <li className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full bg-yellow-500 mr-2" />
-                  <span className="font-medium text-white mr-1">DI₲M</span>
-                  – Hosting permission NFT (Bronze / Silver / Gold tiers)
-                </li>
-              </ul>
-            </div>
-
-            {/* Market Participants */}
-            <div>
-              <h3 className="font-semibold text-white mb-2">Participants</h3>
-              <ul className="space-y-2">
-                <li>🎤 <span className="font-medium text-white">Artists</span> earn XFG & PARA, stake CURA for visibility.</li>
-                <li>🎧 <span className="font-medium text-white">Listeners</span> spend XFG, earn PARA, tip PARA.</li>
-                <li>🛰️ <span className="font-medium text-white">Elderfiers</span> stake XFG, earn XFG & PARA for seeding.</li>
-                <li>🏷️ <span className="font-medium text-white">Labels</span> stake CURA to promote catalogs, share XFG sales.</li>
-                <li>📜 <span className="font-medium text-white">Curators</span> stake/earn CURA for playlists; receive PARA tips.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        <EconomyVisualization title="DIGM Economy Overview" showMindMap={true} className="mt-8" />
 
         {/* Benefits */}
         {canHost && (

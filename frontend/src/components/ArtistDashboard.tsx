@@ -3,6 +3,7 @@ import { useWallet } from '../hooks/useWallet';
 import FileUpload from './FileUpload';
 import { UploadedFile, formatFileSize, formatDuration } from '../utils/fileUpload';
 import { api } from '../utils/api';
+import { GENRES } from '../constants/genres';
 
 interface Track {
   id: string;
@@ -397,24 +398,9 @@ const ArtistDashboard: React.FC = () => {
                     className="input-field w-full"
                   >
                     <option value="">Select genre</option>
-                    <option value="Electronic">Electronic</option>
-                    <option value="Hip Hop">Hip Hop</option>
-                    <option value="Rock">Rock</option>
-                    <option value="Pop">Pop</option>
-                    <option value="Jazz">Jazz</option>
-                    <option value="Classical">Classical</option>
-                    <option value="Country">Country</option>
-                    <option value="R&B">R&B</option>
-                    <option value="Reggae">Reggae</option>
-                    <option value="Folk">Folk</option>
-                    <option value="Blues">Blues</option>
-                    <option value="Metal">Metal</option>
-                    <option value="Ambient">Ambient</option>
-                    <option value="Techno">Techno</option>
-                    <option value="House">House</option>
-                    <option value="Drum & Bass">Drum & Bass</option>
-                    <option value="Trap">Trap</option>
-                    <option value="Lo-fi">Lo-fi</option>
+                    {GENRES.map(g => (
+                      <option key={g} value={g}>{g}</option>
+                    ))}
                   </select>
                 </div>
 
