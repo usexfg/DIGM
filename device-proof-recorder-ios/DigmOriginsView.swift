@@ -28,7 +28,7 @@ struct DigmOriginsView: View {
                     Spacer()
                     
                     VStack(spacing: 20) {
-                        // Elegant Greek-style duration display
+                        //  duration display
                         if recorder.isRecording, let duration = recorder.duration {
                             VStack(spacing: 8) {
                                 // Top decorative line
@@ -48,10 +48,10 @@ struct DigmOriginsView: View {
                             }
                         }
                         
-                        // US Dime-sized record button with marble aesthetic
+                        // US Dime-sized record button
                         Button(action: recorder.toggleRecording) {
                             ZStack {
-                                // Ornate Greek-style outer ring
+                                // Ornate outer ring
                                 Circle()
                                     .strokeBorder(
                                         Color(red: 0.3, green: 0.3, blue: 0.3),

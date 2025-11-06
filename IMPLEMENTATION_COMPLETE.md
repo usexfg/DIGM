@@ -23,7 +23,7 @@
 
 ### Features
 - One-tap recording (like voice memo)
-- Built-in microphone only (no external mics)
+- Built-in microphone only (external mics possible in future)
 - Secure Enclave cryptographic signatures
 - Real-time SHA-256 hashing
 - .digm proof JSON generation
@@ -218,7 +218,7 @@ The DIGM device-first audio ecosystem is ready for:
 
 ---
 
-Built with ❤️ for authentic, verifiable audio.
+Built with 🜂 for authentic, verifiable audio.
 
 **DIGM ◉rigins** + **DIGM Platform** = **Verified Audio Ecosystem**
 

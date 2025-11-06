@@ -61,13 +61,35 @@ export class FuegoBridge extends EventEmitter {
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ extra: licensePayload })
+        body: JSON.stringify(licensePayload)
       });
       if (!res.ok) throw new Error(`RPC error ${res.status}`);
       const json = await res.json();
       return json.txHash;
     } catch (e) {
       throw new Error(`createAlbumLicense failed: ${e}`);
+    }
+  }
+
+  /**
+   * Get album licenses for a buyer
+   * @param buyerKey Public key of the buyer
+   * @param albumId Optional album ID to filter licenses
+   * @returns Array of license transaction hashes
+   */
+  async getAlbumLicenses(buyerKey: string, albumId?: string): Promise<string[]> {
+    const url = `http://localhost:${this.config.rpcPort}/api/v1/get_album_licenses`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ buyerKey, albumId: albumId || '' })
+      });
+      if (!res.ok) throw new Error(`RPC error ${res.status}`);
+      const json = await res.json();
+      return json.licenseTxHashes || [];
+    } catch (e) {
+      throw new Error(`getAlbumLicenses failed: ${e}`);
     }
   }
 

@@ -6,3 +6,10 @@ export const GENRES: string[] = [
 ];
 
 export const GENRES_WITH_ALL = ['All Genres', ...GENRES];
+
+
+
+
+
+
+
