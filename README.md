@@ -88,7 +88,7 @@ Three distinct tokens power the DIGM ecosystem, each with a specific and crucial
 | Curator Token Rewards | ❌ | ❌ | ❌ | ✅ PARA |
 | Decentralized | 😂 | 😂 | ❌ | **AF**✅  The Future Is Decentralized, D.Ekhead |
 | P2P Payments | ❌ | ❌ | ❌ | ✅ XF₲, Fuego Ξmbers (HEAT), PARA |
-| Freemium | Ads | ❌ | Ads | ✅ 0 ads. cpu-power |
+| Freemium | Ads | ❌ | Ads | ✅ 0 ads. donate hash power for full access to music on DIGM |
 | Open Source | ❌ | ❌ | ❌ | ✅FOSSM | 
 
 <sub>(*) user's wallet must meet/exceed 0.1 XF₲ threshold (1M HEAT) for premium access when using DIGM platform.</sub>
