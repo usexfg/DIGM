@@ -2,7 +2,7 @@ name: Release Android App
 
 on:
   push:
-    branches: [originsapp]
+    branches: [main, master, develop]
   release:
     types: [created]
   workflow_dispatch:
@@ -31,26 +31,30 @@ jobs:
       - name: Install Fastlane
         run: |
           cd device-proof-recorder-android
+          mkdir -p fastlane
+          cp Fastfile fastlane/
+          cp Gemfile fastlane/
+          cd fastlane
           bundle install
 
       - name: Setup Google Play API
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
-          cd device-proof-recorder-android
+          cd device-proof-recorder-android/fastlane
           if [ -n "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" ]; then
-            echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > fastlane/google_play_api_key.json
+            echo "$GOOGLE_PLAY_SERVICE_ACCOUNT_JSON" > google_play_api_key.json
           fi
 
       - name: Build and Upload to Google Play (Production)
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
-          cd device-proof-recorder-android
+          cd device-proof-recorder-android/fastlane
           bundle exec fastlane release
 
       - name: Upload Release Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: android-release
           path: |
@@ -66,4 +70,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
           prerelease: false
-
