@@ -1,6 +1,8 @@
 name: Release Android App
 
 on:
+  push:
+    branches: [originsapp]
   release:
     types: [created]
   workflow_dispatch:
