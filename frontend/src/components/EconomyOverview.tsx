@@ -59,7 +59,7 @@ const EconomyOverview: React.FC = () => {
       value: 15,
       color: '#45B7D1',
       percentage: 15,
-      supply: '100M',
+      supply: '10K',
       marketCap: '$1.2M',
       description: 'Curation & governance token for playlist creation and DAO voting'
     },
