@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<data-extraction-rules>
-    <cloud-backup>
-        <!-- Exclude recordings from cloud backup -->
-        <exclude domain="files" path="recordings/" />
-        <exclude domain="files" path="proofs/" />
-    </cloud-backup>
-</data-extraction-rules>
-
