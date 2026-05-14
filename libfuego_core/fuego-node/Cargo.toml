@@ -1,0 +1,16 @@
+[package]
+name = "fuego-node"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+bincode = "1.3"
+anyhow = "1.0"
+sha2 = "0.10"
+tokio = { version = "1.0", features = ["full"] }
+fuego-crypto = { path = "../fuego-crypto" }
+i2p-net = { path = "../i2p-net" }
+p2p-net = { path = "../p2p-net" }
+async-trait = "0.1"
+

@@ -1,0 +1,12 @@
+[package]
+name = "fuego-audio"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+symphonia = { version = "0.5", features = ["all"] }
+chunk-store = { path = "../chunk-store" }
+i2p-net = { path = "../i2p-net" }
+anyhow = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }

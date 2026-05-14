@@ -1,0 +1,12 @@
+namespace rs.fuego.digm {
+    object DigmCore {
+        constructor(mnemonic: String, storage_path: String);
+        def get_address(index: u32) -> String;
+        def sync_node() -> Result<(), String>;
+        def get_state_root() -> String;
+        def next_pcm_frame() -> Vec<f32>;
+        def get_current_earnings() -> f64;
+    };
+
+    def init_ffi();
+};

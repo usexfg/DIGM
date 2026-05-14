@@ -201,4 +201,4 @@ private/
 docker-compose.override.yml
 
 # External repositories
-fuego-node/ 
+/fuego-node/ 

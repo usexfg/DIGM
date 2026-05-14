@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "fuego-crypto",
+    "fuego-vault",
+    "fuego-node",
+    "i2p-net",
+    "p2p-net",
+    "chunk-store",
+    "digm-app",
+    "ffi-bridge",
+    "fuego-audio",
+]
+resolver = "2"

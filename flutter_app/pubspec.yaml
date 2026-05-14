@@ -1,0 +1,29 @@
+name: digm_app
+description: A decentralized music platform powered by Fuego.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  flutter_riverpod: ^2.5.1
+  fpdart: ^0.6.0
+  path_provider: ^2.1.2
+  shared_preferences: ^2.2.2
+  # UniFFI generated bindings will be added here as a local package or via ffi
+  fuego_core:
+    path: ../libfuego_core/ffi-bridge/dart
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
