@@ -10,6 +10,7 @@ use chunk_store::ChunkStore;
 use fuego_audio::AudioStreamer;
 use fuego_crypto::Address;
 
+pub mod api_server;
 
 pub struct DigmCore {
     vault: Arc<Mutex<Vault>>,
@@ -118,6 +119,21 @@ impl DigmCore {
     pub fn create_album(&self, album_id: String, title: String, price: u64, preview_singles: Vec<String>) -> Result<(), String> {
         let app = self.app.lock().unwrap();
         app.create_album(album_id, title, price, preview_singles)
+    }
+
+    pub fn stake_single(&self, address: String, track_id: String, album_id: String, amount: u64) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.stake_single(&Address::from(address), &track_id, &album_id, amount)
+    }
+
+    pub fn purchase_album(&self, address: String, album_id: String, amount: u64) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.purchase_album(&Address::from(address), &album_id, amount)
+    }
+
+    pub fn earn_para(&self, address: String, amount: u64) {
+        let app = self.app.lock().unwrap();
+        app.earn_para(&Address::from(address), amount)
     }
 
     pub fn can_browse_album(&self, address: String, album_id: String) -> bool {
