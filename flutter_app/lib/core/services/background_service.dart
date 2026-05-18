@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +9,9 @@ class BackgroundService {
     try {
       await _channel.invokeMethod('startService');
     } on PlatformException catch (e) {
-      print('Failed to start background service: ${e.message}');
+      debugPrint('BackgroundService: start failed - ${e.message}');
+    } on MissingPluginException {
+      debugPrint('BackgroundService: not yet implemented on this platform');
     }
   }
 
@@ -16,15 +19,20 @@ class BackgroundService {
     try {
       await _channel.invokeMethod('stopService');
     } on PlatformException catch (e) {
-      print('Failed to stop background service: ${e.message}');
+      debugPrint('BackgroundService: stop failed - ${e.message}');
+    } on MissingPluginException {
+      debugPrint('BackgroundService: not yet implemented on this platform');
     }
   }
 
   Future<bool> isRunning() async {
     try {
-      return await _channel.invokeMethod('isRunning');
+      final result = await _channel.invokeMethod<bool>('isRunning');
+      return result ?? false;
     } on PlatformException catch (e) {
-      print('Failed to check background service status: ${e.message}');
+      debugPrint('BackgroundService: status check failed - ${e.message}');
+      return false;
+    } on MissingPluginException {
       return false;
     }
   }

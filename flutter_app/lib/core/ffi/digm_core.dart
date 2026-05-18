@@ -1,12 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:fuego_core/digm_core.dart';
 
-/// Provider for the DIGM Rust Core.
-/// This singleton manages the connection to the Fuego node, I2P router, and vault.
-final digmCoreProvider = Provider<DigmCore>((ref) {
-  // In a real app, these would be loaded from secure storage
-  return DigmCore(
-    mnemonic: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon',
-    storagePath: '/tmp/digm_data',
-  );
+final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
+  return const FlutterSecureStorage();
 });
+
+final digmCoreProvider = FutureProvider<DigmCore>((ref) async {
+  final storage = ref.watch(secureStorageProvider);
+  final mnemonic = await storage.read(key: 'digm_mnemonic') ?? '';
+  final dir = await _getStoragePath();
+  return DigmCore(mnemonic: mnemonic, storagePath: dir);
+});
+
+Future<String> _getStoragePath() async {
+  final directory = await getApplicationDocumentsDirectory();
+  return directory.path;
+}

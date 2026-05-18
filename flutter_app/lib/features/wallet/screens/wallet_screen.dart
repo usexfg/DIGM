@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/ffi/digm_core.dart';
+import '../../../core/theme/digm_theme.dart';
 import 'recovery_screen.dart';
 
-/// Provider for the current node mode to allow UI reactivity.
 final nodeModeProvider = StateProvider<String>((ref) => 'Client');
 
 class WalletScreen extends ConsumerWidget {
@@ -11,87 +11,123 @@ class WalletScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final digmCore = ref.watch(digmCoreProvider);
-    final address = digmCore.get_address(0);
-    
-    final paraBalance = digmCore.get_current_earnings(address).toString();
-    final voxBalance = digmCore.get_vox_balance(address).toString();
-    final curaBalance = digmCore.get_cura_balance(address).toString();
+    final coreAsync = ref.watch(digmCoreProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Wallet'),
+    return coreAsync.when(
+      data: (core) {
+        final address = core.get_address(0);
+        final paraBalance = core.get_current_earnings(address).toString();
+        final voxBalance = core.get_vox_balance(address).toString();
+        final curaBalance = core.get_cura_balance(address).toString();
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Wallet'),
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SectionHeader(title: 'Your Address'),
+                const SizedBox(height: 8),
+                _GlassCard(
+                  child: SelectableText(
+                    address,
+                    style: const TextStyle(
+                      fontFamily: 'SpaceGrotesk',
+                      fontSize: 13,
+                      color: DigmTheme.fuchsiaLight,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _SectionHeader(title: 'Balances'),
+                const SizedBox(height: 16),
+                _BalanceTile(label: 'PARA', value: paraBalance),
+                _BalanceTile(label: 'VOX', value: voxBalance),
+                _BalanceTile(label: 'CURA', value: curaBalance),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      try {
+                        final txHash = await core.anchor_state();
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('State anchored! Tx: $txHash')),
+                        );
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Anchoring failed: $e')),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.anchor),
+                    label: const Text('Anchor State to L1'),
+                  ),
+                ),
+                const SizedBox(height: 32),
+                _SectionHeader(title: 'Staking Pools'),
+                const SizedBox(height: 16),
+                _StakingPoolTile(album: 'Fuego Waves', paraStaked: '1250.00', rank: '#3'),
+                _StakingPoolTile(album: 'Deep Rust', paraStaked: '420.00', rank: '#12'),
+                const SizedBox(height: 32),
+                _SectionHeader(title: 'Node Settings'),
+                const SizedBox(height: 16),
+                const _SovereignSettingsTile(),
+                const SizedBox(height: 32),
+                _SectionHeader(title: 'Guardian Recovery'),
+                const SizedBox(height: 16),
+                const _GuardianManagementTile(),
+              ],
+            ),
+          ),
+        );
+      },
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: DigmTheme.fuchsiaLight)),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Your Address',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            SelectableText(
-              address,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Balances',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            _BalanceTile(label: 'PARA', value: paraBalance),
-            _BalanceTile(label: 'VOX', value: voxBalance),
-            _BalanceTile(label: 'CURA', value: curaBalance),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    final txHash = await ref.read(digmCoreProvider).anchor_state();
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('State anchored! Tx: $txHash')),
-                    );
-                  } catch (e) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Anchoring failed: $e')),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.anchor),
-                label: const Text('Anchor State to L1'),
-              ),
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              'Staking Pools',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            _StakingPoolTile(album: 'Fuego Waves', paraStaked: '1250.00', rank: '#3'),
-            _StakingPoolTile(album: 'Deep Rust', paraStaked: '420.00', rank: '#12'),
-            const SizedBox(height: 32),
-            const Text(
-              'Node Settings',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _SovereignSettingsTile(),
-            const SizedBox(height: 32),
-            const Text(
-              'Guardian Recovery',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            const _GuardianManagementTile(),
-          ],
+      error: (e, _) => Scaffold(
+        body: Center(
+          child: Text('Error: $e', style: const TextStyle(color: DigmTheme.error)),
         ),
       ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  const _SectionHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontFamily: 'SpaceGrotesk',
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: DigmTheme.textPrimary,
+      ),
+    );
+  }
+}
+
+class _GlassCard extends StatelessWidget {
+  final Widget child;
+  const _GlassCard({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: DigmTheme.glassContainer(),
+      child: child,
     );
   }
 }
@@ -109,74 +145,86 @@ class _SovereignSettingsTileState extends ConsumerState<_SovereignSettingsTile> 
   void _syncNode() async {
     setState(() => _isSyncing = true);
     try {
-      await ref.read(digmCoreProvider).sync_node();
+      final core = await ref.read(digmCoreProvider.future);
+      await core.sync_node();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Node sync complete!')),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Sync failed: $e')),
       );
     } finally {
-      setState(() => _isSyncing = false);
+      if (mounted) setState(() => _isSyncing = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final digmCore = ref.watch(digmCoreProvider);
+    final digmCore = ref.watch(digmCoreProvider).valueOrNull;
     final mode = ref.watch(nodeModeProvider);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          children: [
-            const ListTile(
-              title: Text('Node Mode', style: TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('Controls validation depth and P2P seeding'),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: DigmTheme.glassContainer(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Node Mode',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+              color: DigmTheme.textPrimary,
+              fontSize: 16,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: SegmentedButton<String>(
-                segments: const [
-                  ButtonSegment(value: 'Client', label: Text('Client')),
-                  ButtonSegment(value: 'Seeder', label: Text('Seeder')),
-                  ButtonSegment(value: 'Sovereign', label: Text('Sovereign')),
-                ],
-                selected: {mode},
-                onSelectionChanged: (Set<String> newSelection) {
-                  final newMode = newSelection.first;
-                  ref.read(nodeModeProvider.notifier).state = newMode;
-                  digmCore.set_node_mode(newMode);
-                },
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'Controls validation depth and P2P seeding',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: DigmTheme.textSecondary,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(value: 'Client', label: Text('Client')),
+              ButtonSegment(value: 'Seeder', label: Text('Seeder')),
+              ButtonSegment(value: 'Sovereign', label: Text('Sovereign')),
+            ],
+            selected: {mode},
+            onSelectionChanged: (Set<String> newSelection) {
+              final newMode = newSelection.first;
+              ref.read(nodeModeProvider.notifier).state = newMode;
+              digmCore?.set_node_mode(newMode);
+            },
+          ),
+          if (mode == 'Sovereign' || mode == 'Seeder') ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _isSyncing ? null : _syncNode,
+                icon: _isSyncing
+                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Icon(Icons.sync),
+                label: Text(_isSyncing ? 'Syncing...' : 'Sync Now'),
               ),
             ),
-            if (mode == 'Sovereign' || mode == 'Seeder')
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: _isSyncing ? null : _syncNode,
-                    icon: _isSyncing 
-                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Icon(Icons.sync),
-                    label: Text(_isSyncing ? 'Syncing...' : 'Sync Now'),
-                  ),
-                ),
-              ),
           ],
-        ),
+        ],
       ),
     );
   }
 }
 
 class _GuardianManagementTile extends ConsumerStatefulWidget {
-
   const _GuardianManagementTile({super.key});
 
   @override
@@ -187,84 +235,123 @@ class _GuardianManagementTileState extends ConsumerState<_GuardianManagementTile
   final TextEditingController _addressController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    final digmCore = ref.watch(digmCoreProvider);
-    final guardians = digmCore.get_guardians();
-    final threshold = digmCore.get_recovery_threshold();
+  void dispose() {
+    _addressController.dispose();
+    super.dispose();
+  }
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Guardians', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('Threshold: $threshold', style: const TextStyle(fontSize: 12)),
-              ],
-            ),
-            const SizedBox(height: 8),
-            ...guardians.map((addr) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(addr, style: const TextStyle(fontSize: 12)),
-              trailing: IconButton(
-                icon: const Icon(Icons.remove_circle_outline, size: 18),
-                onPressed: () {
-                  digmCore.remove_guardian(addr);
-                  setState(() {});
-                },
+  @override
+  Widget build(BuildContext context) {
+    final core = ref.watch(digmCoreProvider).valueOrNull;
+    final guardians = core?.get_guardians() ?? [];
+    final threshold = core?.get_recovery_threshold() ?? 0;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: DigmTheme.glassContainer(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Guardians',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  color: DigmTheme.textPrimary,
+                  fontSize: 16,
+                ),
               ),
-            )),
-            const SizedBox(height: 16),
-            Row(
+              Text(
+                'Threshold: $threshold',
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 12,
+                  color: DigmTheme.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...guardians.map((addr) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _addressController,
-                    decoration: const InputDecoration(
-                      hintText: 'Guardian Address',
-                      isDense: true,
+                  child: Text(
+                    addr,
+                    style: const TextStyle(
+                      fontFamily: 'SpaceGrotesk',
+                      fontSize: 12,
+                      color: DigmTheme.fuchsiaLight,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                ElevatedButton(
+                IconButton(
+                  icon: const Icon(Icons.remove_circle_outline, size: 18),
+                  color: DigmTheme.error,
                   onPressed: () {
-                    if (_addressController.text.isNotEmpty) {
-                      digmCore.add_guardian(_addressController.text);
-                      _addressController.clear();
-                      setState(() {});
-                    }
+                    core?.remove_guardian(addr);
+                    setState(() {});
                   },
-                  child: const Text('Add'),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 16),
-            const Text(
-              'Recovery',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RecoveryScreen()),
-                  );
-                },
-                child: const Text('Manage Identity Recovery'),
+          )),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _addressController,
+                  decoration: const InputDecoration(
+                    hintText: 'Guardian Address',
+                    isDense: true,
+                  ),
+                ),
               ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () {
+                  if (_addressController.text.isNotEmpty) {
+                    core?.add_guardian(_addressController.text);
+                    _addressController.clear();
+                    setState(() {});
+                  }
+                },
+                child: const Text('Add'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const Divider(color: DigmTheme.glassBorder),
+          const SizedBox(height: 16),
+          const Text(
+            'Recovery',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w600,
+              color: DigmTheme.textPrimary,
+              fontSize: 16,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RecoveryScreen()),
+                );
+              },
+              child: const Text('Manage Identity Recovery'),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -278,13 +365,31 @@ class _BalanceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: DigmTheme.glassContainer(),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 16)),
-          Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 16,
+              color: DigmTheme.textPrimary,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontFamily: 'SpaceGrotesk',
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: DigmTheme.fuchsiaLight,
+            ),
+          ),
         ],
       ),
     );
@@ -300,26 +405,56 @@ class _StakingPoolTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ListTile(
-        title: Text(album, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text('Staked: $paraStaked PARA'),
-        trailing: Chip(
-          label: Text(rank),
-          backgroundColor: Colors.blue.withValues(alpha: 0.2),
-        ),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: DigmTheme.glassContainer(),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  album,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    color: DigmTheme.textPrimary,
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Staked: $paraStaked PARA',
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    color: DigmTheme.textSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: DigmTheme.fuchsia.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              rank,
+              style: const TextStyle(
+                fontFamily: 'SpaceGrotesk',
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: DigmTheme.fuchsiaLight,
+              ),
+            ),
+          ),
+        ],
       ),
     );
-  }
-}
-
-class constHBox extends StatelessWidget {
-  final double height;
-  const constHBox({required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(height: height);
   }
 }

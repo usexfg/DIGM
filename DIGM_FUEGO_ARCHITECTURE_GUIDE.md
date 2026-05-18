@@ -31,7 +31,7 @@
 |-------|------|---------|
 | **XFG** | Native coin | Real-value payments. Buy albums, swap cross-chain, mine. The money. |
 | **CD** | Commitment Deposit | Locked XFG that earns yield from swap fee pool (2% per swap). Privacy flywheel — more locks = bigger ring pools = better privacy. |
-| **DIGM** | Colored coin (on-chain) | Artist/publisher hosting rights. Fixed supply: 100,000. Required to publish albums on the platform. Anti-spam + quality gate. |
+| **DIGM** | Colored coin (on-chain) | Artist/publisher hosting rights. Fixed supply: 100,000. Required to publish albums on the platform. Anti-spam + quality gate. (Note: potentially acquirable via PARA/VOX burn) |
 
 ### In-App (DIGM platform layer, anchored on-chain)
 
@@ -77,11 +77,13 @@ Listening ──→ PARA (streaming proofs)
                │   ├─ Artist gets nfVOX (permanent #1 trophy)
                │   └─ Artist holds TOP (until dethroned)
                │
-               └──→ VOX
-                     │
-                     ├──→ Buy cosmetics, add-ons, customization
-                     ├──→ Burn → request next song on Paradio
-                     └──→ Burn → mint CURA (curator rights)
+                └──→ VOX
+                      │
+                      ├──→ Buy cosmetics, add-ons, customization
+                      ├──→ Burn → request next song on Paradio
+                      ├──→ Burn → mint CURA (curator rights)
+                      └──→ Burn → acquire DIGM (hosting rights)
+
 ```
 
 ---
