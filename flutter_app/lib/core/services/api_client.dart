@@ -8,12 +8,12 @@ class ApiClient {
 
   ApiClient({this.baseUrl = 'http://127.0.0.1:8889'}) : _client = HttpClient();
 
-  Future<Map<String, dynamic>> _get(String path) async {
+  Future<dynamic> _get(String path) async {
     final url = Uri.parse('$baseUrl/api/digm/$path');
     final request = await _client.getUrl(url);
     final response = await request.close();
     final body = await response.transform(utf8.decoder).join();
-    return jsonDecode(body) as Map<String, dynamic>;
+    return jsonDecode(body);
   }
 
   Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body) async {
@@ -28,21 +28,34 @@ class ApiClient {
 
   Future<String> getAddress() async {
     final result = await _get('address');
-    return result['address'] as String;
+    if (result is Map<String, dynamic>) {
+      return result['address'] as String? ?? '';
+    }
+    return '';
   }
 
   Future<Map<String, dynamic>> getBalance(String address) async {
-    return _get('balance/$address');
+    final result = await _get('balance/$address');
+    if (result is Map<String, dynamic>) return result;
+    return {};
   }
 
   Future<List<dynamic>> getSinglePools() async {
     final result = await _get('single-pools');
-    return result as List<dynamic>;
+    if (result is List<dynamic>) return result;
+    return [];
   }
 
   Future<List<dynamic>> getAlbumRankings() async {
     final result = await _get('album-rankings');
-    return result as List<dynamic>;
+    if (result is List<dynamic>) return result;
+    return [];
+  }
+
+  Future<Map<String, dynamic>> getGuardians() async {
+    final result = await _get('guardians');
+    if (result is Map<String, dynamic>) return result;
+    return {};
   }
 
   Future<Map<String, dynamic>> stakeAlbum({
