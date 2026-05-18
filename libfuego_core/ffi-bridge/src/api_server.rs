@@ -41,6 +41,11 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/anchor", post(anchor_state))
         .route("/api/digm/sync", post(sync_node))
         .route("/api/digm/create-album", post(create_album))
+        .route("/api/digm/earn-para", post(earn_para_route))
+        .route("/api/digm/stream-payment", post(stream_payment_route))
+        .route("/api/digm/charge-browsing", post(charge_browsing_route))
+        .route("/api/digm/vote-single", post(vote_single_route))
+        .route("/api/digm/close-epoch", post(close_epoch_route))
         .layer(cors)
         .with_state(state);
 
@@ -85,6 +90,68 @@ struct CreateAlbumRequest {
     title: String,
     price: u64,
     preview_singles: Vec<String>,
+}
+
+#[derive(Deserialize)]
+struct EarnParaRequest {
+    address: String,
+    amount: u64,
+}
+
+#[derive(Deserialize)]
+struct StreamPaymentRequest {
+    from: String,
+    to: String,
+    amount: u64,
+}
+
+#[derive(Deserialize)]
+struct ChargeBrowsingRequest {
+    address: String,
+    track_duration_secs: u64,
+    played_secs: u64,
+}
+
+#[derive(Deserialize)]
+struct VoteSingleRequest {
+    address: String,
+    track_id: String,
+}
+
+async fn earn_para_route(State(state): State<ApiState>, Json(req): Json<EarnParaRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    core.earn_para(req.address, req.amount);
+    Ok(Json(serde_json::json!({ "status": "ok" })))
+}
+
+async fn stream_payment_route(State(state): State<ApiState>, Json(req): Json<StreamPaymentRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.stream_payment(req.from, req.to, req.amount) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn charge_browsing_route(State(state): State<ApiState>, Json(req): Json<ChargeBrowsingRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.charge_browsing_play(req.address, req.track_duration_secs, req.played_secs) {
+        Ok(cost) => Ok(Json(serde_json::json!({ "status": "ok", "cost": cost }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn vote_single_route(State(state): State<ApiState>, Json(req): Json<VoteSingleRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.vote_for_single(req.address, req.track_id) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn close_epoch_route(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    core.close_epoch();
+    Ok(Json(serde_json::json!({ "status": "ok" })))
 }
 
 async fn get_address(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {

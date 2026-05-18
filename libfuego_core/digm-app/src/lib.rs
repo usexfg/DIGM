@@ -389,6 +389,13 @@ impl DigmApp {
             println!("Album #1 hit! Rewards distributed for: {}", winning_album_id);
         }
         
+        // Increment all active account ages
+        for account in state.accounts.values_mut() {
+            if account.para_balance > 0 || account.vox_balance > 0 {
+                account.wallet_age_epochs += 1;
+            }
+        }
+        
         state.current_epoch += 1;
     }
 

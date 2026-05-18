@@ -170,6 +170,16 @@ impl DigmCore {
         app.get_account(&addr).map(|a| a.cura_balance).unwrap_or(0)
     }
 
+    pub fn close_epoch(&self) {
+        let app = self.app.lock().unwrap();
+        app.close_epoch();
+    }
+
+    pub fn vote_for_single(&self, address: String, track_id: String) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.vote_for_single(&Address::from(address), &track_id)
+    }
+
 
     pub fn load_track(&self, chunk_hashes: Vec<String>) -> Result<(), String> {
         let mut audio = self.audio.lock().unwrap();
