@@ -104,6 +104,54 @@ class ApiClient {
     return _post('anchor', {});
   }
 
+  Future<Map<String, dynamic>> earnPara({
+    required String address,
+    required int amount,
+  }) async {
+    return _post('earn-para', {
+      'address': address,
+      'amount': amount,
+    });
+  }
+
+  Future<Map<String, dynamic>> streamPayment({
+    required String from,
+    required String to,
+    required int amount,
+  }) async {
+    return _post('stream-payment', {
+      'from': from,
+      'to': to,
+      'amount': amount,
+    });
+  }
+
+  Future<Map<String, dynamic>> chargeBrowsing({
+    required String address,
+    required int trackDurationSecs,
+    required int playedSecs,
+  }) async {
+    return _post('charge-browsing', {
+      'address': address,
+      'track_duration_secs': trackDurationSecs,
+      'played_secs': playedSecs,
+    });
+  }
+
+  Future<Map<String, dynamic>> voteSingle({
+    required String address,
+    required String trackId,
+  }) async {
+    return _post('vote-single', {
+      'address': address,
+      'track_id': trackId,
+    });
+  }
+
+  Future<Map<String, dynamic>> closeEpoch() async {
+    return _post('close-epoch', {});
+  }
+
   void close() {
     _client.close();
   }

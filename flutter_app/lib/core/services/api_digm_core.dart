@@ -113,6 +113,34 @@ class ApiDigmCore extends DigmCore {
   @override
   bool can_browse_album(String address, String albumId) => true;
 
+  // -- Economy --
+
+  @override
+  void earn_para(String address, int amount) {
+    _api.earnPara(address: address, amount: amount);
+  }
+
+  @override
+  void vote_for_single(String address, String trackId) {
+    _api.voteSingle(address: address, trackId: trackId);
+  }
+
+  @override
+  void close_epoch() {
+    _api.closeEpoch();
+  }
+
+  @override
+  void stream_payment(String from, String to, int amount) {
+    _api.streamPayment(from: from, to: to, amount: amount);
+  }
+
+  @override
+  int charge_browsing_play(String address, int trackDurationSecs, int playedSecs) {
+    _api.chargeBrowsing(address: address, trackDurationSecs: trackDurationSecs, playedSecs: playedSecs);
+    return 0;
+  }
+
   // -- Guardians & Recovery --
 
   @override

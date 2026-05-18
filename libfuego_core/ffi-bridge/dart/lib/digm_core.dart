@@ -78,6 +78,14 @@ class DigmCore {
     return 0;
   }
 
+  // -- Economy --
+
+  void earn_para(String address, int amount) {}
+
+  void vote_for_single(String address, String trackId) {}
+
+  void close_epoch() {}
+
   // -- Payments --
 
   void stream_payment(String from, String to, int amount) {}

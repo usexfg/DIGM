@@ -7,6 +7,8 @@ import 'core/theme/digm_theme.dart';
 import 'features/player/screens/paradio_screen.dart';
 import 'features/wallet/screens/wallet_screen.dart';
 import 'features/discovery/screens/discovery_screen.dart';
+import 'features/marketplace/screens/album_screen.dart';
+import 'features/staking/screens/staking_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +58,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   final List<Widget> _screens = const [
     ParadioScreen(),
     DiscoveryScreen(),
+    AlbumScreen(),
+    StakingScreen(),
     WalletScreen(),
   ];
 
@@ -143,6 +147,16 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
               icon: Icon(Icons.search_outlined),
               selectedIcon: Icon(Icons.search),
               label: 'Discover',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.album_outlined),
+              selectedIcon: Icon(Icons.album),
+              label: 'Market',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.trending_up_outlined),
+              selectedIcon: Icon(Icons.trending_up),
+              label: 'Staking',
             ),
             NavigationDestination(
               icon: Icon(Icons.account_balance_wallet_outlined),
