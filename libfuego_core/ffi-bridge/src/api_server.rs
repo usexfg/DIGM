@@ -29,7 +29,7 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
 
     let app = Router::new()
         .route("/api/digm/address", get(get_address))
-        .route("/api/digm/balance/{address}", get(get_balance))
+        .route("/api/digm/balance/:address", get(get_balance))
         .route("/api/digm/single-pools", get(get_single_pools))
         .route("/api/digm/album-rankings", get(get_album_rankings))
         .route("/api/digm/state-root", get(get_state_root))
