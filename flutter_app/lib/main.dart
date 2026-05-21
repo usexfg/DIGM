@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -125,12 +126,15 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.8),
-          border: const Border(top: BorderSide(color: DigmTheme.glassBorder)),
-        ),
-        child: NavigationBar(
+      bottomNavigationBar: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.6),
+              border: const Border(top: BorderSide(color: DigmTheme.glassBorder)),
+            ),
+            child: NavigationBar(
           selectedIndex: _selectedIndex,
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -165,7 +169,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
             ),
           ],
         ),
-      ),
+        ),
+        ),
+        ),
     );
   }
 }
