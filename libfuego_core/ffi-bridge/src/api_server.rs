@@ -36,6 +36,8 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/guardians", get(get_guardians))
         .route("/api/digm/stake-album", post(stake_album))
         .route("/api/digm/stake-single", post(stake_single))
+        .route("/api/digm/unstake-single", post(unstake_single_route))
+        .route("/api/digm/unstake-album", post(unstake_album_route))
         .route("/api/digm/purchase-album", post(purchase_album))
         .route("/api/digm/browse", post(can_browse))
         .route("/api/digm/anchor", post(anchor_state))
@@ -69,6 +71,18 @@ struct StakeSingleRequest {
     track_id: String,
     album_id: String,
     amount: u64,
+}
+
+#[derive(Deserialize)]
+struct UnstakeSingleRequest {
+    address: String,
+    track_id: String,
+}
+
+#[derive(Deserialize)]
+struct UnstakeAlbumRequest {
+    address: String,
+    album_id: String,
 }
 
 #[derive(Deserialize)]
@@ -207,6 +221,22 @@ async fn stake_single(State(state): State<ApiState>, Json(req): Json<StakeSingle
     let core = state.core.lock().unwrap();
     match core.stake_single(req.address, req.track_id, req.album_id, req.amount) {
         Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn unstake_single_route(State(state): State<ApiState>, Json(req): Json<UnstakeSingleRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.unstake_single(req.address, req.track_id) {
+        Ok(returned) => Ok(Json(serde_json::json!({ "status": "ok", "returned_para": returned }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn unstake_album_route(State(state): State<ApiState>, Json(req): Json<UnstakeAlbumRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.unstake_album(req.address, req.album_id) {
+        Ok(returned) => Ok(Json(serde_json::json!({ "status": "ok", "returned_para": returned }))),
         Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
     }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/ffi/digm_core.dart';
 import '../../../core/theme/digm_theme.dart';
+import '../../leaderboard/screens/leaderboard_screen.dart';
+import 'create_album_screen.dart';
 
 class AlbumInfo {
   final String albumId;
@@ -146,10 +148,45 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        _buildHeader(),
-        Expanded(child: _buildContent()),
+        Column(
+          children: [
+            _buildHeader(),
+            Expanded(child: _buildContent()),
+          ],
+        ),
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FloatingActionButton.small(
+                heroTag: 'leaderboard',
+                backgroundColor: DigmTheme.surfaceDark,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LeaderboardScreen()),
+                  );
+                },
+                child: const Icon(Icons.bar_chart, color: DigmTheme.fuchsiaLight),
+              ),
+              const SizedBox(height: 8),
+              FloatingActionButton(
+                heroTag: 'publish',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CreateAlbumScreen()),
+                  );
+                },
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

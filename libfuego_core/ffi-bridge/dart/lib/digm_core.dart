@@ -68,6 +68,10 @@ class DigmCore {
 
   void stake_album(String address, String albumId, int amount) {}
 
+  int unstake_single(String address, String trackId) => 0;
+
+  int unstake_album(String address, String albumId) => 0;
+
   void create_album(String albumId, String title, int price, List<String> previewSingles) {}
 
   bool can_browse_album(String address, String albumId) {

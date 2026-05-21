@@ -84,6 +84,26 @@ class ApiClient {
     });
   }
 
+  Future<Map<String, dynamic>> unstakeSingle({
+    required String address,
+    required String trackId,
+  }) async {
+    return _post('unstake-single', {
+      'address': address,
+      'track_id': trackId,
+    });
+  }
+
+  Future<Map<String, dynamic>> unstakeAlbum({
+    required String address,
+    required String albumId,
+  }) async {
+    return _post('unstake-album', {
+      'address': address,
+      'album_id': albumId,
+    });
+  }
+
   Future<Map<String, dynamic>> purchaseAlbum({
     required String address,
     required String albumId,

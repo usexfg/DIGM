@@ -84,6 +84,32 @@ class _StakingScreenState extends ConsumerState<StakingScreen> {
     }
   }
 
+  Future<void> _unstakeSingle() async {
+    final trackId = _trackIdController.text.trim();
+    if (trackId.isEmpty) return;
+    try {
+      final core = await ref.read(digmCoreProvider.future);
+      final address = core.get_address(0);
+      final returned = core.unstake_single(address, trackId);
+      setState(() => _status = 'Unstaked ${(returned / 10000000).toStringAsFixed(2)} PARA from $trackId');
+    } catch (e) {
+      setState(() => _status = 'Unstake failed: $e');
+    }
+  }
+
+  Future<void> _unstakeAlbum() async {
+    final albumId = _albumIdController.text.trim();
+    if (albumId.isEmpty) return;
+    try {
+      final core = await ref.read(digmCoreProvider.future);
+      final address = core.get_address(0);
+      final returned = core.unstake_album(address, albumId);
+      setState(() => _status = 'Unstaked ${(returned / 10000000).toStringAsFixed(2)} PARA from $albumId');
+    } catch (e) {
+      setState(() => _status = 'Unstake failed: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -214,6 +240,32 @@ class _StakingScreenState extends ConsumerState<StakingScreen> {
                       backgroundColor: DigmTheme.fuchsia.withValues(alpha: 0.3),
                     ),
                   ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _unstakeSingle,
+                        icon: const Icon(Icons.undo, size: 14),
+                        label: const Text('Unstake'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.withValues(alpha: 0.2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _unstakeAlbum,
+                        icon: const Icon(Icons.undo, size: 14),
+                        label: const Text('Unstake Album'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.withValues(alpha: 0.2),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 SizedBox(

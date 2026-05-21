@@ -205,6 +205,44 @@ impl DigmApp {
         Ok(())
     }
 
+    pub fn unstake_single(&self, address: &Address, track_id: &str) -> Result<u64, String> {
+        let total_returned;
+        {
+            let mut state = self.state.write().unwrap();
+            let single = state.singles.get_mut(track_id).ok_or("Single not found")?;
+            let positions = single.stakers.remove(address)
+                .ok_or("No stake found for this single")?;
+            total_returned = positions.iter().map(|p| p.amount).sum();
+            single.total_para_staked -= total_returned;
+        }
+        {
+            let mut state = self.state.write().unwrap();
+            let account = state.accounts.get_mut(address)
+                .ok_or("Account not found")?;
+            account.para_balance += total_returned;
+        }
+        Ok(total_returned)
+    }
+
+    pub fn unstake_album(&self, address: &Address, album_id: &str) -> Result<u64, String> {
+        let total_returned;
+        {
+            let mut state = self.state.write().unwrap();
+            let album = state.albums.get_mut(album_id).ok_or("Album not found")?;
+            let positions = album.stakers.remove(address)
+                .ok_or("No stake found for this album")?;
+            total_returned = positions.iter().map(|p| p.amount).sum();
+            album.total_para_staked -= total_returned;
+        }
+        {
+            let mut state = self.state.write().unwrap();
+            let account = state.accounts.get_mut(address)
+                .ok_or("Account not found")?;
+            account.para_balance += total_returned;
+        }
+        Ok(total_returned)
+    }
+
     pub fn purchase_album(&self, address: &Address, album_id: &str, amount: u64) -> Result<(), String> {
         let mut state = self.state.write().unwrap();
         

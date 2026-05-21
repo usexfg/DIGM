@@ -106,6 +106,18 @@ class ApiDigmCore extends DigmCore {
   }
 
   @override
+  int unstake_single(String address, String trackId) {
+    _api.unstakeSingle(address: address, trackId: trackId);
+    return 0;
+  }
+
+  @override
+  int unstake_album(String address, String albumId) {
+    _api.unstakeAlbum(address: address, albumId: albumId);
+    return 0;
+  }
+
+  @override
   void create_album(String albumId, String title, int price, List<String> previewSingles) {
     _api.stakeAlbum(address: _address, albumId: albumId, amount: price);
   }

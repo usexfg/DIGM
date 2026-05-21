@@ -126,6 +126,16 @@ impl DigmCore {
         app.stake_single(&Address::from(address), &track_id, &album_id, amount)
     }
 
+    pub fn unstake_single(&self, address: String, track_id: String) -> Result<u64, String> {
+        let app = self.app.lock().unwrap();
+        app.unstake_single(&Address::from(address), &track_id)
+    }
+
+    pub fn unstake_album(&self, address: String, album_id: String) -> Result<u64, String> {
+        let app = self.app.lock().unwrap();
+        app.unstake_album(&Address::from(address), &album_id)
+    }
+
     pub fn purchase_album(&self, address: String, album_id: String, amount: u64) -> Result<(), String> {
         let app = self.app.lock().unwrap();
         app.purchase_album(&Address::from(address), &album_id, amount)
