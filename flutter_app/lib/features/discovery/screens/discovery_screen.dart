@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert';
 import '../../../core/ffi/digm_core.dart';
-import '../../../core/services/audio_player_service.dart';
 import '../../../core/theme/digm_theme.dart';
+import '../../player/models/track.dart';
+import '../../player/providers/player_provider.dart';
 
 class SinglePool {
   final String id;
@@ -68,16 +69,21 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
   }
 
   void _playTrack(String trackId, String albumId) {
-    final audioPlayer = ref.read(audioPlayerProvider);
-    audioPlayer.loadTrack([
-      'hash_${albumId}_${trackId}_1',
-      'hash_${albumId}_${trackId}_2',
-      'hash_${albumId}_${trackId}_3',
-    ]);
-    audioPlayer.play();
+    final track = Track(
+      id: trackId,
+      title: trackId,
+      artist: 'Artist',
+      albumId: albumId,
+      chunkHashes: [
+        'hash_${albumId}_${trackId}_1',
+        'hash_${albumId}_${trackId}_2',
+        'hash_${albumId}_${trackId}_3',
+      ],
+    );
+    ref.read(playerProvider.notifier).playTrack(track);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Streaming $trackId on ParaDio...'),
+        content: Text('Streaming $trackId...'),
         backgroundColor: DigmTheme.fuchsia,
       ),
     );

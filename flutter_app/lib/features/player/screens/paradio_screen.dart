@@ -1,9 +1,11 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:async';
-import '../../../core/ffi/digm_core.dart';
-import '../../../core/services/audio_player_service.dart';
 import '../../../core/theme/digm_theme.dart';
+import '../providers/player_provider.dart';
+import '../widgets/live_waveform.dart';
+import '../widgets/para_meter_bar.dart';
+import '../widgets/para_meter_ring.dart';
 
 class ParadioScreen extends ConsumerStatefulWidget {
   const ParadioScreen({super.key});
@@ -13,229 +15,232 @@ class ParadioScreen extends ConsumerStatefulWidget {
 }
 
 class _ParadioScreenState extends ConsumerState<ParadioScreen> {
-  double _earnings = 0.0;
-  Timer? _earningsTimer;
-  bool _isPlaying = false;
-  String? _address;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startEarningsPolling();
-    });
-  }
-
-  void _startEarningsPolling() {
-    _earningsTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-      try {
-        final core = await ref.read(digmCoreProvider.future);
-        final addr = _address ??= core.get_address(0);
-        final earnings = core.get_current_earnings(addr);
-        if (mounted) {
-          setState(() {
-            _earnings = earnings.toDouble() / 10000000;
-          });
-        }
-      } catch (_) {}
-    });
-  }
-
-  @override
-  void dispose() {
-    _earningsTimer?.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final audioPlayer = ref.watch(audioPlayerProvider);
+    final state = ref.watch(playerProvider);
+    final track = state.currentTrack;
 
-    return Column(
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ShaderMask(
-                shaderCallback: DigmTheme.gradientShader,
-                child: const Text(
-                  'ParaDio',
-                  style: TextStyle(
-                    fontFamily: 'SpaceGrotesk',
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  DigmTheme.darkPurple,
+                  DigmTheme.black,
+                ],
               ),
-              IconButton(
-                icon: const Icon(Icons.sync, color: DigmTheme.textSecondary),
-                onPressed: () => ref.read(digmCoreProvider.future).then((core) => core.sync_node()),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 8),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'The Sovereign Radio Station',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              color: DigmTheme.textSecondary,
-              fontSize: 14,
             ),
           ),
         ),
-
-        Expanded(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [DigmTheme.fuchsia, DigmTheme.darkPurple],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: DigmTheme.glassBorder, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: DigmTheme.fuchsia.withValues(alpha: 0.3),
-                        blurRadius: 30,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(Icons.music_note, size: 80, color: Colors.white70),
+        if (track?.albumArtUrl != null)
+          Positioned.fill(
+            child: ClipRRect(
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                child: Image.network(
+                  track!.albumArtUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                 ),
-                const SizedBox(height: 24),
-
-                const Text(
-                  'Fuego Waves',
-                  style: TextStyle(
-                    fontFamily: 'SpaceGrotesk',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: DigmTheme.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Anonymous',
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    color: DigmTheme.textSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 48),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              ),
+            ),
+          ),
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.6),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.replay_10, size: 32),
-                      color: DigmTheme.textSecondary,
-                      onPressed: () {},
-                    ),
-                    const SizedBox(width: 24),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [DigmTheme.fuchsia, DigmTheme.fuchsiaLight],
+                    ShaderMask(
+                      shaderCallback: DigmTheme.gradientShader,
+                      child: const Text(
+                        'ParaDio',
+                        style: TextStyle(
+                          fontFamily: 'SpaceGrotesk',
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: DigmTheme.fuchsia.withValues(alpha: 0.4),
-                            blurRadius: 20,
-                            offset: const Offset(0, 5),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '${state.earnings.toStringAsFixed(4)}',
+                          style: const TextStyle(
+                            fontFamily: 'SpaceGrotesk',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: DigmTheme.fuchsiaLight,
                           ),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          _isPlaying ? Icons.pause : Icons.play_arrow,
-                          size: 48,
                         ),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() => _isPlaying = !_isPlaying);
-                          if (_isPlaying) {
-                            audioPlayer.loadTrack([
-                              'hash_single-001_1', 'hash_single-001_2', 'hash_single-001_3',
-                            ]);
-                            audioPlayer.play();
-                          } else {
-                            audioPlayer.pause();
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    IconButton(
-                      icon: const Icon(Icons.forward_10, size: 32),
-                      color: DigmTheme.textSecondary,
-                      onPressed: () {},
+                        const SizedBox(width: 4),
+                        const Text(
+                          'PARA',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 10,
+                            color: DigmTheme.textMuted,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(Icons.sync, color: DigmTheme.textSecondary, size: 20),
+                          onPressed: () {},
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 48),
-
-                _EarningsCard(earnings: _earnings),
-              ],
-            ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'The Sovereign Radio Station',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      color: DigmTheme.textSecondary,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              SizedBox(
+                width: 180,
+                height: 180,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomPaint(
+                      size: const Size(180, 180),
+                      painter: ParaMeterRing(
+                        progress: state.earningsProgress,
+                        earnings: state.earnings,
+                      ),
+                    ),
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: const LinearGradient(
+                          colors: [DigmTheme.fuchsia, DigmTheme.darkPurple],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(color: DigmTheme.glassBorder, width: 2),
+                        image: track?.albumArtUrl != null
+                            ? DecorationImage(
+                                image: NetworkImage(track!.albumArtUrl!),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                        boxShadow: [
+                          BoxShadow(
+                            color: DigmTheme.fuchsia.withValues(alpha: 0.3),
+                            blurRadius: 30,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: track?.albumArtUrl == null
+                          ? const Center(
+                              child: Icon(Icons.wifi_tethering, size: 60, color: Colors.white54),
+                            )
+                          : null,
+                    ),
+                    if (state.isParadio)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: DigmTheme.fuchsia.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: DigmTheme.glassBorder),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.wifi_tethering, size: 12, color: DigmTheme.fuchsiaLight),
+                              SizedBox(width: 4),
+                              Text(
+                                'LIVE',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: DigmTheme.fuchsiaLight,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                track?.title ?? 'Fuego Waves',
+                style: const TextStyle(
+                  fontFamily: 'SpaceGrotesk',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: DigmTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                track?.artist ?? 'Anonymous',
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  color: DigmTheme.textSecondary,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SizedBox(
+                height: 48,
+                child: LiveWaveform(height: 48, barCount: 64),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: ParaMeterBar(
+                  earnings: state.earnings,
+                  progress: state.earningsProgress,
+                ),
+              ),
+              const SizedBox(height: 48),
+            ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _EarningsCard extends StatelessWidget {
-  final double earnings;
-  const _EarningsCard({required this.earnings});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
-      decoration: BoxDecoration(
-        color: DigmTheme.fuchsia.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: DigmTheme.glassBorder),
-      ),
-      child: Column(
-        children: [
-          const Text(
-            'Current Earnings',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              color: DigmTheme.textSecondary,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${earnings.toStringAsFixed(4)} PARA',
-            style: const TextStyle(
-              fontFamily: 'SpaceGrotesk',
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: DigmTheme.fuchsiaLight,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

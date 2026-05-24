@@ -8,8 +8,15 @@ class AudioPlayerService {
   bool _isPlaying = false;
   Timer? _streamTimer;
   StreamController<List<double>>? _pcmController;
+  int _frameCount = 0;
 
   AudioPlayerService(this._core);
+
+  bool get isPlaying => _isPlaying;
+  Duration get position => Duration(milliseconds: _frameCount * 20);
+  int get frameCount => _frameCount;
+  Stream<List<double>> get pcmStream =>
+      _pcmController?.stream ?? const Stream.empty();
 
   void play() {
     if (_isPlaying) return;
@@ -21,6 +28,7 @@ class AudioPlayerService {
 
   void loadTrack(List<String> hashes) {
     pause();
+    _frameCount = 0;
     _core.play_track(hashes);
   }
 
@@ -36,8 +44,6 @@ class AudioPlayerService {
     _pcmController = null;
   }
 
-  Stream<List<double>> get pcmStream => _pcmController?.stream ?? const Stream.empty();
-
   void _startStreaming() {
     _streamTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
       if (!_isPlaying) {
@@ -47,6 +53,7 @@ class AudioPlayerService {
       try {
         final frame = _core.next_pcm_frame();
         _pcmController?.add(frame);
+        _frameCount++;
       } catch (_) {
         timer.cancel();
         _isPlaying = false;

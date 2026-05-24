@@ -5,7 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'core/ffi/digm_core.dart';
 import 'core/services/background_service.dart';
 import 'core/theme/digm_theme.dart';
+import 'features/player/providers/player_provider.dart';
 import 'features/player/screens/paradio_screen.dart';
+import 'features/player/widgets/player_bar.dart';
 import 'features/wallet/screens/wallet_screen.dart';
 import 'features/discovery/screens/discovery_screen.dart';
 import 'features/marketplace/screens/album_screen.dart';
@@ -50,11 +52,13 @@ class MainNavigationScreen extends ConsumerStatefulWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  ConsumerState<MainNavigationScreen> createState() => _MainNavigationScreenState();
+  ConsumerState<MainNavigationScreen> createState() =>
+      _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   int _selectedIndex = 0;
+  bool _autoTuned = false;
 
   final List<Widget> _screens = const [
     ParadioScreen(),
@@ -65,65 +69,80 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final coreAsync = ref.watch(digmCoreProvider);
 
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: DigmTheme.bgGradient),
-        child: SafeArea(
-          child: coreAsync.when(
-            data: (_) => _screens[_selectedIndex],
-            loading: () => const Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(color: DigmTheme.fuchsiaLight),
-                  SizedBox(height: 16),
-                  Text(
-                    'Initializing DIGM node...',
-                    style: TextStyle(color: DigmTheme.textSecondary),
+        child: Column(
+          children: [
+            Expanded(
+              child: SafeArea(
+                child: coreAsync.when(
+                  data: (core) {
+                    if (!_autoTuned) {
+                      _autoTuned = true;
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        try {
+                          ref.read(playerProvider.notifier).tuneInToParadio();
+                        } catch (_) {}
+                      });
+                    }
+                    return _screens[_selectedIndex];
+                  },
+                  loading: () => const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(
+                            color: DigmTheme.fuchsiaLight),
+                        SizedBox(height: 16),
+                        Text(
+                          'Initializing DIGM node...',
+                          style:
+                              TextStyle(color: DigmTheme.textSecondary),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-            error: (e, _) => Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.error_outline, size: 48, color: DigmTheme.error),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Failed to initialize wallet',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: DigmTheme.textPrimary,
+                  error: (e, _) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.error_outline,
+                              size: 48, color: DigmTheme.error),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Failed to initialize wallet',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: DigmTheme.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Please create or import a wallet to continue.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              color: DigmTheme.textSecondary,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Please create or import a wallet to continue.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        color: DigmTheme.textSecondary,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
+            const PlayerBar(),
+          ],
         ),
       ),
       bottomNavigationBar: ClipRect(
@@ -132,46 +151,47 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.6),
-              border: const Border(top: BorderSide(color: DigmTheme.glassBorder)),
+              border: const Border(
+                  top: BorderSide(color: DigmTheme.glassBorder)),
             ),
             child: NavigationBar(
-          selectedIndex: _selectedIndex,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          onDestinationSelected: (index) {
-            setState(() => _selectedIndex = index);
-          },
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.play_circle_outline),
-              selectedIcon: Icon(Icons.play_circle),
-              label: 'ParaDio',
+              selectedIndex: _selectedIndex,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onDestinationSelected: (index) {
+                setState(() => _selectedIndex = index);
+              },
+              destinations: const [
+                NavigationDestination(
+                  icon: Icon(Icons.play_circle_outline),
+                  selectedIcon: Icon(Icons.play_circle),
+                  label: 'ParaDio',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.search_outlined),
+                  selectedIcon: Icon(Icons.search),
+                  label: 'Discover',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.album_outlined),
+                  selectedIcon: Icon(Icons.album),
+                  label: 'Market',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.trending_up_outlined),
+                  selectedIcon: Icon(Icons.trending_up),
+                  label: 'Staking',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.account_balance_wallet_outlined),
+                  selectedIcon: Icon(Icons.account_balance_wallet),
+                  label: 'Wallet',
+                ),
+              ],
             ),
-            NavigationDestination(
-              icon: Icon(Icons.search_outlined),
-              selectedIcon: Icon(Icons.search),
-              label: 'Discover',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.album_outlined),
-              selectedIcon: Icon(Icons.album),
-              label: 'Market',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.trending_up_outlined),
-              selectedIcon: Icon(Icons.trending_up),
-              label: 'Staking',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.account_balance_wallet_outlined),
-              selectedIcon: Icon(Icons.account_balance_wallet),
-              label: 'Wallet',
-            ),
-          ],
+          ),
         ),
-        ),
-        ),
-        ),
+      ),
     );
   }
 }
