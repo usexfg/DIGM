@@ -11,8 +11,21 @@ class SinglePool {
   final String albumId;
   final int totalPara;
   final int votes;
+  final String title;
+  final String artist;
+  final String coverArt;
+  final String audioUrl;
 
-  SinglePool({required this.id, required this.albumId, required this.totalPara, required this.votes});
+  SinglePool({
+    required this.id,
+    required this.albumId,
+    required this.totalPara,
+    required this.votes,
+    required this.title,
+    required this.artist,
+    required this.coverArt,
+    required this.audioUrl,
+  });
 
   factory SinglePool.fromJson(Map<String, dynamic> json) {
     return SinglePool(
@@ -20,6 +33,10 @@ class SinglePool {
       albumId: json['album_id'] as String,
       totalPara: json['total_para'] as int,
       votes: json['votes'] as int,
+      title: json['title'] as String,
+      artist: json['artist'] as String,
+      coverArt: json['coverArt'] as String,
+      audioUrl: json['audioUrl'] as String,
     );
   }
 }
@@ -68,22 +85,22 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
     }
   }
 
-  void _playTrack(String trackId, String albumId) {
+  void _playTrack(SinglePool pool) {
     final track = Track(
-      id: trackId,
-      title: trackId,
-      artist: 'Artist',
-      albumId: albumId,
+      id: pool.id,
+      title: pool.title,
+      artist: pool.artist,
+      albumId: pool.albumId,
       chunkHashes: [
-        'hash_${albumId}_${trackId}_1',
-        'hash_${albumId}_${trackId}_2',
-        'hash_${albumId}_${trackId}_3',
+        'hash_${pool.albumId}_${pool.id}_1',
+        'hash_${pool.albumId}_${pool.id}_2',
+        'hash_${pool.albumId}_${pool.id}_3',
       ],
     );
     ref.read(playerProvider.notifier).playTrack(track);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Streaming $trackId...'),
+        content: Text('Streaming ${pool.title}...'),
         backgroundColor: DigmTheme.fuchsia,
       ),
     );
@@ -248,11 +265,11 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                   ],
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.play_circle_fill, size: 36),
-                  color: DigmTheme.fuchsiaLight,
-                  onPressed: () => _playTrack(pool.id, pool.albumId),
-                ),
+                    IconButton(
+                      icon: const Icon(Icons.play_circle_fill, size: 36),
+                      color: DigmTheme.fuchsiaLight,
+                      onPressed: () => _playTrack(pool),
+                    ),
               ],
             ),
           ),

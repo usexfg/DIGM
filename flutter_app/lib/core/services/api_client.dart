@@ -16,6 +16,8 @@ class ApiClient {
     return jsonDecode(body);
   }
 
+  Future<dynamic> get(String path) async => _get(path);
+
   Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body) async {
     final url = Uri.parse('$baseUrl/api/digm/$path');
     final request = await _client.postUrl(url);

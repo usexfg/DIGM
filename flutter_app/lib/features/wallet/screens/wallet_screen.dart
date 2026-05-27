@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/ffi/digm_core.dart';
 import '../../../core/theme/digm_theme.dart';
 import 'recovery_screen.dart';
+import '../../features/artist/screens/artist_dashboard_screen.dart';
+import '../../features/curator/screens/curator_dashboard_screen.dart';
+import '../../features/marketplace/screens/create_album_screen.dart';
+import '../../../core/widgets/access_locked_screen.dart';
 
 final nodeModeProvider = StateProvider<String>((ref) => 'Client');
 
@@ -28,7 +32,67 @@ class WalletScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: _StudioButton(
+                        label: 'Artist Studio',
+                        icon: Icons.auto_graph,
+                        onPressed: () {
+                          if (int.parse(voxBalance) > 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ArtistDashboardScreen()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AccessLockedScreen(
+                                  title: 'ARTIST STUDIO LOCKED',
+                                  requiredToken: 'VOX (DIGM) COIN',
+                                  description: 'The Artist Studio is an exclusive domain for Sovereign Creators. You need to hold VOX (DIGM) coin in your wallet to unlock publishing tools and manage your catalog.',
+                                  icon: Icons.auto_graph,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _StudioButton(
+                        label: 'Curator Studio',
+                        icon: Icons.radio,
+                        onPressed: () {
+                          if (int.parse(curaBalance) > 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const CuratorDashboardScreen()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AccessLockedScreen(
+                                  title: 'CURATOR STUDIO LOCKED',
+                                  requiredToken: 'CURA TOKEN',
+                                  description: 'Host your own Paradio station and earn a 30% cut of listener streams. Minting a CURA token by burning VOX is required to access the Curator Studio.',
+                                  icon: Icons.radio,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
                 _SectionHeader(title: 'Your Address'),
                 const SizedBox(height: 8),
                 _GlassCard(
@@ -400,7 +464,6 @@ class _StakingPoolTile extends StatelessWidget {
   final String album;
   final String paraStaked;
   final String rank;
-
   const _StakingPoolTile({required this.album, required this.paraStaked, required this.rank});
 
   @override
@@ -458,3 +521,37 @@ class _StakingPoolTile extends StatelessWidget {
     );
   }
 }
+
+class _StudioButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+  const _StudioButton({super.key, required this.label, required this.icon, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, color: DigmTheme.fuchsiaLight),
+      label: Text(
+        label,
+        style: GoogleFonts.spaceGrotesk(
+          fontWeight: FontWeight.bold,
+          color: DigmTheme.textPrimary,
+          fontSize: 12,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white.withOpacity(0.1),
+        foregroundColor: DigmTheme.textPrimary,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: DigmTheme.glassBorder),
+        ),
+        elevation: 0,
+      ),
+    );
+  }
+}
+

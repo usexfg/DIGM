@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:fuego_core/digm_core.dart';
 import 'api_client.dart';
 
@@ -45,7 +46,9 @@ class ApiDigmCore extends DigmCore {
           ?.map((e) => e.toString())
           .toList() ?? [];
       _recoveryThreshold = (guardians['threshold'] as num?)?.toInt() ?? 0;
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('ApiDigmCore init error: $e');
+    }
   }
 
   Future<void> _refreshBalances() async {
@@ -56,20 +59,22 @@ class ApiDigmCore extends DigmCore {
       _paraBalance = (balances['para'] as num?)?.toInt() ?? _paraBalance;
       _voxBalance = (balances['vox'] as num?)?.toInt() ?? _voxBalance;
       _curaBalance = (balances['cura'] as num?)?.toInt() ?? _curaBalance;
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Balances refresh error: $e');
+    }
   }
 
   void dispose() {
     _refreshTimer?.cancel();
   }
 
-  // -- Wallet & Identity --
+  // --- SYNC methods (cached values) ---
 
   @override
   String get_address(int index) => _address;
 
   @override
-  int get_current_earnings(String address) => _paraBalance;
+  String get_current_earnings(String address) => _paraBalance.toString();
 
   @override
   int get_vox_balance(String address) => _voxBalance;
@@ -77,7 +82,19 @@ class ApiDigmCore extends DigmCore {
   @override
   int get_cura_balance(String address) => _curaBalance;
 
-  // -- Node --
+  @override
+  String get_single_pools() => _singlePools;
+
+  @override
+  String get_album_rankings() => _albumRankings;
+
+  @override
+  List<String> get_guardians() => _guardians;
+
+  @override
+  int get_recovery_threshold() => _recoveryThreshold;
+
+  // --- ASYNC methods (real API calls) ---
 
   @override
   Future<void> sync_node() async {
@@ -87,45 +104,28 @@ class ApiDigmCore extends DigmCore {
   @override
   Future<String> anchor_state() async {
     final result = await _api.anchor();
-    return (result['tx_hash'] as String?) ?? '';
+    return result['tx_hash'] as String? ?? '';
   }
 
-  // -- Discovery & Pools --
-
   @override
-  String get_single_pools() => _singlePools;
+  Future<List<double>> next_pcm_frame() async {
+    try {
+      final result = await _api.get('next-pcm-frame');
+      if (result['status'] == 'eos') throw Exception('End of stream');
+      final raw = result['frame'] as List<dynamic>;
+      return raw.cast<double>();
+    } catch (e) {
+      debugPrint('PCM fetch error: $e');
+      rethrow;
+    }
+  }
 
-  @override
-  String get_album_rankings() => _albumRankings;
-
-  // -- Staking & Albums --
+  // --- Fire-and-forget methods ---
 
   @override
   void stake_album(String address, String albumId, int amount) {
     _api.stakeAlbum(address: address, albumId: albumId, amount: amount);
   }
-
-  @override
-  int unstake_single(String address, String trackId) {
-    _api.unstakeSingle(address: address, trackId: trackId);
-    return 0;
-  }
-
-  @override
-  int unstake_album(String address, String albumId) {
-    _api.unstakeAlbum(address: address, albumId: albumId);
-    return 0;
-  }
-
-  @override
-  void create_album(String albumId, String title, int price, List<String> previewSingles) {
-    _api.stakeAlbum(address: _address, albumId: albumId, amount: price);
-  }
-
-  @override
-  bool can_browse_album(String address, String albumId) => true;
-
-  // -- Economy --
 
   @override
   void earn_para(String address, int amount) {
@@ -147,17 +147,18 @@ class ApiDigmCore extends DigmCore {
     _api.streamPayment(from: from, to: to, amount: amount);
   }
 
+  // -- Recovery --
+
   @override
-  int charge_browsing_play(String address, int trackDurationSecs, int playedSecs) {
-    _api.chargeBrowsing(address: address, trackDurationSecs: trackDurationSecs, playedSecs: playedSecs);
-    return 0;
+  Future<String> initiate_recovery(List<int> newPublicKey) async {
+    debugPrint('ApiDigmCore: initiate_recovery not implemented via API yet');
+    await Future.delayed(const Duration(seconds: 1));
+    return '{"old_root":"0xabc","new_public_key":"0xdef","threshold":2,"signatures":[]}';
   }
 
-  // -- Guardians & Recovery --
-
   @override
-  List<String> get_guardians() => _guardians;
-
-  @override
-  int get_recovery_threshold() => _recoveryThreshold;
+  Future<void> finalize_recovery(String requestJson) async {
+    debugPrint('ApiDigmCore: finalize_recovery not implemented via API yet');
+    await Future.delayed(const Duration(seconds: 1));
+  }
 }

@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fuego_core/digm_core.dart';
 import '../ffi/digm_core.dart';
+import 'pcm_audio_sink.dart';
 
 class AudioPlayerService {
   final DigmCore _core;
   bool _isPlaying = false;
   Timer? _streamTimer;
   StreamController<List<double>>? _pcmController;
+  PcmAudioSink? _pcmSink;
   int _frameCount = 0;
 
   AudioPlayerService(this._core);
@@ -23,35 +24,40 @@ class AudioPlayerService {
     _isPlaying = true;
     _pcmController?.close();
     _pcmController = StreamController<List<double>>.broadcast();
+    _pcmSink = PcmAudioSink();
+    _pcmSink!.start(pcmStream);
     _startStreaming();
   }
 
   void loadTrack(List<String> hashes) {
     pause();
     _frameCount = 0;
-    _core.play_track(hashes);
+    _core.load_track(hashes);
   }
 
   void pause() {
     _isPlaying = false;
     _streamTimer?.cancel();
     _streamTimer = null;
+    _pcmSink?.pause();
   }
 
   void stop() {
     pause();
+    _pcmSink?.stop();
+    _pcmSink = null;
     _pcmController?.close();
     _pcmController = null;
   }
 
   void _startStreaming() {
-    _streamTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) {
+    _streamTimer = Timer.periodic(const Duration(milliseconds: 20), (timer) async {
       if (!_isPlaying) {
         timer.cancel();
         return;
       }
       try {
-        final frame = _core.next_pcm_frame();
+        final frame = await _core.next_pcm_frame();
         _pcmController?.add(frame);
         _frameCount++;
       } catch (_) {

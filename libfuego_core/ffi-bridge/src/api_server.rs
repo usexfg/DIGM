@@ -48,6 +48,7 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/charge-browsing", post(charge_browsing_route))
         .route("/api/digm/vote-single", post(vote_single_route))
         .route("/api/digm/close-epoch", post(close_epoch_route))
+        .route("/api/digm/next-pcm-frame", get(next_pcm_frame_route))
         .layer(cors)
         .with_state(state);
 
@@ -276,5 +277,13 @@ async fn create_album(State(state): State<ApiState>, Json(req): Json<CreateAlbum
     match core.create_album(req.album_id, req.title, req.price, req.preview_singles) {
         Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
         Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn next_pcm_frame_route(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.next_pcm_frame() {
+        Ok(frame) => Ok(Json(serde_json::json!({ "status": "ok", "frame": frame }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "eos", "message": e }))),
     }
 }
