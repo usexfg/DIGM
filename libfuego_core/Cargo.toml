@@ -9,5 +9,6 @@ members = [
     "digm-app",
     "ffi-bridge",
     "fuego-audio",
+    "parapay",
 ]
 resolver = "2"

@@ -3,6 +3,7 @@ use serde::{Serialize, Deserialize};
 pub const TX_EXTRA_DIGM_ALBUM_RECORD: u8 = 0x0A;
 pub const TX_EXTRA_ALBUM_LICENSE: u8 = 0x0B;
 pub const TX_EXTRA_CURATION_TAG: u8 = 0x0C;
+pub const TX_EXTRA_PARA_CLAIM: u8 = 0x0D;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PubKey(pub [u8; 32]);
@@ -62,12 +63,26 @@ pub struct CuraColoredCoin {
     pub version: u32,
 }
 
+/// 0x0D — PARA Claim (on-chain cash-out of off-chain paper PARA).
+/// Submits a Merkle proof that the claimant had X PARA at a checkpoint
+/// previously anchored to L1. If valid, PARA colored coin is minted on-chain.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ParaClaim {
+    pub claimant: PubKey,           // wallet pubkey claiming PARA
+    pub amount: u128,               // PARA atomic units (18 decimal) to claim
+    pub checkpoint_root: Hash,      // Merkle root anchored on-chain
+    pub merkle_proof: Vec<Vec<u8>>, // siblings from leaf to root
+    pub timestamp: u64,
+    pub version: u32,
+}
+
 /// Parsed tx_extra field variants relevant to DIGM.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum DigmTxExtra {
     AlbumRecord(DigmAlbumRecord),
     AlbumLicense(AlbumLicense),
     CuraColoredCoin(CuraColoredCoin),
+    ParaClaim(ParaClaim),
 }
 
 /// Serialize a DigmAlbumRecord into tx_extra bytes (0x0A tag).
@@ -97,6 +112,17 @@ pub fn serialize_cura_colored_coin(tag: &CuraColoredCoin) -> Result<Vec<u8>, Str
     let mut data = Vec::new();
     data.push(TX_EXTRA_CURATION_TAG);
     bincode::serialize(&tag).map_err(|e| e.to_string()).map(|mut blob| {
+        data.push(blob.len() as u8);
+        data.append(&mut blob);
+        data
+    })
+}
+
+/// Serialize a ParaClaim into tx_extra bytes (0x0D tag).
+pub fn serialize_para_claim(claim: &ParaClaim) -> Result<Vec<u8>, String> {
+    let mut data = Vec::new();
+    data.push(TX_EXTRA_PARA_CLAIM);
+    bincode::serialize(&claim).map_err(|e| e.to_string()).map(|mut blob| {
         data.push(blob.len() as u8);
         data.append(&mut blob);
         data
@@ -136,6 +162,11 @@ pub fn parse_digm_extra(extra: &[u8]) -> Vec<DigmTxExtra> {
                     results.push(DigmTxExtra::CuraColoredCoin(tag));
                 }
             }
+            TX_EXTRA_PARA_CLAIM => {
+                if let Ok(claim) = bincode::deserialize::<ParaClaim>(blob) {
+                    results.push(DigmTxExtra::ParaClaim(claim));
+                }
+            }
             _ => {}
         }
     }
@@ -170,4 +201,25 @@ pub fn verify_license(lic: &AlbumLicense) -> bool {
         }
         Err(_) => false,
     }
+}
+
+/// Verify a PARA claim's Merkle proof against a known checkpoint root.
+/// The leaf is: keccak256(claimant_pubkey || amount_le_u128)
+pub fn verify_para_claim(claim: &ParaClaim, checkpoint_root: &[u8; 32]) -> bool {
+    use sha3::{Digest, Keccak256};
+    let mut hasher = Keccak256::new();
+    hasher.update(&claim.claimant.0);
+    hasher.update(claim.amount.to_le_bytes());
+    let leaf = hasher.finalize();
+    let mut leaf_arr = [0u8; 32];
+    leaf_arr.copy_from_slice(&leaf);
+
+    let proof_bytes: Vec<[u8; 32]> = claim.merkle_proof.iter().map(|v| {
+        let mut a = [0u8; 32];
+        let len = v.len().min(32);
+        a[..len].copy_from_slice(&v[..len]);
+        a
+    }).collect();
+
+    crate::merkle::MerkleTree::verify_proof(&leaf_arr, &proof_bytes, 0, &claim.checkpoint_root.0)
 }

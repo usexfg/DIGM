@@ -1,4 +1,4 @@
-use crate::tx_extra::{self, DigmAlbumRecord, CuraColoredCoin, DigmTxExtra};
+use crate::tx_extra::{self, DigmAlbumRecord, CuraColoredCoin, DigmTxExtra, ParaClaim};
 #[cfg(test)]
 use crate::tx_extra::AlbumLicense;
 use std::collections::{HashMap, HashSet};
@@ -144,6 +144,9 @@ impl DigmChainScanner {
                 }
                 DigmTxExtra::CuraColoredCoin(cura) => {
                     self.cura_log.entries.push(cura.clone());
+                }
+                DigmTxExtra::ParaClaim(_claim) => {
+                    // PARA claim logged — validation against anchored checkpoint done by node
                 }
             }
 
