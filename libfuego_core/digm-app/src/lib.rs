@@ -1,8 +1,14 @@
 use serde::{Serialize, Deserialize};
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
-use fuego_crypto::{Address, Keypair};
+use fuego_crypto::Address;
 use sha2::{Sha256, Digest};
+use scanner::DigmChainScanner;
+use merkle::MerkleTree;
+
+pub mod tx_extra;
+pub mod merkle;
+pub mod scanner;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserAccount {
@@ -12,6 +18,9 @@ pub struct UserAccount {
     pub cura_balance: u64,
     pub display_name: Option<String>,
     pub wallet_age_epochs: u64,
+    pub stations_created: u64,
+    pub curator_playlist: Vec<String>,
+    pub curator_vibe: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -43,10 +52,31 @@ pub struct Album {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Station {
+    pub station_id: String,
+    pub curator: Address,
+    pub name: String,
+    pub description: String,
+    pub tracks: Vec<String>,
+    pub created_at: u64,
+    pub is_active: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StationSummary {
+    pub station_id: String,
+    pub name: String,
+    pub description: String,
+    pub num_tracks: usize,
+    pub is_active: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct GlobalState {
     pub accounts: HashMap<Address, UserAccount>,
     pub singles: HashMap<String, Single>,
     pub albums: HashMap<String, Album>,
+    pub stations: HashMap<String, Station>,
     pub current_epoch: u64,
     pub top_holder: Option<Address>,
 }
@@ -67,20 +97,19 @@ pub struct AlbumRanking {
     pub rank: usize,
 }
 
+#[derive(Default)]
 pub struct DigmApp {
     state: Arc<RwLock<GlobalState>>,
+    pub scanner: Arc<RwLock<DigmChainScanner>>,
+    pub state_tree: Arc<RwLock<MerkleTree>>,
 }
 
 impl DigmApp {
     pub fn new() -> Self {
-        Self {
-            state: Arc::new(RwLock::new(GlobalState {
-                accounts: HashMap::new(),
-                singles: HashMap::new(),
-                albums: HashMap::new(),
-                current_epoch: 0,
-                top_holder: None,
-            })),
+        DigmApp {
+            state: Arc::new(RwLock::new(GlobalState::default())),
+            scanner: Arc::new(RwLock::new(DigmChainScanner::new())),
+            state_tree: Arc::new(RwLock::new(MerkleTree::new())),
         }
     }
 
@@ -103,6 +132,9 @@ impl DigmApp {
             cura_balance: 0,
             display_name: None,
             wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
         });
         account.para_balance += amount;
     }
@@ -124,6 +156,9 @@ impl DigmApp {
             cura_balance: 0,
             display_name: None,
             wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
         });
         receiver.para_balance += amount;
         
@@ -169,7 +204,7 @@ impl DigmApp {
         });
         
         single.total_para_staked += amount;
-        let positions = single.stakers.entry(address.clone()).or_insert(Vec::new());
+        let positions = single.stakers.entry(address.clone()).or_default();
         positions.push(StakePosition {
             amount,
             timestamp: std::time::SystemTime::now()
@@ -246,7 +281,7 @@ impl DigmApp {
     pub fn purchase_album(&self, address: &Address, album_id: &str, amount: u64) -> Result<(), String> {
         let mut state = self.state.write().unwrap();
         
-        let album_price = {
+        let _album_price = {
             let album = state.albums.get(album_id).ok_or("Album not found")?;
             if amount < album.price {
                 return Err("Insufficient payment for album".to_string());
@@ -270,18 +305,95 @@ impl DigmApp {
 
     pub fn can_browse_album(&self, address: &Address, album_id: &str) -> bool {
         let state = self.state.read().unwrap();
-        
+
         // Check if user has staked in ANY single belonging to this album
         for single in state.singles.values() {
             if single.album_id == album_id && single.stakers.contains_key(address) {
                 return true;
             }
         }
-        
-        // Check 0x0B license ownership (placeholder)
-        // In a real implementation, we'd scan the blockchain here
-        
+
+        // Check 0x0B AlbumLicense via chain scanner
+        let scanner = self.scanner.read().unwrap();
+        let addr_hex = hex::encode(address.0.as_bytes());
+        if scanner.has_license_for(&addr_hex, album_id) {
+            return true;
+        }
+
         false
+    }
+
+    /// Scan a raw transaction's tx_extra for DIGM tags (0x0A, 0x0B, 0x0C).
+    /// Call this when processing incoming blocks from the node.
+    pub fn scan_tx_extra(
+        &self,
+        tx_hash: [u8; 32],
+        block_height: u64,
+        timestamp: u64,
+        extra: &[u8],
+    ) -> Vec<scanner::ScanEvent> {
+        self.scanner
+            .write()
+            .unwrap()
+            .scan_transaction(tx_hash, block_height, timestamp, extra)
+    }
+
+    /// Compute a Merkle checkpoint of current DIGM app state.
+    /// Returns (root, epoch, height, timestamp).
+    pub fn compute_state_checkpoint(&self) -> ([u8; 32], u64, u64, u64) {
+        let mut tree = self.state_tree.write().unwrap();
+        tree.clear();
+
+        let state = self.state.read().unwrap();
+
+        // Add accounts as leaves
+        for (addr, acct) in &state.accounts {
+            tree.add_leaf_bytes(
+                format!("account:{addr}:p{}:v{}:c{}", acct.para_balance, acct.vox_balance, acct.cura_balance)
+                    .as_bytes(),
+            );
+        }
+
+        // Add albums as leaves
+        for (id, album) in &state.albums {
+            tree.add_leaf_bytes(
+                format!("album:{id}:t{}:s{}", album.total_sales_value, album.total_para_staked)
+                    .as_bytes(),
+            );
+        }
+
+        // Add singles as leaves
+        for (id, single) in &state.singles {
+            tree.add_leaf_bytes(
+                format!("single:{id}:p{}:v{}", single.total_para_staked, single.listener_votes)
+                    .as_bytes(),
+            );
+        }
+
+        // Add stations as leaves
+        for (id, station) in &state.stations {
+            tree.add_leaf_bytes(
+                format!("station:{id}:t{}:a{}", station.tracks.len(), station.is_active)
+                    .as_bytes(),
+            );
+        }
+
+        let root = tree.root();
+        let epoch = state.current_epoch;
+
+        (root, epoch, 0, 0) // height/timestamp filled by caller
+    }
+
+    /// Compute a Merkle-anchored checkpoint for the state (new Merkle system).
+    pub fn compute_merkle_anchor(
+        &self,
+        prev_root: &[u8; 32],
+        block_height: u64,
+        timestamp: u64,
+    ) -> [u8; 32] {
+        let (_, epoch, _, _) = self.compute_state_checkpoint();
+        let tree = self.state_tree.read().unwrap();
+        merkle::compute_checkpoint(prev_root, &tree, epoch, block_height, timestamp)
     }
 
     pub fn charge_browsing_play(&self, address: &Address, track_duration_secs: u64, played_secs: u64) -> Result<u64, String> {
@@ -305,7 +417,7 @@ impl DigmApp {
         Ok(cost)
     }
 
-    pub fn vote_for_single(&self, address: &Address, track_id: &str) -> Result<(), String> {
+    pub fn vote_for_single(&self, _address: &Address, track_id: &str) -> Result<(), String> {
         let mut state = self.state.write().unwrap();
         let single = state.singles.get_mut(track_id).ok_or("Single not found")?;
         single.listener_votes += 1;
@@ -313,18 +425,13 @@ impl DigmApp {
     }
 
     pub fn compute_state_root(&self) -> String {
-        let state = self.state.read().unwrap();
-        let serialized = bincode::serialize(&*state).unwrap();
-        let mut hasher = Sha256::new();
-        hasher.update(&serialized);
-        hex::encode(hasher.finalize())
+        let (root, _, _, _) = self.compute_state_checkpoint();
+        hex::encode(root)
     }
 
     pub fn anchor_state(&self) -> Result<String, String> {
         let root = self.compute_state_root();
         println!("Anchoring state root to Fuego L1: {}", root);
-        
-        // Simulate L1 transaction submission
         let tx_hash = hex::encode(Sha256::digest(root.as_bytes()));
         Ok(tx_hash)
     }
@@ -355,6 +462,80 @@ impl DigmApp {
                 rank: i + 1,
             }
         }).collect()
+    }
+
+    pub const MAX_STATIONS: u64 = 10;
+
+    pub fn create_station(&self, curator: &Address, station_id: String, name: String, description: String, tracks: Vec<String>) -> Result<(), String> {
+        let mut state = self.state.write().unwrap();
+        if state.stations.contains_key(&station_id) {
+            return Err("Station already exists".to_string());
+        }
+        let account = state.accounts.get_mut(curator).ok_or("Curator account not found")?;
+        if account.stations_created >= Self::MAX_STATIONS {
+            return Err(format!("CURA station limit reached (max {})", Self::MAX_STATIONS));
+        }
+        account.stations_created += 1;
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        state.stations.insert(station_id.clone(), Station {
+            station_id,
+            curator: curator.clone(),
+            name,
+            description,
+            tracks,
+            created_at: now,
+            is_active: true,
+        });
+        Ok(())
+    }
+
+    pub fn get_curator_stations(&self, curator: &Address) -> Vec<StationSummary> {
+        let state = self.state.read().unwrap();
+        state.stations.values()
+            .filter(|s| s.curator == *curator)
+            .map(|s| StationSummary {
+                station_id: s.station_id.clone(),
+                name: s.name.clone(),
+                description: s.description.clone(),
+                num_tracks: s.tracks.len(),
+                is_active: s.is_active,
+            })
+            .collect()
+    }
+
+    pub fn curator_stations_remaining(&self, curator: &Address) -> u64 {
+        let state = self.state.read().unwrap();
+        let created = state.accounts.get(curator)
+            .map(|a| a.stations_created)
+            .unwrap_or(0);
+        Self::MAX_STATIONS.saturating_sub(created)
+    }
+
+    pub fn update_curator_vibe(&self, curator: &Address, vibe: String) -> Result<(), String> {
+        let mut state = self.state.write().unwrap();
+        let account = state.accounts.get_mut(curator).ok_or("Curator account not found")?;
+        account.curator_vibe = Some(vibe);
+        Ok(())
+    }
+
+    pub fn get_curator_vibe(&self, curator: &Address) -> Option<String> {
+        let state = self.state.read().unwrap();
+        state.accounts.get(curator).and_then(|a| a.curator_vibe.clone())
+    }
+
+    pub fn set_curator_playlist(&self, curator: &Address, tracks: Vec<String>) -> Result<(), String> {
+        let mut state = self.state.write().unwrap();
+        let account = state.accounts.get_mut(curator).ok_or("Curator account not found")?;
+        account.curator_playlist = tracks;
+        Ok(())
+    }
+
+    pub fn get_curator_playlist(&self, curator: &Address) -> Vec<String> {
+        let state = self.state.read().unwrap();
+        state.accounts.get(curator).map(|a| a.curator_playlist.clone()).unwrap_or_default()
     }
 
     pub fn calculate_airtime_weight(&self, track_id: &str) -> f64 {

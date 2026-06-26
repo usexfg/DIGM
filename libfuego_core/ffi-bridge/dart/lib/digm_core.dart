@@ -102,6 +102,14 @@ class DigmCore {
     }
   }
 
+  void stake_single(String address, String trackId, String albumId, int amount) {
+    if (!useMock) {
+      _apiCall('/api/digm/stake-single', method: 'POST', body: {
+        'address': address, 'track_id': trackId, 'album_id': albumId, 'amount': amount,
+      });
+    }
+  }
+
   int unstake_single(String address, String trackId) {
     if (!useMock) {
       _apiCall('/api/digm/unstake-single', method: 'POST', body: {
@@ -167,6 +175,14 @@ class DigmCore {
 
   // -- Payments --
 
+  void purchase_album(String address, String albumId, int amount) {
+    if (!useMock) {
+      _apiCall('/api/digm/purchase-album', method: 'POST', body: {
+        'address': address, 'album_id': albumId, 'amount': amount,
+      });
+    }
+  }
+
   void stream_payment(String from, String to, int amount) {
     if (!useMock) {
       _apiCall('/api/digm/stream-payment', method: 'POST', body: {
@@ -193,6 +209,54 @@ class DigmCore {
 
   void set_node_mode(String mode) {
     debugPrint('Mock: set_node_mode($mode)');
+  }
+
+  // -- Stations & CURA (partially SYNC, partially fire-and-forget) --
+
+  static const int maxStations = 10;
+
+  void create_station(String curator, String stationId, String name, String description, List<String> tracks) {
+    if (!useMock) {
+      _apiCall('/api/digm/create-station', method: 'POST', body: {
+        'curator': curator, 'station_id': stationId, 'name': name, 'description': description, 'tracks': tracks,
+      });
+    }
+  }
+
+  String get_curator_stations(String address) {
+    return jsonEncode([
+      {"station_id": "station-001", "name": "Fuego Waves Radio", "description": "Deep space ambient mixed with neo-tokyo synthwave.", "num_tracks": 4, "is_active": true},
+    ]);
+  }
+
+  int curator_stations_remaining(String address) {
+    return 9;
+  }
+
+  void update_curator_vibe(String address, String vibe) {
+    if (!useMock) {
+      _apiCall('/api/digm/curator-vibe', method: 'POST', body: {
+        'address': address, 'vibe': vibe,
+      });
+    }
+  }
+
+  String get_curator_vibe(String address) {
+    return 'Deep space ambient mixed with neo-tokyo synthwave. Focused on high-frequency energy for sovereign coding sessions.';
+  }
+
+  void set_curator_playlist(String address, List<String> tracks) {
+    if (!useMock) {
+      _apiCall('/api/digm/curator-playlist', method: 'POST', body: {
+        'address': address, 'tracks': tracks,
+      });
+    }
+  }
+
+  String get_curator_playlist(String address) {
+    return jsonEncode([
+      {"title": "Curator's Pick 1", "artist": "Featured Artist", "duration": "3:30"},
+    ]);
   }
 
   // -- Guardians & Recovery (SYNC - cached) --

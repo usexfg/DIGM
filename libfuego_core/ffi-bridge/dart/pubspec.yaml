@@ -1,5 +1,5 @@
-name: fuego_core
-description: Dart bindings for the DIGM Rust core (mock implementation)
+name: digm_core
+description: DIGM music platform bridge — business logic layer on top of Fuego blockchain.
 version: 0.1.0
 
 environment:

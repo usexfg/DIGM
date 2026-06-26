@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:fuego_core/digm_core.dart';
+import 'package:digm_core/digm_core.dart';
 import 'api_client.dart';
 
 class ApiDigmCore extends DigmCore {
@@ -143,8 +143,57 @@ class ApiDigmCore extends DigmCore {
   }
 
   @override
+  void stake_single(String address, String trackId, String albumId, int amount) {
+    _api.stakeSingle(address: address, trackId: trackId, albumId: albumId, amount: amount);
+  }
+
+  @override
+  void purchase_album(String address, String albumId, int amount) {
+    _api.purchaseAlbum(address: address, albumId: albumId, amount: amount);
+  }
+
+  @override
   void stream_payment(String from, String to, int amount) {
     _api.streamPayment(from: from, to: to, amount: amount);
+  }
+
+  // -- Stations --
+
+  @override
+  void create_station(String curator, String stationId, String name, String description, List<String> tracks) {
+    _api.createStation(curator: curator, stationId: stationId, name: name, description: description, tracks: tracks);
+  }
+
+  @override
+  String get_curator_stations(String address) {
+    // Will be fetched via API on next poll
+    return super.get_curator_stations(address);
+  }
+
+  @override
+  int curator_stations_remaining(String address) {
+    // Will be fetched via API on next poll
+    return super.curator_stations_remaining(address);
+  }
+
+  @override
+  void update_curator_vibe(String address, String vibe) {
+    _api.updateCuratorVibe(address: address, vibe: vibe);
+  }
+
+  @override
+  String get_curator_vibe(String address) {
+    return super.get_curator_vibe(address);
+  }
+
+  @override
+  void set_curator_playlist(String address, List<String> tracks) {
+    _api.setCuratorPlaylist(address: address, tracks: tracks);
+  }
+
+  @override
+  String get_curator_playlist(String address) {
+    return super.get_curator_playlist(address);
   }
 
   // -- Recovery --

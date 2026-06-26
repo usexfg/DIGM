@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fuego_core/digm_core.dart';
+import 'package:digm_core/digm_core.dart';
 import '../../../core/ffi/digm_core.dart';
 import '../../../core/services/audio_player_service.dart';
 import '../models/player_state.dart';
@@ -68,7 +68,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     _earningsTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
       try {
         final raw = _core.get_current_earnings(_address);
-        final para = raw.toDouble() / 10000000;
+        final para = (double.tryParse(raw) ?? 0.0) / 10000000;
         if (state.earnings != para) {
           state = state.copyWith(earnings: para);
         }
