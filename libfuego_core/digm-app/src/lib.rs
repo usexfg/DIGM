@@ -5,11 +5,13 @@ use fuego_crypto::Address;
 use sha2::{Sha256, Digest};
 use scanner::DigmChainScanner;
 use merkle::MerkleTree;
+use parapay::AccrualConfig;
 
 pub mod tx_extra;
 pub mod merkle;
 pub mod scanner;
 pub mod parapay_sessions;
+pub mod persistor;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserAccount {
@@ -103,6 +105,8 @@ pub struct DigmApp {
     state: Arc<RwLock<GlobalState>>,
     pub scanner: Arc<RwLock<DigmChainScanner>>,
     pub state_tree: Arc<RwLock<MerkleTree>>,
+    pub parapay_sessions: Arc<RwLock<Option<parapay_sessions::ParaPaySessionManager>>>,
+    pub data_dir: std::path::PathBuf,
 }
 
 impl DigmApp {
@@ -111,7 +115,58 @@ impl DigmApp {
             state: Arc::new(RwLock::new(GlobalState::default())),
             scanner: Arc::new(RwLock::new(DigmChainScanner::new())),
             state_tree: Arc::new(RwLock::new(MerkleTree::new())),
+            parapay_sessions: Arc::new(RwLock::new(None)),
+            data_dir: std::path::PathBuf::from("./digm_data"),
         }
+    }
+
+    /// Initialize the ParaPay session manager (requires data_dir for persistence).
+    pub fn init_parapay(&self) -> Result<(), String> {
+        let disk_persistor = Arc::new(persistor::SledPersistor::new(
+            &self.data_dir.join("parapay_sessions")
+        )?);
+
+        struct DigmSettler {
+            app: Arc<RwLock<GlobalState>>,
+        }
+        impl parapay_sessions::PayoutSettler for DigmSettler {
+            fn apply(
+                &self,
+                payout: &parapay::Payout,
+                artist: &Address,
+                listener: &Address,
+                curator: Option<&Address>,
+            ) {
+                let mut state = self.app.write().unwrap();
+                credit_account(&mut state, artist, payout.artist_amount);
+                credit_account(&mut state, listener, payout.listener_amount);
+                if let Some(c) = curator {
+                    credit_account(&mut state, c, payout.curator_amount);
+                }
+            }
+        }
+
+        fn credit_account(state: &mut GlobalState, addr: &Address, amount: u128) {
+            let acct = state.accounts.entry(addr.clone()).or_insert(UserAccount {
+                address: addr.clone(),
+                para_balance: 0,
+                vox_balance: 0,
+                cura_balance: 0,
+                display_name: None,
+                wallet_age_epochs: 0,
+                stations_created: 0,
+                curator_playlist: Vec::new(),
+                curator_vibe: None,
+            });
+            acct.para_balance += amount;
+        }
+
+        let settler = Arc::new(DigmSettler { app: self.state.clone() });
+        let config = AccrualConfig::default();
+
+        let mgr = parapay_sessions::ParaPaySessionManager::new(config, settler, disk_persistor);
+        *self.parapay_sessions.write().unwrap() = Some(mgr);
+        Ok(())
     }
 
     pub fn get_account(&self, address: &Address) -> Option<UserAccount> {
@@ -678,6 +733,81 @@ impl DigmApp {
         }
     }
 
+    /// Begin a ParaPay streaming session. Returns stream_id as hex.
+    pub fn parapay_begin(
+        &self,
+        track_length_sec: u32,
+        curator_present: bool,
+        artist: &str,
+        listener: &str,
+        curator: Option<&str>,
+    ) -> Result<String, String> {
+        let mut guard = self.parapay_sessions.write().unwrap();
+        let mgr = guard.as_mut().ok_or("ParaPay not initialized")?;
+
+        let mut hasher = Sha256::new();
+        hasher.update(listener.as_bytes());
+        hasher.update(artist.as_bytes());
+        hasher.update(track_length_sec.to_le_bytes());
+        let digest = hasher.finalize();
+        let mut sid = [0u8; 32];
+        sid.copy_from_slice(&digest);
+
+        let artist_addr = Address(artist.to_string());
+        let listener_addr = Address(listener.to_string());
+        let curator_addr = curator.map(|c| Address(c.to_string()));
+
+        mgr.begin(sid, track_length_sec, curator_present, artist_addr, listener_addr, curator_addr)?;
+        Ok(hex::encode(sid))
+    }
+
+    /// Report a playback position tick (per-second from fuego-audio).
+    pub fn parapay_tick(&self, stream_id_hex: &str, new_pos_sec: u32) -> Result<(), String> {
+        let sid = decode_stream_id(stream_id_hex)?;
+        let mut guard = self.parapay_sessions.write().unwrap();
+        let mgr = guard.as_mut().ok_or("ParaPay not initialized")?;
+        let artist = Address("artist".into());
+        let listener = Address("listener".into());
+        mgr.tick(sid, new_pos_sec, &artist, &listener, None)
+            .map(|_| ())
+            .map_err(|e| format!("{e:?}"))
+    }
+
+    /// Apply a boost press. Returns total presses used.
+    pub fn parapay_boost(&self, stream_id_hex: &str) -> Result<u32, String> {
+        let sid = decode_stream_id(stream_id_hex)?;
+        let mut guard = self.parapay_sessions.write().unwrap();
+        let mgr = guard.as_mut().ok_or("ParaPay not initialized")?;
+        let result = mgr.boost(sid).map_err(|e| format!("{e:?}"))?;
+        Ok(result.presses_used)
+    }
+
+    /// End a ParaPay session (skip or complete).
+    pub fn parapay_end(&self, stream_id_hex: &str, skipped: bool) -> Result<(), String> {
+        let sid = decode_stream_id(stream_id_hex)?;
+        let mut guard = self.parapay_sessions.write().unwrap();
+        let mgr = guard.as_mut().ok_or("ParaPay not initialized")?;
+        let artist = Address("artist".into());
+        let listener = Address("listener".into());
+        let reason = if skipped {
+            parapay_sessions::EndReason::Skipped
+        } else {
+            parapay_sessions::EndReason::Completed
+        };
+        mgr.end(sid, reason, &artist, &listener, None);
+        Ok(())
+    }
+
+}
+
+fn decode_stream_id(hex_str: &str) -> Result<[u8; 32], String> {
+    let bytes = hex::decode(hex_str).map_err(|e| e.to_string())?;
+    if bytes.len() != 32 {
+        return Err("invalid stream_id length".into());
+    }
+    let mut arr = [0u8; 32];
+    arr.copy_from_slice(&bytes);
+    Ok(arr)
 }
 
 pub fn init() {

@@ -1,9 +1,10 @@
 use thiserror::Error;
+use serde::{Serialize, Deserialize};
 
 /// Unique identifier for a streaming session.
 pub type StreamId = [u8; 32];
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum SessionState {
     /// Pre-threshold. Accrual at BASE_PPS into pending buckets. Skip → forfeit.
     Streaming,
@@ -13,7 +14,7 @@ pub enum SessionState {
     Settled,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StreamSession {
     pub stream_id: StreamId,
     pub state: SessionState,
