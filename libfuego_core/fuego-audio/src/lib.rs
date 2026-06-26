@@ -11,6 +11,8 @@ use anyhow::{Result, Context};
 use std::io::{Read, Seek, SeekFrom};
 use std::borrow::Borrow;
 
+pub mod udp_transport;
+
 pub struct AudioStreamer {
     store: Arc<Mutex<ChunkStore>>,
     prefetcher: Option<Arc<PrefetchManager>>,
@@ -58,7 +60,7 @@ impl AudioStreamer {
         ).map_err(|e| anyhow::anyhow!("Format probe failed: {:?}", e))?;
         
         let format_reader = probed.format;
-        let track = format_reader.tracks().get(0)
+        let track = format_reader.tracks().first()
             .context("No tracks found in audio source")?;
         
         let registry = symphonia::default::get_codecs();

@@ -1,18 +1,16 @@
-use std::sync::{Arc, RwLock, Mutex};
+use std::sync::{Arc, RwLock};
 use std::path::PathBuf;
-use std::fs::{File, OpenOptions};
+use std::fs::File;
 use std::io::{Read, Write};
 use serde::{Serialize, Deserialize};
 use anyhow::{Result, Context};
 use sha2::{Sha256, Digest};
 use std::collections::HashMap;
-use i2p_net::{I2pRouter, I2pStream, SeedingManager};
-use p2p_net::P2PProvider;
+use i2p_net::I2pRouter;
 use async_trait::async_trait;
-use tokio::io::{AsyncRead, AsyncWrite};
+use p2p_net::AsyncStream;
 
-pub trait AsyncStream: AsyncRead + AsyncWrite + Send + Unpin {}
-impl<T: AsyncRead + AsyncWrite + Send + Unpin> AsyncStream for T {}
+pub mod rpc_client;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub enum NetworkMode {
@@ -44,7 +42,7 @@ pub enum NodeMode {
     Client,    // Lightweight, uses SPV-like verification, no seeding
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PrunedState {
     pub current_height: u64,
     pub utxo_set: HashMap<[u8; 32], u64>, // Txid -> Amount
@@ -52,10 +50,7 @@ pub struct PrunedState {
 
 impl PrunedState {
     pub fn new() -> Self {
-        Self {
-            current_height: 0,
-            utxo_set: HashMap::new(),
-        }
+        Self::default()
     }
 
     pub fn save(&self, path: &PathBuf) -> Result<()> {
@@ -79,19 +74,17 @@ pub type NodeState = PrunedState;
 
 pub struct HybridNetworkManager {
     p2p_provider: Arc<dyn p2p_net::P2PProvider>,
-    router: Arc<tokio::sync::Mutex<I2pRouter>>,
+    router: Arc<I2pRouter>,
     peers: Vec<String>,
-    local_port_base: u16,
 }
 
 impl HybridNetworkManager {
     pub fn new(
         p2p_provider: Arc<dyn p2p_net::P2PProvider>,
-        router: Arc<tokio::sync::Mutex<I2pRouter>>,
+        router: Arc<I2pRouter>,
         peers: Vec<String>,
-        local_port_base: u16
     ) -> Self {
-        Self { p2p_provider, router, peers, local_port_base }
+        Self { p2p_provider, router, peers }
     }
 }
 
@@ -102,57 +95,45 @@ impl NetworkProvider for HybridNetworkManager {
     }
 
     async fn fetch_header(&self, height: u64) -> Result<BlockHeader> {
-        // For now, we use I2P for headers as it's more stable for small requests
         if self.peers.is_empty() {
             return Err(anyhow::anyhow!("No peers available"));
         }
         let peer = &self.peers[0];
-        let local_port = self.local_port_base + (height as u16 % 1000);
-        
-        {
-            let router = self.router.lock().await;
-            router.create_tunnel(local_port, peer).await
-                .context("Failed to create tunnel to peer")?;
-        }
-            
-        let mut stream = I2pStream::connect(local_port).await
-            .context("Failed to connect to local I2P tunnel")?;
-            
+
+        let mut stream = self.router.connect(peer).await
+            .context("Failed to connect to peer via I2P")?;
+
         let mut request = Vec::new();
         request.push(0x01); // CMD_GET_HEADER
         request.extend_from_slice(&height.to_be_bytes());
         stream.write_all(&request).await?;
-        
+
         let mut buffer = [0u8; 80];
         stream.read_exact(&mut buffer).await?;
-        
+
         let header: BlockHeader = bincode::deserialize(&buffer)
             .context("Failed to deserialize block header")?;
-            
+
         Ok(header)
     }
 
     async fn get_stream(&self, peer_id: &str, mode: NetworkMode) -> Result<Box<dyn AsyncStream>> {
         match mode {
-            NetworkMode::Performance => {
-                let tcp = self.p2p_provider.connect(peer_id).await?;
-                Ok(Box::new(tcp))
+            NetworkMode::Performance | NetworkMode::Auto => {
+                self.p2p_provider.connect(peer_id).await
             }
             NetworkMode::Privacy => {
-                let local_port = 10000; // In real impl, this is dynamic
-                {
-                    let router = self.router.lock().await;
-                    router.create_tunnel(local_port, peer_id).await?;
-                }
-                let stream = I2pStream::connect(local_port).await?;
+                let stream = self.router.connect(peer_id).await?;
                 Ok(Box::new(stream))
-            }
-            NetworkMode::Auto => {
-                let tcp = self.p2p_provider.connect(peer_id).await?;
-                Ok(Box::new(tcp))
             }
         }
     }
+}
+
+/// Called for each block during sync, with all tx_extra data for DIGM scanning.
+pub trait BlockObserver: Send + Sync {
+    /// Process a block. `tx_extras` contains hex-encoded tx_extra strings from the block.
+    fn on_block(&self, height: u64, timestamp: u64, tx_extras: Vec<String>);
 }
 
 pub struct FuegoNode {
@@ -162,6 +143,7 @@ pub struct FuegoNode {
     pub state_manager: Arc<RwLock<NodeState>>,
     pub data_dir: PathBuf,
     pub seeding_manager: Option<Arc<i2p_net::SeedingManager>>,
+    pub block_observers: Vec<Arc<dyn BlockObserver>>,
 }
 
 impl FuegoNode {
@@ -180,7 +162,12 @@ impl FuegoNode {
             state_manager,
             data_dir,
             seeding_manager,
+            block_observers: Vec::new(),
         }
+    }
+
+    pub fn add_observer(&mut self, observer: Arc<dyn BlockObserver>) {
+        self.block_observers.push(observer);
     }
 
     pub async fn set_mode(&mut self, mode: NodeMode) {
@@ -226,6 +213,49 @@ impl FuegoNode {
         }
 
         println!("Sync complete. Current height: {}", self.get_height());
+        Ok(())
+    }
+
+    /// Sync with full block data, feeding tx_extra to all registered BlockObservers.
+    /// Requires the NetworkProvider to also be a FuegoRpcClient (downcast at runtime).
+    pub async fn sync_with_scan(&self, rpc: &rpc_client::FuegoRpcClient) -> Result<()> {
+        let target_height = rpc.get_current_height().await?;
+        let mut current_height = self.get_height();
+
+        if current_height >= target_height {
+            return Ok(());
+        }
+
+        println!("Syncing + scanning: {} -> {}", current_height, target_height);
+
+        for height in (current_height + 1)..=target_height {
+            if let Ok(block) = rpc.get_block_full(height).await {
+                // Notify all observers with tx_extra data
+                let tx_extras: Vec<String> = block.transactions
+                    .iter()
+                    .map(|tx| tx.extra.clone())
+                    .collect();
+
+                for observer in &self.block_observers {
+                    observer.on_block(height, block.timestamp, tx_extras.clone());
+                }
+
+                current_height = height;
+            } else {
+                // Block not available yet, stop
+                break;
+            }
+
+            {
+                let mut state = self.state_manager.write().unwrap();
+                state.current_height = current_height;
+                if height % 100 == 0 || height == target_height {
+                    state.save(&self.data_dir.join("snapshot.bin"))?;
+                }
+            }
+        }
+
+        println!("Sync+scan complete. Current height: {}", current_height);
         Ok(())
     }
 

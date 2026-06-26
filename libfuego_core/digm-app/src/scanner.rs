@@ -1,6 +1,10 @@
-use crate::tx_extra::{self, AlbumLicense, DigmAlbumRecord, CuraColoredCoin, DigmTxExtra};
+use crate::tx_extra::{self, DigmAlbumRecord, CuraColoredCoin, DigmTxExtra};
+#[cfg(test)]
+use crate::tx_extra::AlbumLicense;
 use std::collections::{HashMap, HashSet};
+use std::sync::{Arc, RwLock};
 use serde::{Serialize, Deserialize};
+use sha2::Digest;
 
 /// A scanned result from a single block/transaction.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -178,6 +182,31 @@ impl DigmChainScanner {
         self.album_registry = AlbumRegistry::new();
         self.cura_log = CuraLog::new();
         self.processed_txs.clear();
+    }
+}
+
+/// Bridges fuego-node's BlockObserver trait to the DIGM chain scanner.
+/// This is how the node feeds block data into the scanner during sync.
+pub struct ScannerBlockObserver {
+    pub scanner: Arc<RwLock<DigmChainScanner>>,
+}
+
+impl fuego_node::BlockObserver for ScannerBlockObserver {
+    fn on_block(&self, height: u64, timestamp: u64, tx_extras: Vec<String>) {
+        let mut scanner = self.scanner.write().unwrap();
+        for (i, extra_hex) in tx_extras.iter().enumerate() {
+            if extra_hex.is_empty() {
+                continue;
+            }
+            if let Ok(extra_bytes) = hex::decode(extra_hex) {
+                let mut tx_hash = [0u8; 32];
+                // Derive a unique hash from height + index
+                let seed = format!("{}:{}", height, i);
+                let digest = sha2::Sha256::digest(seed.as_bytes());
+                tx_hash.copy_from_slice(&digest);
+                scanner.scan_transaction(tx_hash, height, timestamp, &extra_bytes);
+            }
+        }
     }
 }
 
