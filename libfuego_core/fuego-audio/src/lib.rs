@@ -13,11 +13,18 @@ use std::borrow::Borrow;
 
 pub mod udp_transport;
 
+/// Called once per second during playback with the current position.
+/// Returns the number of new seconds advanced since last call.
+pub type ParapayTickFn = Box<dyn Fn(u32) + Send + Sync>;
+
 pub struct AudioStreamer {
     store: Arc<Mutex<ChunkStore>>,
     prefetcher: Option<Arc<PrefetchManager>>,
     decoder_state: Option<DecoderState>,
     current_quality: Quality,
+    current_pos_ms: u64,
+    last_reported_sec: u32,
+    parapay_tick: Option<ParapayTickFn>,
 }
 
 struct DecoderState {
@@ -33,7 +40,14 @@ impl AudioStreamer {
             prefetcher,
             decoder_state: None,
             current_quality: Quality::Lofi,
+            current_pos_ms: 0,
+            last_reported_sec: 0,
+            parapay_tick: None,
         }
+    }
+
+    pub fn set_parapay_tick(&mut self, tick: ParapayTickFn) {
+        self.parapay_tick = Some(tick);
     }
 
     pub fn set_quality(&mut self, quality: Quality) {
@@ -44,6 +58,9 @@ impl AudioStreamer {
         if chunk_hashes.is_empty() {
             return Err(anyhow::anyhow!("No chunks provided"));
         }
+
+        self.current_pos_ms = 0;
+        self.last_reported_sec = 0;
 
         let source = ChunkReader::new(Arc::clone(&self.store), chunk_hashes, self.current_quality);
         let mss = MediaSourceStream::new(Box::new(source), MediaSourceStreamOptions::default());
@@ -78,6 +95,19 @@ impl AudioStreamer {
     }
 
     pub fn next_pcm_frame(&mut self) -> Result<Vec<f32>> {
+        self.current_pos_ms += 20; // ~20ms per frame at 50fps
+        
+        // ParaPay per-second tick
+        let current_sec = (self.current_pos_ms / 1000) as u32;
+        if current_sec > self.last_reported_sec {
+            if let Some(ref tick) = self.parapay_tick {
+                for sec in (self.last_reported_sec + 1)..=current_sec {
+                    tick(sec);
+                }
+            }
+            self.last_reported_sec = current_sec;
+        }
+
         let state = self.decoder_state.as_mut().context("No track loaded")?;
         
         state.frame_count += 1;

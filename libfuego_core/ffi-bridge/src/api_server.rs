@@ -49,6 +49,13 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/vote-single", post(vote_single_route))
         .route("/api/digm/close-epoch", post(close_epoch_route))
         .route("/api/digm/next-pcm-frame", get(next_pcm_frame_route))
+        .route("/api/digm/create-station", post(create_station_route))
+        .route("/api/digm/curator-stations/:address", get(get_curator_stations_route))
+        .route("/api/digm/curator-vibe", post(update_curator_vibe_route))
+        .route("/api/digm/curator-vibe/:address", get(get_curator_vibe_route))
+        .route("/api/digm/curator-playlist", post(set_curator_playlist_route))
+        .route("/api/digm/curator-playlist/:address", get(get_curator_playlist_route))
+        .route("/api/digm/stations-remaining/:address", get(stations_remaining_route))
         .layer(cors)
         .with_state(state);
 
@@ -133,15 +140,36 @@ struct VoteSingleRequest {
     track_id: String,
 }
 
+#[derive(Deserialize)]
+struct CreateStationRequest {
+    curator: String,
+    station_id: String,
+    name: String,
+    description: String,
+    tracks: Vec<String>,
+}
+
+#[derive(Deserialize)]
+struct UpdateVibeRequest {
+    address: String,
+    vibe: String,
+}
+
+#[derive(Deserialize)]
+struct SetPlaylistRequest {
+    address: String,
+    tracks: Vec<String>,
+}
+
 async fn earn_para_route(State(state): State<ApiState>, Json(req): Json<EarnParaRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
     let core = state.core.lock().unwrap();
-    core.earn_para(req.address, req.amount);
+    core.earn_para(req.address, req.amount as u128);
     Ok(Json(serde_json::json!({ "status": "ok" })))
 }
 
 async fn stream_payment_route(State(state): State<ApiState>, Json(req): Json<StreamPaymentRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
     let core = state.core.lock().unwrap();
-    match core.stream_payment(req.from, req.to, req.amount) {
+    match core.stream_payment(req.from, req.to, req.amount as u128) {
         Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
         Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
     }
@@ -286,4 +314,56 @@ async fn next_pcm_frame_route(State(state): State<ApiState>) -> Result<Json<serd
         Ok(frame) => Ok(Json(serde_json::json!({ "status": "ok", "frame": frame }))),
         Err(e) => Ok(Json(serde_json::json!({ "status": "eos", "message": e }))),
     }
+}
+
+// --- Station routes ---
+
+async fn create_station_route(State(state): State<ApiState>, Json(req): Json<CreateStationRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.create_station(req.curator, req.station_id, req.name, req.description, req.tracks) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn get_curator_stations_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let json_str = core.get_curator_stations(address);
+    let value: serde_json::Value = serde_json::from_str(&json_str).unwrap_or(serde_json::json!([]));
+    Ok(Json(value))
+}
+
+async fn stations_remaining_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let remaining = core.curator_stations_remaining(address);
+    Ok(Json(serde_json::json!({ "remaining": remaining, "max": 10 })))
+}
+
+async fn update_curator_vibe_route(State(state): State<ApiState>, Json(req): Json<UpdateVibeRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.update_curator_vibe(req.address, req.vibe) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn get_curator_vibe_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let vibe = core.get_curator_vibe(address);
+    Ok(Json(serde_json::json!({ "vibe": vibe })))
+}
+
+async fn set_curator_playlist_route(State(state): State<ApiState>, Json(req): Json<SetPlaylistRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.set_curator_playlist(req.address, req.tracks) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "status": "error", "message": e }))),
+    }
+}
+
+async fn get_curator_playlist_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let json_str = core.get_curator_playlist(address);
+    let value: serde_json::Value = serde_json::from_str(&json_str).unwrap_or(serde_json::json!([]));
+    Ok(Json(value))
 }

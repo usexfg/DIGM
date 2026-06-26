@@ -865,6 +865,7 @@ dependencies = [
  "fuego-vault",
  "hex",
  "i2p-net",
+ "parapay",
  "rand_core 0.6.4",
  "serde",
  "serde_bytes",

@@ -1,14 +1,26 @@
 use std::sync::{Arc, Mutex, RwLock};
 use std::path::PathBuf;
-use std::str::FromStr;
-
 use fuego_vault::{Vault, recovery::RecoveryRequest};
 use fuego_node::{FuegoNode, NodeMode, PrunedState};
 use digm_app::DigmApp;
-use i2p_net::I2pRouter;
-use chunk_store::ChunkStore;
+use i2p_net::{I2pRouter, PrefetchManager, SeedingManager, ChunkStoreTrait};
+use chunk_store::{ChunkStore, Quality};
 use fuego_audio::AudioStreamer;
 use fuego_crypto::Address;
+
+struct ChunkStoreBridge(Arc<Mutex<ChunkStore>>);
+
+impl ChunkStoreTrait for ChunkStoreBridge {
+    fn put_chunk(&self, data: &[u8]) -> Result<String, anyhow::Error> {
+        self.0.lock().unwrap().put_chunk(data, Quality::High).map_err(|e| anyhow::anyhow!("{:?}", e))
+    }
+    fn get_chunk(&self, hash_str: &str) -> Result<Vec<u8>, anyhow::Error> {
+        self.0.lock().unwrap().get_chunk(hash_str).map_err(|e| anyhow::anyhow!("{:?}", e))
+    }
+    fn pin_chunk(&self, hash_str: &str) -> Result<(), anyhow::Error> {
+        self.0.lock().unwrap().pin_chunk(hash_str).map_err(|e| anyhow::anyhow!("{:?}", e))
+    }
+}
 
 pub mod api_server;
 
@@ -16,56 +28,82 @@ pub struct DigmCore {
     vault: Arc<Mutex<Vault>>,
     node: Arc<Mutex<FuegoNode>>,
     app: Arc<Mutex<DigmApp>>,
-    router: Arc<tokio::sync::Mutex<I2pRouter>>,
+    #[allow(dead_code)]
+    router: Arc<I2pRouter>,
+    #[allow(dead_code)]
     store: Arc<Mutex<ChunkStore>>,
     audio: Arc<Mutex<AudioStreamer>>,
+    prefetcher: Option<Arc<PrefetchManager>>,
 }
 
 impl DigmCore {
     pub fn new(mnemonic: String, storage_path: String, mode: String) -> Result<DigmCore, String> {
         let storage_path_buf = PathBuf::from(&storage_path);
         
-        let vault = Vault::new(&mnemonic).map_err(|e| e)?;
+        let vault = Vault::new(&mnemonic)?;
         
-        let router_arc = Arc::new(tokio::sync::Mutex::new(I2pRouter::new(storage_path_buf.clone(), 8080)));
-        
-        // Initialize hybrid network providers
-        let p2p_provider = Arc::new(futures::executor::block_on(p2p_net::Libp2pProvider::new()).map_err(|e: anyhow::Error| e.to_string())?);
-        
-        let peers = vec![
-            "destination1.b32.i2p".to_string(),
-            "destination2.b32.i2p".to_string(),
-        ];
-        
+        // Launch i2pd and wait for SAM bridge.
+        let mut router = I2pRouter::new("i2pd".into(), storage_path_buf.join("i2pd"));
+        futures::executor::block_on(router.start()).map_err(|e| e.to_string())?;
+        let router_arc = Arc::new(router);
+
+        // Open chunk store.
+        let store_inner = ChunkStore::open(storage_path_buf.join("chunks.db"), 4 * 1024 * 1024 * 1024)
+            .map_err(|e| format!("Store error: {e:?}"))?;
+        let store = Arc::new(Mutex::new(store_inner));
+        let store_trait: Arc<dyn ChunkStoreTrait> = Arc::new(ChunkStoreBridge(Arc::clone(&store)));
+
+        // Build network stack.
+        let p2p_provider = Arc::new(futures::executor::block_on(
+            p2p_net::Libp2pProvider::new(vec![])
+        ).map_err(|e: anyhow::Error| e.to_string())?);
+
+        let peers: Vec<String> = Vec::new(); // populated at runtime via add_seeders
+
         let network = Arc::new(fuego_node::HybridNetworkManager::new(
             p2p_provider,
             Arc::clone(&router_arc),
             peers,
-            10000,
         )) as Arc<dyn fuego_node::NetworkProvider>;
-        
+
         let node_mode = match mode.as_str() {
             "Sovereign" => NodeMode::Sovereign,
             "Seeder" => NodeMode::Seeder,
             "Client" => NodeMode::Client,
             _ => NodeMode::Client,
         };
-        
+
+        // Spin up the seeding manager if we're a Sovereing or Seeder.
+        let seeding_manager = match node_mode {
+            NodeMode::Sovereign | NodeMode::Seeder => {
+                let sm = Arc::new(SeedingManager::new(
+                    Arc::clone(&router_arc),
+                    Arc::clone(&store_trait),
+                ));
+                Some(sm)
+            }
+            NodeMode::Client => None,
+        };
+
         let node = FuegoNode::new(
             storage_path_buf.clone(),
             network,
             Arc::new(RwLock::new(PrunedState::new())),
             node_mode,
             fuego_node::NetworkMode::Auto,
-            None,
+            seeding_manager,
         );
         let app = DigmApp::new();
-        
-        let store_inner = ChunkStore::open(storage_path_buf.clone(), 4 * 1024 * 1024 * 1024)
-            .map_err(|e| format!("Store error: {:?}", e))?;
-        let store = Arc::new(Mutex::new(store_inner));
-        
-        let audio = Arc::new(Mutex::new(AudioStreamer::new(Arc::clone(&store), None)));
+
+        let prefetcher = Arc::new(PrefetchManager::new(
+            Arc::clone(&router_arc),
+            store_trait,
+            5,
+        ));
+        let audio = Arc::new(Mutex::new(AudioStreamer::new(
+            Arc::clone(&store),
+            Some(Arc::clone(&prefetcher)),
+        )));
         
         Ok(DigmCore {
             vault: Arc::new(Mutex::new(vault)),
@@ -74,6 +112,7 @@ impl DigmCore {
             router: router_arc,
             store,
             audio,
+            prefetcher: Some(prefetcher),
         })
     }
 
@@ -141,7 +180,7 @@ impl DigmCore {
         app.purchase_album(&Address::from(address), &album_id, amount)
     }
 
-    pub fn earn_para(&self, address: String, amount: u64) {
+    pub fn earn_para(&self, address: String, amount: u128) {
         let app = self.app.lock().unwrap();
         app.earn_para(&Address::from(address), amount)
     }
@@ -156,7 +195,7 @@ impl DigmCore {
         app.charge_browsing_play(&Address::from(address), track_duration_secs, played_secs)
     }
 
-    pub fn stream_payment(&self, from: String, to: String, amount: u64) -> Result<(), String> {
+    pub fn stream_payment(&self, from: String, to: String, amount: u128) -> Result<(), String> {
         let app = self.app.lock().unwrap();
         app.stream_payment(&Address::from(from), &Address::from(to), amount)
     }
@@ -190,10 +229,60 @@ impl DigmCore {
         app.vote_for_single(&Address::from(address), &track_id)
     }
 
+    // --- Stations ---
+
+    pub fn create_station(&self, curator: String, station_id: String, name: String, description: String, tracks: Vec<String>) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.create_station(&Address::from(curator), station_id, name, description, tracks)
+    }
+
+    pub fn get_curator_stations(&self, curator: String) -> String {
+        let app = self.app.lock().unwrap();
+        let stations = app.get_curator_stations(&Address::from(curator));
+        serde_json::to_string(&stations).unwrap_or_else(|_| "[]".to_string())
+    }
+
+    pub fn curator_stations_remaining(&self, curator: String) -> u64 {
+        let app = self.app.lock().unwrap();
+        app.curator_stations_remaining(&Address::from(curator))
+    }
+
+    pub fn update_curator_vibe(&self, curator: String, vibe: String) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.update_curator_vibe(&Address::from(curator), vibe)
+    }
+
+    pub fn get_curator_vibe(&self, curator: String) -> Option<String> {
+        let app = self.app.lock().unwrap();
+        app.get_curator_vibe(&Address::from(curator))
+    }
+
+    pub fn set_curator_playlist(&self, curator: String, tracks: Vec<String>) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.set_curator_playlist(&Address::from(curator), tracks)
+    }
+
+    pub fn get_curator_playlist(&self, curator: String) -> String {
+        let app = self.app.lock().unwrap();
+        let tracks = app.get_curator_playlist(&Address::from(curator));
+        serde_json::to_string(&tracks).unwrap_or_else(|_| "[]".to_string())
+    }
+
+    // --- End Stations ---
+
 
     pub fn load_track(&self, chunk_hashes: Vec<String>) -> Result<(), String> {
-        let mut audio = self.audio.lock().unwrap();
-        audio.load_track(chunk_hashes).map_err(|e| e.to_string())
+        {
+            let mut audio = self.audio.lock().unwrap();
+            audio.load_track(chunk_hashes.clone()).map_err(|e| e.to_string())?;
+        }
+        if let Some(ref pf) = self.prefetcher {
+            let pf = Arc::clone(pf);
+            tokio::spawn(async move {
+                pf.set_track(chunk_hashes).await;
+            });
+        }
+        Ok(())
     }
 
     pub fn next_pcm_frame(&self) -> Result<Vec<f32>, String> {
@@ -204,6 +293,21 @@ impl DigmCore {
     pub fn play_track(&self, chunk_hashes: Vec<String>) -> Result<(), String> {
         let mut audio = self.audio.lock().unwrap();
         audio.load_track(chunk_hashes).map_err(|e| e.to_string())
+    }
+
+    // --- Networking ---
+
+    pub fn our_i2p_destination(&self) -> Option<String> {
+        self.router.our_destination().map(|s| s.to_string())
+    }
+
+    pub fn add_seeders(&self, destinations: Vec<String>) {
+        if let Some(ref pf) = self.prefetcher {
+            let pf = Arc::clone(pf);
+            tokio::spawn(async move {
+                pf.add_seeders(destinations).await;
+            });
+        }
     }
 
     pub fn set_node_mode(&self, mode: String) -> Result<(), String> {

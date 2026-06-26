@@ -9,11 +9,12 @@ use merkle::MerkleTree;
 pub mod tx_extra;
 pub mod merkle;
 pub mod scanner;
+pub mod parapay_sessions;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserAccount {
     pub address: Address,
-    pub para_balance: u64,
+    pub para_balance: u128,
     pub vox_balance: u64,
     pub cura_balance: u64,
     pub display_name: Option<String>,
@@ -120,10 +121,15 @@ impl DigmApp {
 
     pub fn get_current_earnings(&self, address: &Address) -> u64 {
         let state = self.state.read().unwrap();
+        state.accounts.get(address).map(|a| a.para_balance as u64).unwrap_or(0)
+    }
+
+    pub fn get_para_balance(&self, address: &Address) -> u128 {
+        let state = self.state.read().unwrap();
         state.accounts.get(address).map(|a| a.para_balance).unwrap_or(0)
     }
 
-    pub fn earn_para(&self, address: &Address, amount: u64) {
+    pub fn earn_para(&self, address: &Address, amount: u128) {
         let mut state = self.state.write().unwrap();
         let account = state.accounts.entry(address.clone()).or_insert(UserAccount {
             address: address.clone(),
@@ -136,10 +142,10 @@ impl DigmApp {
             curator_playlist: Vec::new(),
             curator_vibe: None,
         });
-        account.para_balance += amount;
+        account.para_balance += amount as u128;
     }
 
-    pub fn stream_payment(&self, from_address: &Address, to_address: &Address, amount: u64) -> Result<(), String> {
+    pub fn stream_payment(&self, from_address: &Address, to_address: &Address, amount: u128) -> Result<(), String> {
         let mut state = self.state.write().unwrap();
         
         let sender = state.accounts.get_mut(from_address).ok_or("Sender account not found")?;
@@ -189,11 +195,11 @@ impl DigmApp {
         let mut state = self.state.write().unwrap();
         
         let account = state.accounts.get_mut(address).ok_or("Account not found")?;
-        if account.para_balance < amount {
+        if account.para_balance < amount as u128 {
             return Err("Insufficient PARA balance".to_string());
         }
         
-        account.para_balance -= amount;
+        account.para_balance -= amount as u128;
         
         let single = state.singles.entry(track_id.to_string()).or_insert(Single {
             track_id: track_id.to_string(),
@@ -220,11 +226,11 @@ impl DigmApp {
         let mut state = self.state.write().unwrap();
         
         let account = state.accounts.get_mut(address).ok_or("Account not found")?;
-        if account.para_balance < amount {
+        if account.para_balance < amount as u128 {
             return Err("Insufficient PARA balance".to_string());
         }
         
-        account.para_balance -= amount;
+        account.para_balance -= amount as u128;
         
         let album = state.albums.get_mut(album_id).ok_or("Album not found")?;
         album.total_para_staked += amount;
@@ -254,7 +260,7 @@ impl DigmApp {
             let mut state = self.state.write().unwrap();
             let account = state.accounts.get_mut(address)
                 .ok_or("Account not found")?;
-            account.para_balance += total_returned;
+            account.para_balance += total_returned as u128;
         }
         Ok(total_returned)
     }
@@ -273,7 +279,7 @@ impl DigmApp {
             let mut state = self.state.write().unwrap();
             let account = state.accounts.get_mut(address)
                 .ok_or("Account not found")?;
-            account.para_balance += total_returned;
+            account.para_balance += total_returned as u128;
         }
         Ok(total_returned)
     }
@@ -290,11 +296,11 @@ impl DigmApp {
         };
         
         let account = state.accounts.get_mut(address).ok_or("Account not found")?;
-        if account.para_balance < amount {
+        if account.para_balance < amount as u128 {
             return Err("Insufficient PARA balance".to_string());
         }
         
-        account.para_balance -= amount;
+        account.para_balance -= amount as u128;
         
         let album = state.albums.get_mut(album_id).unwrap();
         album.total_sales_value += amount;
@@ -409,11 +415,11 @@ impl DigmApp {
             played_secs * 166_667
         };
         
-        if account.para_balance < cost {
+        if account.para_balance < cost as u128 {
             return Err("Insufficient PARA for browsing".to_string());
         }
         
-        account.para_balance -= cost;
+        account.para_balance -= cost as u128;
         Ok(cost)
     }
 
@@ -616,6 +622,60 @@ impl DigmApp {
         }
         
         state.current_epoch += 1;
+    }
+
+    /// Apply a ParaPay payout directly to account balances.
+    pub fn execute_payout(
+        &self,
+        artist_amount: u128,
+        listener_amount: u128,
+        curator_amount: u128,
+        artist: &Address,
+        listener: &Address,
+        curator: Option<&Address>,
+    ) {
+        let mut state = self.state.write().unwrap();
+
+        let artist_acct = state.accounts.entry(artist.clone()).or_insert(UserAccount {
+            address: artist.clone(),
+            para_balance: 0,
+            vox_balance: 0,
+            cura_balance: 0,
+            display_name: None,
+            wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
+        });
+        artist_acct.para_balance += artist_amount;
+
+        let listener_acct = state.accounts.entry(listener.clone()).or_insert(UserAccount {
+            address: listener.clone(),
+            para_balance: 0,
+            vox_balance: 0,
+            cura_balance: 0,
+            display_name: None,
+            wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
+        });
+        listener_acct.para_balance += listener_amount;
+
+        if let Some(c) = curator {
+            let curator_acct = state.accounts.entry(c.clone()).or_insert(UserAccount {
+                address: c.clone(),
+                para_balance: 0,
+                vox_balance: 0,
+                cura_balance: 0,
+                display_name: None,
+                wallet_age_epochs: 0,
+                stations_created: 0,
+                curator_playlist: Vec::new(),
+                curator_vibe: None,
+            });
+            curator_acct.para_balance += curator_amount;
+        }
     }
 
 }
