@@ -1,12 +1,13 @@
 use std::sync::{Arc, Mutex, RwLock};
 use std::path::PathBuf;
 use fuego_vault::{Vault, recovery::RecoveryRequest};
-use fuego_node::{FuegoNode, NodeMode, PrunedState};
+use fuego_node::{FuegoNode, NodeMode, PrunedState, NetworkProvider, rpc_client::FuegoRpcClient};
 use digm_app::DigmApp;
 use i2p_net::{I2pRouter, PrefetchManager, SeedingManager, ChunkStoreTrait};
 use chunk_store::{ChunkStore, Quality};
 use fuego_audio::AudioStreamer;
 use fuego_crypto::Address;
+use digm_app::scanner::ScannerBlockObserver;
 
 struct ChunkStoreBridge(Arc<Mutex<ChunkStore>>);
 
@@ -26,14 +27,15 @@ pub mod api_server;
 
 pub struct DigmCore {
     vault: Arc<Mutex<Vault>>,
-    node: Arc<Mutex<FuegoNode>>,
+    pub node: Arc<Mutex<FuegoNode>>,
     app: Arc<Mutex<DigmApp>>,
     #[allow(dead_code)]
-    router: Arc<I2pRouter>,
+    router: Option<Arc<I2pRouter>>,
     #[allow(dead_code)]
     store: Arc<Mutex<ChunkStore>>,
     audio: Arc<Mutex<AudioStreamer>>,
     prefetcher: Option<Arc<PrefetchManager>>,
+    rpc_client: Option<Arc<FuegoRpcClient>>,
 }
 
 impl DigmCore {
@@ -109,11 +111,69 @@ impl DigmCore {
             vault: Arc::new(Mutex::new(vault)),
             node: Arc::new(Mutex::new(node)),
             app: Arc::new(Mutex::new(app)),
-            router: router_arc,
+            router: Some(router_arc),
             store,
             audio,
             prefetcher: Some(prefetcher),
+            rpc_client: None,
         })
+    }
+
+    /// Create a light client using HTTP RPC to fuegod (no I2P needed).
+    pub fn new_rpc(mnemonic: String, storage_path: String, fuegod_host: &str, fuegod_port: u16) -> Result<DigmCore, String> {
+        let storage_path_buf = PathBuf::from(&storage_path);
+
+        let vault = Vault::new(&mnemonic)?;
+        let app = DigmApp::new();
+
+        let rpc = Arc::new(FuegoRpcClient::new(fuegod_host, fuegod_port));
+        let state_mgr = Arc::new(RwLock::new(PrunedState::new()));
+
+        let node = FuegoNode::new(
+            storage_path_buf.clone(),
+            rpc.clone() as Arc<dyn NetworkProvider>,
+            state_mgr,
+            NodeMode::Client,
+            fuego_node::NetworkMode::Auto,
+            None,
+        );
+
+        let store_inner = ChunkStore::open(storage_path_buf.join("chunks.db"), 512 * 1024 * 1024)
+            .map_err(|e| format!("Store error: {e:?}"))?;
+        let store = Arc::new(Mutex::new(store_inner));
+
+        let audio = Arc::new(Mutex::new(AudioStreamer::new(
+            Arc::clone(&store),
+            None, // no prefetcher in light mode
+        )));
+
+        Ok(DigmCore {
+            vault: Arc::new(Mutex::new(vault)),
+            node: Arc::new(Mutex::new(node)),
+            app: Arc::new(Mutex::new(app)),
+            router: None,
+            store,
+            audio,
+            prefetcher: None,
+            rpc_client: Some(rpc),
+        })
+    }
+
+    /// Sync the node via RPC and feed blocks to the DIGM scanner.
+    pub async fn sync_and_scan(&self) -> Result<(), String> {
+        let rpc = self.rpc_client.as_ref().ok_or("No RPC client — use new_rpc() constructor")?;
+
+        // Register scanner as block observer
+        {
+            let app = self.app.lock().unwrap();
+            let scanner = app.scanner.clone();
+            let observer = Arc::new(ScannerBlockObserver { scanner });
+            let mut node = self.node.lock().unwrap();
+            node.add_observer(observer);
+        }
+
+        let node = self.node.lock().unwrap();
+        node.sync_with_scan(rpc).await.map_err(|e| e.to_string())
     }
 
 
@@ -124,8 +184,14 @@ impl DigmCore {
     }
 
     pub fn sync_node(&self) -> Result<(), String> {
-        let node = self.node.lock().unwrap();
-        futures::executor::block_on(node.sync()).map_err(|e| e.to_string())
+        // Try RPC sync with scanner feed if available
+        if self.rpc_client.is_some() {
+            futures::executor::block_on(self.sync_and_scan()).map_err(|e| e.to_string())?;
+        } else {
+            let node = self.node.lock().unwrap();
+            futures::executor::block_on(node.sync()).map_err(|e| e.to_string())?;
+        }
+        Ok(())
     }
 
     pub fn get_state_root(&self) -> String {
@@ -298,7 +364,7 @@ impl DigmCore {
     // --- Networking ---
 
     pub fn our_i2p_destination(&self) -> Option<String> {
-        self.router.our_destination().map(|s| s.to_string())
+        self.router.as_ref().and_then(|r| r.our_destination()).map(|s| s.to_string())
     }
 
     pub fn add_seeders(&self, destinations: Vec<String>) {

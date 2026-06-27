@@ -3,12 +3,24 @@ use ffi_bridge::DigmCore;
 
 #[tokio::main]
 async fn main() {
-    let core = DigmCore::new(
+    // Use RPC mode — connects to local fuegod
+    let core = match ffi_bridge::DigmCore::new_rpc(
         "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about".to_string(),
         "/tmp/digm_data".to_string(),
-        "Sovereign".to_string(),
-    )
-    .expect("Failed to initialize DIGM core");
+        "127.0.0.1",
+        18180,
+    ) {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("RPC mode failed (is fuegod running?): {}", e);
+            eprintln!("Falling back to I2P mock mode...");
+            DigmCore::new(
+                "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about".to_string(),
+                "/tmp/digm_data".to_string(),
+                "Sovereign".to_string(),
+            ).expect("Failed to initialize DIGM core")
+        }
+    };
 
     let core_arc = Arc::new(Mutex::new(core));
 
@@ -32,10 +44,10 @@ async fn main() {
             vec!["single-003".to_string()],
         );
         let addr = c.get_address(0);
-        c.earn_para(addr.clone(), 100_000_000); // give user PARA to stake
+        c.earn_para(addr.clone(), 100_000_000u128);
         let _ = c.stake_single(addr.clone(), "single-001".to_string(), "album-1".to_string(), 5_000_000);
         let _ = c.stake_single(addr.clone(), "single-003".to_string(), "album-2".to_string(), 7_800_000);
-        let _ = c.purchase_album(addr.clone(), "album-1".to_string(), 10_000_000); // simulate a sale
+        let _ = c.purchase_album(addr.clone(), "album-1".to_string(), 10_000_000);
         let _ = c.purchase_album(addr.clone(), "album-2".to_string(), 8_000_000);
     }
 
