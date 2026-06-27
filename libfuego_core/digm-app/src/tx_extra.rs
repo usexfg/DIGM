@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 pub const TX_EXTRA_DIGM_ALBUM_RECORD: u8 = 0x0A;
 pub const TX_EXTRA_ALBUM_LICENSE: u8 = 0x0B;
 pub const TX_EXTRA_CURATION_TAG: u8 = 0x0C;
-pub const TX_EXTRA_PARA_CLAIM: u8 = 0x0D;
+pub const TX_EXTRA_PARA_CLAIM: u8 = 0xAA;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PubKey(pub [u8; 32]);
@@ -63,7 +63,7 @@ pub struct CuraColoredCoin {
     pub version: u32,
 }
 
-/// 0x0D — PARA Claim (on-chain cash-out of off-chain paper PARA).
+/// 0xAA — PARA Claim (on-chain cash-out of off-chain paper PARA).
 /// Submits a Merkle proof that the claimant had X PARA at a checkpoint
 /// previously anchored to L1. If valid, PARA colored coin is minted on-chain.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -118,7 +118,7 @@ pub fn serialize_cura_colored_coin(tag: &CuraColoredCoin) -> Result<Vec<u8>, Str
     })
 }
 
-/// Serialize a ParaClaim into tx_extra bytes (0x0D tag).
+/// Serialize a ParaClaim into tx_extra bytes (0xAA tag).
 pub fn serialize_para_claim(claim: &ParaClaim) -> Result<Vec<u8>, String> {
     let mut data = Vec::new();
     data.push(TX_EXTRA_PARA_CLAIM);
