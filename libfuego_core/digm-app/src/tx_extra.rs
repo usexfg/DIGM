@@ -28,7 +28,9 @@ impl Signature {
 pub struct Hash(pub [u8; 32]);
 
 /// 0x0A — DIGM Album Record (required for posting releases).
-/// Artist must hold DIGM coin to create this tag.
+/// Artist must hold an unspent DIGM token, which is consumed on post.
+/// The digm_token_id references the specific token burned for anti-spam.
+/// 10,000 single slots total; after filled, DIGM gates albums only.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DigmAlbumRecord {
     pub album_id: String,
@@ -37,6 +39,9 @@ pub struct DigmAlbumRecord {
     pub artist_sig: Signature,
     pub timestamp: u64,
     pub version: u32,
+    pub digm_token_id: String,
+    pub catalogue_slot: u64,
+    pub is_single: bool,
 }
 
 /// 0x0B — Album License (listener ownership / listening rights).

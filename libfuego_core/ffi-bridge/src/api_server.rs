@@ -59,6 +59,10 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/parapay/tick", post(parapay_tick_route))
         .route("/api/digm/parapay/boost", post(parapay_boost_route))
         .route("/api/digm/parapay/end", post(parapay_end_route))
+        .route("/api/digm/digm/acquire", post(acquire_digm_route))
+        .route("/api/digm/digm/consume", post(consume_digm_route))
+        .route("/api/digm/digm/singles-remaining", get(singles_remaining_route))
+        .route("/api/digm/digm/unspent/:address", get(unspent_digm_route))
         .route("/api/digm/stations-remaining/:address", get(stations_remaining_route))
         .layer(cors)
         .with_state(state);
@@ -429,4 +433,42 @@ async fn parapay_end_route(State(state): State<ApiState>, Json(req): Json<Parapa
         Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
         Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
     }
+}
+
+// --- DIGM token / anti-spam gate routes ---
+
+#[derive(Deserialize)]
+struct AcquireDigmRequest {
+    address: String,
+    amount: u64,
+}
+
+async fn acquire_digm_route(State(state): State<ApiState>, Json(req): Json<AcquireDigmRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.acquire_digm(req.address, req.amount) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
+}
+
+async fn consume_digm_route(State(state): State<ApiState>, Json(req): Json<serde_json::Value>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let address = req.get("address").and_then(|s| s.as_str()).unwrap_or("");
+    let core = state.core.lock().unwrap();
+    match core.consume_digm_for_single(address.to_string()) {
+        Ok(slot) => Ok(Json(serde_json::json!({ "slot": slot, "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
+}
+
+async fn singles_remaining_route(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let remaining = core.singles_remaining();
+    let full = core.is_single_catalogue_full();
+    Ok(Json(serde_json::json!({ "remaining": remaining, "full": full, "max": 10000 })))
+}
+
+async fn unspent_digm_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let unspent = core.get_unspent_digm(address);
+    Ok(Json(serde_json::json!({ "unspent": unspent })))
 }

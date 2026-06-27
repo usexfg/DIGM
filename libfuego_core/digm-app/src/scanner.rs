@@ -234,6 +234,9 @@ mod tests {
             artist_sig: Signature(sig.to_bytes().to_vec()),
             timestamp: 1000,
             version: 1,
+            digm_token_id: "token-001".to_string(),
+            catalogue_slot: 1,
+            is_single: true,
         }
     }
 

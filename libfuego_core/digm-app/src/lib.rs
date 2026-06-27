@@ -19,6 +19,8 @@ pub struct UserAccount {
     pub para_balance: u128,
     pub vox_balance: u64,
     pub cura_balance: u64,
+    pub digm_tokens_held: u64,
+    pub digm_tokens_consumed: u64,
     pub display_name: Option<String>,
     pub wallet_age_epochs: u64,
     pub stations_created: u64,
@@ -82,7 +84,13 @@ pub struct GlobalState {
     pub stations: HashMap<String, Station>,
     pub current_epoch: u64,
     pub top_holder: Option<Address>,
+    pub total_singles_posted: u64,
+    pub max_singles: u64,
 }
+
+/// DIGM token supply model.
+pub const MAX_SINGLE_SLOTS: u64 = 10_000;
+pub const DIGM_COIN_NAME: &str = "DIGM";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingleSummary {
@@ -152,6 +160,8 @@ impl DigmApp {
                 para_balance: 0,
                 vox_balance: 0,
                 cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
                 display_name: None,
                 wallet_age_epochs: 0,
                 stations_created: 0,
@@ -191,6 +201,8 @@ impl DigmApp {
             para_balance: 0,
             vox_balance: 0,
             cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -215,6 +227,8 @@ impl DigmApp {
             para_balance: 0,
             vox_balance: 0,
             cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -696,6 +710,8 @@ impl DigmApp {
             para_balance: 0,
             vox_balance: 0,
             cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -709,6 +725,8 @@ impl DigmApp {
             para_balance: 0,
             vox_balance: 0,
             cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -723,6 +741,8 @@ impl DigmApp {
                 para_balance: 0,
                 vox_balance: 0,
                 cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
                 display_name: None,
                 wallet_age_epochs: 0,
                 stations_created: 0,
@@ -808,6 +828,71 @@ fn decode_stream_id(hex_str: &str) -> Result<[u8; 32], String> {
     let mut arr = [0u8; 32];
     arr.copy_from_slice(&bytes);
     Ok(arr)
+}
+
+// --- DIGM Token / Anti-Spam Gate ---
+
+impl DigmApp {
+    /// Acquire DIGM tokens via swap pool. Caller exchanges XFG for DIGM.
+    pub fn acquire_digm(&self, address: &Address, amount: u64) -> Result<(), String> {
+        let mut state = self.state.write().unwrap();
+        let acct = state.accounts.entry(address.clone()).or_insert(UserAccount {
+            address: address.clone(),
+            para_balance: 0,
+            vox_balance: 0,
+            cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
+            display_name: None,
+            wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
+        });
+        acct.digm_tokens_held += amount;
+        Ok(())
+    }
+
+    /// Consume one DIGM token to post a single to the 0P catalogue.
+    /// Returns the catalogue slot number (1-based).
+    pub fn consume_digm_for_single(&self, address: &Address) -> Result<u64, String> {
+        let mut state = self.state.write().unwrap();
+
+        if state.total_singles_posted >= MAX_SINGLE_SLOTS {
+            return Err(format!(
+                "0P Singles Catalogue full: {}/{} slots filled. DIGM now gates albums only.",
+                state.total_singles_posted, MAX_SINGLE_SLOTS
+            ));
+        }
+
+        let acct = state.accounts.get_mut(address).ok_or("Account not found")?;
+        if acct.digm_tokens_held <= acct.digm_tokens_consumed {
+            return Err("No unspent DIGM tokens. Acquire DIGM via swap pool first.".into());
+        }
+
+        acct.digm_tokens_consumed += 1;
+        state.total_singles_posted += 1;
+        Ok(state.total_singles_posted)
+    }
+
+    /// Check how many single slots remain in the 0P catalogue.
+    pub fn singles_remaining(&self) -> u64 {
+        let state = self.state.read().unwrap();
+        MAX_SINGLE_SLOTS.saturating_sub(state.total_singles_posted)
+    }
+
+    /// Whether the 0P Singles Catalogue is full.
+    pub fn is_single_catalogue_full(&self) -> bool {
+        self.singles_remaining() == 0
+    }
+
+    /// Get unspent DIGM token count for an address.
+    pub fn get_unspent_digm(&self, address: &Address) -> u64 {
+        let state = self.state.read().unwrap();
+        state.accounts.get(address)
+            .map(|a| a.digm_tokens_held.saturating_sub(a.digm_tokens_consumed))
+            .unwrap_or(0)
+    }
 }
 
 pub fn init() {

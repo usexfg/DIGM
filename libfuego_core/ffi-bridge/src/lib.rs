@@ -290,6 +290,33 @@ impl DigmCore {
         app.close_epoch();
     }
 
+    // --- DIGM token / anti-spam gate ---
+
+    pub fn acquire_digm(&self, address: String, amount: u64) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.acquire_digm(&Address::from(address), amount)
+    }
+
+    pub fn consume_digm_for_single(&self, address: String) -> Result<u64, String> {
+        let app = self.app.lock().unwrap();
+        app.consume_digm_for_single(&Address::from(address))
+    }
+
+    pub fn singles_remaining(&self) -> u64 {
+        let app = self.app.lock().unwrap();
+        app.singles_remaining()
+    }
+
+    pub fn is_single_catalogue_full(&self) -> bool {
+        let app = self.app.lock().unwrap();
+        app.is_single_catalogue_full()
+    }
+
+    pub fn get_unspent_digm(&self, address: String) -> u64 {
+        let app = self.app.lock().unwrap();
+        app.get_unspent_digm(&Address::from(address))
+    }
+
     pub fn vote_for_single(&self, address: String, track_id: String) -> Result<(), String> {
         let app = self.app.lock().unwrap();
         app.vote_for_single(&Address::from(address), &track_id)
