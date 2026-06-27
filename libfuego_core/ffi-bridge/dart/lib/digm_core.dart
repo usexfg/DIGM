@@ -291,4 +291,23 @@ class DigmCore {
   bool verify_recovery(String requestJson) {
     return true;
   }
+
+  // --- ParaPay (mock defaults) ---
+
+  String parapay_begin(int trackLengthSec, {bool curatorPresent = false, String artist = 'artist', String listener = 'listener', String? curator}) {
+    return '0000000000000000000000000000000000000000000000000000000000000001';
+  }
+
+  void parapay_tick(String streamId, int posSec) {
+    debugPrint('Mock: parapay_tick($streamId, $posSec)');
+  }
+
+  int parapay_boost(String streamId) {
+    debugPrint('Mock: parapay_boost($streamId)');
+    return 0;
+  }
+
+  void parapay_end(String streamId, {bool skipped = false}) {
+    debugPrint('Mock: parapay_end($streamId, skipped=$skipped)');
+  }
 }

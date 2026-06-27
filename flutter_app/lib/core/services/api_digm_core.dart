@@ -210,4 +210,28 @@ class ApiDigmCore extends DigmCore {
     debugPrint('ApiDigmCore: finalize_recovery not implemented via API yet');
     await Future.delayed(const Duration(seconds: 1));
   }
+
+  // --- ParaPay (real API calls) ---
+
+  @override
+  String parapay_begin(int trackLengthSec, {bool curatorPresent = false, String artist = 'artist', String listener = 'listener', String? curator}) {
+    _api.parapayBegin(trackLengthSec, curatorPresent: curatorPresent);
+    return '0000000000000000000000000000000000000000000000000000000000000001';
+  }
+
+  @override
+  void parapay_tick(String streamId, int posSec) {
+    _api.parapayTick(streamId, posSec);
+  }
+
+  @override
+  int parapay_boost(String streamId) {
+    _api.parapayBoost(streamId);
+    return 0;
+  }
+
+  @override
+  void parapay_end(String streamId, {bool skipped = false}) {
+    _api.parapayEnd(streamId, skipped: skipped);
+  }
 }

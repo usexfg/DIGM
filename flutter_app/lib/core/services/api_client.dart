@@ -174,8 +174,90 @@ class ApiClient {
     return _post('close-epoch', {});
   }
 
+  // --- Stations ---
+
+  Future<Map<String, dynamic>> createStation({
+    required String curator,
+    required String stationId,
+    required String name,
+    required String description,
+    required List<String> tracks,
+  }) async {
+    return _post('create-station', {
+      'curator': curator,
+      'station_id': stationId,
+      'name': name,
+      'description': description,
+      'tracks': tracks,
+    });
+  }
+
+  Future<List<dynamic>> getCuratorStations(String address) async {
+    final result = await _get('curator-stations/$address');
+    if (result is List<dynamic>) return result;
+    return [];
+  }
+
+  Future<Map<String, dynamic>> updateCuratorVibe({
+    required String address,
+    required String vibe,
+  }) async {
+    return _post('curator-vibe', {
+      'address': address,
+      'vibe': vibe,
+    });
+  }
+
+  Future<String> getCuratorVibe(String address) async {
+    final result = await _get('curator-vibe/$address');
+    return result['vibe'] as String? ?? '';
+  }
+
+  Future<Map<String, dynamic>> setCuratorPlaylist({
+    required String address,
+    required List<String> tracks,
+  }) async {
+    return _post('curator-playlist', {
+      'address': address,
+      'tracks': tracks,
+    });
+  }
+
+  Future<List<dynamic>> getCuratorPlaylist(String address) async {
+    final result = await _get('curator-playlist/$address');
+    if (result is List<dynamic>) return result;
+    return [];
+  }
+
+  Future<Map<String, dynamic>> stationsRemaining(String address) async {
+    final result = await _get('stations-remaining/$address');
+    if (result is Map<String, dynamic>) return result;
+    return {};
+  }
+
   void close() {
     _client.close();
+  }
+
+  // --- ParaPay ---
+  Future<Map<String, dynamic>> parapayBegin(int trackLengthSec, {bool curatorPresent = false}) async {
+    return _post('parapay/begin', {
+      'track_length_sec': trackLengthSec,
+      'curator_present': curatorPresent,
+    });
+  }
+
+  Future<void> parapayTick(String streamId, int posSec) async {
+    await _post('parapay/tick', {'stream_id': streamId, 'pos_sec': posSec});
+  }
+
+  Future<int> parapayBoost(String streamId) async {
+    final result = await _post('parapay/boost', {'stream_id': streamId});
+    return (result['presses'] as num?)?.toInt() ?? 0;
+  }
+
+  Future<void> parapayEnd(String streamId, {bool skipped = false}) async {
+    await _post('parapay/end', {'stream_id': streamId, 'skipped': skipped});
   }
 }
 

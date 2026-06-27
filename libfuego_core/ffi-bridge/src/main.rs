@@ -12,6 +12,14 @@ async fn main() {
 
     let core_arc = Arc::new(Mutex::new(core));
 
+    // Initialize ParaPay session manager
+    {
+        let c = core_arc.lock().unwrap();
+        if let Err(e) = c.init_parapay() {
+            eprintln!("ParaPay init warning: {}", e);
+        }
+    }
+
     // Seed some mock data for the UI
     {
         let c = core_arc.lock().unwrap();

@@ -55,6 +55,10 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/curator-vibe/:address", get(get_curator_vibe_route))
         .route("/api/digm/curator-playlist", post(set_curator_playlist_route))
         .route("/api/digm/curator-playlist/:address", get(get_curator_playlist_route))
+        .route("/api/digm/parapay/begin", post(parapay_begin_route))
+        .route("/api/digm/parapay/tick", post(parapay_tick_route))
+        .route("/api/digm/parapay/boost", post(parapay_boost_route))
+        .route("/api/digm/parapay/end", post(parapay_end_route))
         .route("/api/digm/stations-remaining/:address", get(stations_remaining_route))
         .layer(cors)
         .with_state(state);
@@ -366,4 +370,63 @@ async fn get_curator_playlist_route(State(state): State<ApiState>, Path(address)
     let json_str = core.get_curator_playlist(address);
     let value: serde_json::Value = serde_json::from_str(&json_str).unwrap_or(serde_json::json!([]));
     Ok(Json(value))
+}
+
+// --- ParaPay routes ---
+
+#[derive(Deserialize)]
+struct ParapayBeginRequest {
+    track_length_sec: u32,
+    #[serde(default)]
+    curator_present: bool,
+}
+
+#[derive(Deserialize)]
+struct ParapayTickRequest {
+    stream_id: String,
+    pos_sec: u32,
+}
+
+#[derive(Deserialize)]
+struct ParapayEndRequest {
+    stream_id: String,
+    #[serde(default)]
+    skipped: bool,
+}
+
+async fn parapay_begin_route(State(state): State<ApiState>, Json(req): Json<ParapayBeginRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.parapay_begin_simple(req.track_length_sec) {
+        Ok(stream_id) => Ok(Json(serde_json::json!({ "stream_id": stream_id }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
+}
+
+async fn parapay_tick_route(State(state): State<ApiState>, Json(req): Json<ParapayTickRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.parapay_tick(req.stream_id, req.pos_sec) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
+}
+
+#[derive(Deserialize)]
+struct ParapayBoostRequest {
+    stream_id: String,
+}
+
+async fn parapay_boost_route(State(state): State<ApiState>, Json(req): Json<ParapayBoostRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.parapay_boost(req.stream_id) {
+        Ok(presses) => Ok(Json(serde_json::json!({ "presses": presses }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
+}
+
+async fn parapay_end_route(State(state): State<ApiState>, Json(req): Json<ParapayEndRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.parapay_end(req.stream_id, req.skipped) {
+        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
 }

@@ -369,6 +369,46 @@ impl DigmCore {
         let mut vault = self.vault.lock().unwrap();
         vault.finalize_recovery(request)
     }
+
+    // --- ParaPay delegation ---
+
+    pub fn init_parapay(&self) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.init_parapay()
+    }
+
+    pub fn parapay_begin(
+        &self,
+        track_length_sec: u32,
+        curator_present: bool,
+        artist: String,
+        listener: String,
+        curator: Option<String>,
+    ) -> Result<String, String> {
+        let app = self.app.lock().unwrap();
+        app.parapay_begin(track_length_sec, curator_present, &artist, &listener, curator.as_deref())
+    }
+
+    pub fn parapay_tick(&self, stream_id: String, pos_sec: u32) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.parapay_tick(&stream_id, pos_sec)
+    }
+
+    pub fn parapay_boost(&self, stream_id: String) -> Result<u32, String> {
+        let app = self.app.lock().unwrap();
+        app.parapay_boost(&stream_id)
+    }
+
+    pub fn parapay_end(&self, stream_id: String, skipped: bool) -> Result<(), String> {
+        let app = self.app.lock().unwrap();
+        app.parapay_end(&stream_id, skipped)
+    }
+
+    pub fn parapay_begin_simple(&self, track_length_sec: u32) -> Result<String, String> {
+        let app = self.app.lock().unwrap();
+        app.init_parapay()?;
+        app.parapay_begin(track_length_sec, false, "artist", "listener", None)
+    }
 }
 
 pub fn init_ffi() {
