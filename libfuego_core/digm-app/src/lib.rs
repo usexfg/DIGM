@@ -21,11 +21,20 @@ pub struct UserAccount {
     pub cura_balance: u64,
     pub digm_tokens_held: u64,
     pub digm_tokens_consumed: u64,
+    pub digm_token_acquired_at: Vec<DigmTokenEntry>,
     pub display_name: Option<String>,
     pub wallet_age_epochs: u64,
     pub stations_created: u64,
     pub curator_playlist: Vec<String>,
     pub curator_vibe: Option<String>,
+}
+
+/// Track when and from which pool a DIGM token was acquired.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DigmTokenEntry {
+    pub acquired_at: u64,
+    pub source: DigmPoolSource,
+    pub consumed: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -86,11 +95,32 @@ pub struct GlobalState {
     pub top_holder: Option<Address>,
     pub total_singles_posted: u64,
     pub max_singles: u64,
+    /// DIGM pool tracking
+    pub digm_heat_pool_remaining: u64,
+    pub digm_xfg_pool_remaining: u64,
+    pub digm_heat_pool_sold: u64,
+    pub digm_xfg_pool_sold: u64,
 }
 
-/// DIGM token supply model.
+/// DIGM token supply model — two pools, anti-spam single-release gate.
 pub const MAX_SINGLE_SLOTS: u64 = 10_000;
+pub const DIGM_HEAT_POOL_SIZE: u64 = 5_000;
+pub const DIGM_XFG_POOL_SIZE: u64 = 5_000;
+pub const DIGM_HEAT_FIXED_PRICE: u64 = 10_000_000; // 0.1 HEAT in atomic units (1 XFG = 10M HEAT → 0.1 XFG = 1M, but HEAT is 0.01 XFG so 0.1 HEAT = 10M atomic)
 pub const DIGM_COIN_NAME: &str = "DIGM";
+/// Hard deadline for v0 cycle — all DIGM must be used by this timestamp.
+/// Set to end of 2026 (1735689600 = Dec 31 2026 00:00 UTC).
+pub const DIGM_V0_DEADLINE: u64 = 1735689600;
+/// DIGM acquired from XFG pool must be consumed within this many seconds.
+pub const DIGM_XFG_HOLD_LIMIT_SECS: u64 = 90 * 24 * 3600; // 90 days
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum DigmPoolSource {
+    /// HEAT pool: fixed 0.1 HEAT, immediate-use only (buy & publish now)
+    Heat,
+    /// XFG pool: bancor curve pricing, can hold (speculators)
+    Xfg,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingleSummary {
@@ -162,6 +192,7 @@ impl DigmApp {
                 cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
                 display_name: None,
                 wallet_age_epochs: 0,
                 stations_created: 0,
@@ -203,6 +234,7 @@ impl DigmApp {
             cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -229,6 +261,7 @@ impl DigmApp {
             cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -712,6 +745,7 @@ impl DigmApp {
             cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -727,6 +761,7 @@ impl DigmApp {
             cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
@@ -743,6 +778,7 @@ impl DigmApp {
                 cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
                 display_name: None,
                 wallet_age_epochs: 0,
                 stations_created: 0,
@@ -831,68 +867,207 @@ fn decode_stream_id(hex_str: &str) -> Result<[u8; 32], String> {
 }
 
 // --- DIGM Token / Anti-Spam Gate ---
+// Two pools, fixed-price HEAT + bancor-curve XFG, hard v0 deadline.
 
 impl DigmApp {
-    /// Acquire DIGM tokens via swap pool. Caller exchanges XFG for DIGM.
-    pub fn acquire_digm(&self, address: &Address, amount: u64) -> Result<(), String> {
-        let mut state = self.state.write().unwrap();
-        let acct = state.accounts.entry(address.clone()).or_insert(UserAccount {
+    fn ensure_digm_account<'a>(state: &'a mut GlobalState, address: &Address) -> &'a mut UserAccount {
+        state.accounts.entry(address.clone()).or_insert(UserAccount {
             address: address.clone(),
             para_balance: 0,
             vox_balance: 0,
             cura_balance: 0,
             digm_tokens_held: 0,
             digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
             display_name: None,
             wallet_age_epochs: 0,
             stations_created: 0,
             curator_playlist: Vec::new(),
             curator_vibe: None,
-        });
-        acct.digm_tokens_held += amount;
-        Ok(())
+        })
     }
 
-    /// Consume one DIGM token to post a single to the 0P catalogue.
-    /// Returns the catalogue slot number (1-based).
-    pub fn consume_digm_for_single(&self, address: &Address) -> Result<u64, String> {
+    fn now_secs() -> u64 {
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs()
+    }
+
+    /// HEAT pool: fixed 0.1 HEAT, immediate-use only (buy & publish now).
+    /// Token is acquired AND consumed atomically. Returns catalogue slot number.
+    pub fn acquire_digm_heat(&self, address: &Address) -> Result<u64, String> {
+        let mut state = self.state.write().unwrap();
+
+        if state.digm_heat_pool_sold >= DIGM_HEAT_POOL_SIZE {
+            return Err("HEAT pool exhausted".into());
+        }
+
+        let now = Self::now_secs();
+        if now >= DIGM_V0_DEADLINE {
+            return Err("DIGM v0 cycle has ended.".into());
+        }
+
+        if state.total_singles_posted >= MAX_SINGLE_SLOTS {
+            return Err("0P Singles Catalogue full. DIGM now gates albums only.".into());
+        }
+
+        // Use entry API, drop borrow before accessing state again
+        {
+            let acct = state.accounts.entry(address.clone()).or_insert(
+                Self::make_default_account(address)
+            );
+            acct.digm_token_acquired_at.push(DigmTokenEntry {
+                acquired_at: now,
+                source: DigmPoolSource::Heat,
+                consumed: true,
+            });
+            acct.digm_tokens_held += 1;
+            acct.digm_tokens_consumed += 1;
+        }
+        state.digm_heat_pool_sold += 1;
+        state.total_singles_posted += 1;
+        Ok(state.total_singles_posted)
+    }
+
+    /// XFG pool: bancor curve pricing, tokens can be held (speculators).
+    pub fn acquire_digm_xfg(&self, address: &Address) -> Result<u64, String> {
+        let mut state = self.state.write().unwrap();
+
+        if state.digm_xfg_pool_sold >= DIGM_XFG_POOL_SIZE {
+            return Err("XFG pool exhausted".into());
+        }
+
+        let now = Self::now_secs();
+        if now >= DIGM_V0_DEADLINE {
+            return Err("DIGM v0 cycle has ended.".into());
+        }
+
+        let held;
+        {
+            let acct = state.accounts.entry(address.clone()).or_insert(
+                Self::make_default_account(address)
+            );
+            acct.digm_token_acquired_at.push(DigmTokenEntry {
+                acquired_at: now,
+                source: DigmPoolSource::Xfg,
+                consumed: false,
+            });
+            acct.digm_tokens_held += 1;
+            held = acct.digm_tokens_held;
+        }
+        state.digm_xfg_pool_sold += 1;
+        Ok(held)
+    }
+
+    fn make_default_account(address: &Address) -> UserAccount {
+        UserAccount {
+            address: address.clone(),
+            para_balance: 0,
+            vox_balance: 0,
+            cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
+            display_name: None,
+            wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
+        }
+    }
+
+    /// Bancor curve price for the nth XFG pool token.
+    /// price = base * (1 + sold/total * (1/reserve_ratio - 1))
+    pub fn digm_xfg_price(&self, nth: u64) -> u64 {
+        let total = DIGM_XFG_POOL_SIZE as f64;
+        let sold = (nth.saturating_sub(1)) as f64;
+        if sold >= total { return u64::MAX; }
+        let reserve_ratio = 0.1;
+        let base = 1_000_000u64 as f64; // 0.1 XFG base
+        let mark = 1.0 + sold / total * (1.0 / reserve_ratio - 1.0);
+        (base * mark) as u64
+    }
+
+    pub fn digm_xfg_current_price(&self) -> u64 {
+        let state = self.state.read().unwrap();
+        self.digm_xfg_price(state.digm_xfg_pool_sold + 1)
+    }
+
+    /// Consume a held DIGM (from XFG pool) to post a single.
+    pub fn consume_held_digm(&self, address: &Address) -> Result<u64, String> {
         let mut state = self.state.write().unwrap();
 
         if state.total_singles_posted >= MAX_SINGLE_SLOTS {
-            return Err(format!(
-                "0P Singles Catalogue full: {}/{} slots filled. DIGM now gates albums only.",
-                state.total_singles_posted, MAX_SINGLE_SLOTS
-            ));
+            return Err("0P Singles Catalogue full. DIGM now gates albums only.".into());
+        }
+
+        let now = Self::now_secs();
+        if now >= DIGM_V0_DEADLINE {
+            return Err("DIGM v0 cycle has ended. Unused tokens expired.".into());
         }
 
         let acct = state.accounts.get_mut(address).ok_or("Account not found")?;
-        if acct.digm_tokens_held <= acct.digm_tokens_consumed {
-            return Err("No unspent DIGM tokens. Acquire DIGM via swap pool first.".into());
+        let unspent = acct.digm_token_acquired_at.iter_mut()
+            .filter(|e| !e.consumed)
+            .next()
+            .ok_or("No unspent DIGM tokens")?;
+
+        if unspent.source == DigmPoolSource::Xfg {
+            if now > unspent.acquired_at + DIGM_XFG_HOLD_LIMIT_SECS {
+                unspent.consumed = true;
+                acct.digm_tokens_consumed += 1;
+                return Err("DIGM token expired (90-day hold limit).".into());
+            }
         }
 
+        unspent.consumed = true;
         acct.digm_tokens_consumed += 1;
         state.total_singles_posted += 1;
         Ok(state.total_singles_posted)
     }
 
-    /// Check how many single slots remain in the 0P catalogue.
     pub fn singles_remaining(&self) -> u64 {
         let state = self.state.read().unwrap();
         MAX_SINGLE_SLOTS.saturating_sub(state.total_singles_posted)
     }
 
-    /// Whether the 0P Singles Catalogue is full.
     pub fn is_single_catalogue_full(&self) -> bool {
         self.singles_remaining() == 0
     }
 
-    /// Get unspent DIGM token count for an address.
     pub fn get_unspent_digm(&self, address: &Address) -> u64 {
         let state = self.state.read().unwrap();
         state.accounts.get(address)
             .map(|a| a.digm_tokens_held.saturating_sub(a.digm_tokens_consumed))
             .unwrap_or(0)
     }
+
+    pub fn digm_pool_stats(&self) -> DigmPoolStats {
+        let state = self.state.read().unwrap();
+        DigmPoolStats {
+            heat_pool_remaining: DIGM_HEAT_POOL_SIZE.saturating_sub(state.digm_heat_pool_sold),
+            xfg_pool_remaining: DIGM_XFG_POOL_SIZE.saturating_sub(state.digm_xfg_pool_sold),
+            heat_pool_sold: state.digm_heat_pool_sold,
+            xfg_pool_sold: state.digm_xfg_pool_sold,
+            heat_fixed_price: DIGM_HEAT_FIXED_PRICE,
+            xfg_current_price: self.digm_xfg_current_price(),
+            deadline: DIGM_V0_DEADLINE,
+            singles_posted: state.total_singles_posted,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DigmPoolStats {
+    pub heat_pool_remaining: u64,
+    pub xfg_pool_remaining: u64,
+    pub heat_pool_sold: u64,
+    pub xfg_pool_sold: u64,
+    pub heat_fixed_price: u64,
+    pub xfg_current_price: u64,
+    pub deadline: u64,
+    pub singles_posted: u64,
 }
 
 pub fn init() {

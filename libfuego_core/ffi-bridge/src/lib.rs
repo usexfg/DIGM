@@ -292,14 +292,24 @@ impl DigmCore {
 
     // --- DIGM token / anti-spam gate ---
 
-    pub fn acquire_digm(&self, address: String, amount: u64) -> Result<(), String> {
+    pub fn acquire_digm_heat(&self, address: String) -> Result<u64, String> {
         let app = self.app.lock().unwrap();
-        app.acquire_digm(&Address::from(address), amount)
+        app.acquire_digm_heat(&Address::from(address))
     }
 
-    pub fn consume_digm_for_single(&self, address: String) -> Result<u64, String> {
+    pub fn acquire_digm_xfg(&self, address: String) -> Result<u64, String> {
         let app = self.app.lock().unwrap();
-        app.consume_digm_for_single(&Address::from(address))
+        app.acquire_digm_xfg(&Address::from(address))
+    }
+
+    pub fn consume_held_digm(&self, address: String) -> Result<u64, String> {
+        let app = self.app.lock().unwrap();
+        app.consume_held_digm(&Address::from(address))
+    }
+
+    pub fn digm_pool_stats(&self) -> String {
+        let app = self.app.lock().unwrap();
+        serde_json::to_string(&app.digm_pool_stats()).unwrap_or_else(|_| "{}".into())
     }
 
     pub fn singles_remaining(&self) -> u64 {

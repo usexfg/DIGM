@@ -59,8 +59,10 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/parapay/tick", post(parapay_tick_route))
         .route("/api/digm/parapay/boost", post(parapay_boost_route))
         .route("/api/digm/parapay/end", post(parapay_end_route))
-        .route("/api/digm/digm/acquire", post(acquire_digm_route))
+        .route("/api/digm/digm/acquire-heat", post(acquire_digm_heat_route))
+        .route("/api/digm/digm/acquire-xfg", post(acquire_digm_xfg_route))
         .route("/api/digm/digm/consume", post(consume_digm_route))
+        .route("/api/digm/digm/pool-stats", get(digm_pool_stats_route))
         .route("/api/digm/digm/singles-remaining", get(singles_remaining_route))
         .route("/api/digm/digm/unspent/:address", get(unspent_digm_route))
         .route("/api/digm/stations-remaining/:address", get(stations_remaining_route))
@@ -438,26 +440,46 @@ async fn parapay_end_route(State(state): State<ApiState>, Json(req): Json<Parapa
 // --- DIGM token / anti-spam gate routes ---
 
 #[derive(Deserialize)]
-struct AcquireDigmRequest {
+struct DigmAddressRequest {
     address: String,
-    amount: u64,
 }
 
-async fn acquire_digm_route(State(state): State<ApiState>, Json(req): Json<AcquireDigmRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+async fn acquire_digm_heat_route(State(state): State<ApiState>, Json(req): Json<DigmAddressRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
     let core = state.core.lock().unwrap();
-    match core.acquire_digm(req.address, req.amount) {
-        Ok(()) => Ok(Json(serde_json::json!({ "status": "ok" }))),
+    match core.acquire_digm_heat(req.address) {
+        Ok(slot) => Ok(Json(serde_json::json!({ "slot": slot, "status": "ok", "pool": "HEAT" }))),
         Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
     }
 }
 
-async fn consume_digm_route(State(state): State<ApiState>, Json(req): Json<serde_json::Value>) -> Result<Json<serde_json::Value>, StatusCode> {
-    let address = req.get("address").and_then(|s| s.as_str()).unwrap_or("");
+async fn acquire_digm_xfg_route(State(state): State<ApiState>, Json(req): Json<DigmAddressRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
     let core = state.core.lock().unwrap();
-    match core.consume_digm_for_single(address.to_string()) {
+    match core.acquire_digm_xfg(req.address) {
+        Ok(held) => Ok(Json(serde_json::json!({ "tokens_held": held, "status": "ok", "pool": "XFG" }))),
+        Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
+    }
+}
+
+async fn consume_digm_route(State(state): State<ApiState>, Json(req): Json<DigmAddressRequest>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    match core.consume_held_digm(req.address) {
         Ok(slot) => Ok(Json(serde_json::json!({ "slot": slot, "status": "ok" }))),
         Err(e) => Ok(Json(serde_json::json!({ "error": e }))),
     }
+}
+
+async fn digm_pool_stats_route(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let stats = core.digm_pool_stats();
+    let value: serde_json::Value = serde_json::from_str(&stats).unwrap_or(serde_json::json!({}));
+    Ok(Json(value))
+}
+
+
+async fn unspent_digm_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
+    let core = state.core.lock().unwrap();
+    let unspent = core.get_unspent_digm(address);
+    Ok(Json(serde_json::json!({ "unspent": unspent })))
 }
 
 async fn singles_remaining_route(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {
@@ -465,10 +487,4 @@ async fn singles_remaining_route(State(state): State<ApiState>) -> Result<Json<s
     let remaining = core.singles_remaining();
     let full = core.is_single_catalogue_full();
     Ok(Json(serde_json::json!({ "remaining": remaining, "full": full, "max": 10000 })))
-}
-
-async fn unspent_digm_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
-    let core = state.core.lock().unwrap();
-    let unspent = core.get_unspent_digm(address);
-    Ok(Json(serde_json::json!({ "unspent": unspent })))
 }
