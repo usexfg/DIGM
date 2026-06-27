@@ -1,9 +1,13 @@
 /// Runtime configuration for the ParaPay engine.
 /// BASE_PPS and BONUS_PPS values are tunable; the invariant holds regardless.
+///
+/// PARA supply model: 1 total PARA with 27 decimal places.
+/// Total atomic units: 10^27 (1,000,000,000,000,000,000,000,000,000).
+/// Minted as a Fuego colored coin via 0xAA tx_extra tag.
 #[derive(Debug, Clone)]
 pub struct AccrualConfig {
-    pub base_pps: u64,
-    pub bonus_pps: u64,
+    pub base_pps: u128,
+    pub bonus_pps: u128,
     pub threshold_num: u32,
     pub threshold_den: u32,
     pub curator_rate_bps: u32,
@@ -14,17 +18,24 @@ pub struct AccrualConfig {
     pub min_track_length_sec: u32,
 }
 
+/// 1 total PARA with 27 decimal places.
+pub const PARA_TOTAL_SUPPLY: u128 = 1_000_000_000_000_000_000_000_000_000;
+pub const PARA_DECIMALS: u8 = 27;
+
 impl Default for AccrualConfig {
     fn default() -> Self {
+        // 1 nano-PARA/sec = 10^18 atomic units (10^-9 × 10^27)
+        // BASE_PPS = 0.4 nano-PARA/sec, BONUS_PPS = 0.6 nano-PARA/sec
+        let nano_para: u128 = 1_000_000_000_000_000_000; // 10^18
         AccrualConfig {
-            base_pps: 40_000_000,              // 0.4 PARA/sec in atomic units (18 decimal = 1e17 base)
-            bonus_pps: 60_000_000,             // 0.6 PARA/sec
+            base_pps: 400_000_000_000_000_000,   // 0.4 nPARA/sec
+            bonus_pps: 600_000_000_000_000_000,  // 0.6 nPARA/sec
             threshold_num: 2,
             threshold_den: 3,
-            curator_rate_bps: 3300,            // 33.00%
+            curator_rate_bps: 3300,
             max_boost_presses: 5,
-            split_artist_bps: 5000,            // 50%
-            split_listener_bps: 5000,          // 50%
+            split_artist_bps: 5000,
+            split_listener_bps: 5000,
             tick_granularity_secs: 1,
             min_track_length_sec: 30,
         }
