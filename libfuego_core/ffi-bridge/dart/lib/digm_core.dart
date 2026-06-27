@@ -56,6 +56,39 @@ class DigmCore {
     return 3;
   }
 
+  // --- DIGM token / anti-spam gate (mock defaults) ---
+
+  int acquire_digm_heat(String address) {
+    debugPrint('Mock: acquire_digm_heat($address)');
+    return 1;
+  }
+
+  int acquire_digm_xfg(String address) {
+    debugPrint('Mock: acquire_digm_xfg($address)');
+    return 1;
+  }
+
+  int consume_held_digm(String address) {
+    debugPrint('Mock: consume_held_digm($address)');
+    return 1;
+  }
+
+  String digm_pool_stats() {
+    return '{"heat_pool_remaining":5000,"xfg_pool_remaining":5000,"heat_pool_sold":0,"xfg_pool_sold":0,"heat_fixed_price":10000000,"xfg_current_price":1000000,"deadline":1735689600,"singles_posted":0}';
+  }
+
+  int get_unspent_digm(String address) {
+    return 0;
+  }
+
+  int singles_remaining() {
+    return 10000;
+  }
+
+  bool is_single_catalogue_full() {
+    return false;
+  }
+
   // --- Node (ASYNC - real API calls) ---
 
   Future<void> sync_node() async {

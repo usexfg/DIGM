@@ -259,6 +259,38 @@ class ApiClient {
   Future<void> parapayEnd(String streamId, {bool skipped = false}) async {
     await _post('parapay/end', {'stream_id': streamId, 'skipped': skipped});
   }
+
+  // --- DIGM Anti-Spam Gate ---
+  Future<Map<String, dynamic>> acquireDigmHeat(String address) async {
+    return _post('digm/acquire-heat', {'address': address});
+  }
+
+  Future<Map<String, dynamic>> acquireDigmXfg(String address) async {
+    return _post('digm/acquire-xfg', {'address': address});
+  }
+
+  Future<Map<String, dynamic>> consumeHeldDigm(String address) async {
+    return _post('digm/consume', {'address': address});
+  }
+
+  Future<Map<String, dynamic>> digmPoolStats() async {
+    return _get('digm/pool-stats');
+  }
+
+  Future<int> singlesRemaining() async {
+    final result = await _get('digm/singles-remaining');
+    return (result['remaining'] as num?)?.toInt() ?? 0;
+  }
+
+  Future<bool> isCatalogueFull() async {
+    final result = await _get('digm/singles-remaining');
+    return (result['full'] as bool?) ?? false;
+  }
+
+  Future<int> unspentDigm(String address) async {
+    final result = await _get('digm/unspent/$address');
+    return (result['unspent'] as num?)?.toInt() ?? 0;
+  }
 }
 
 final apiClientProvider = Provider<ApiClient>((ref) {

@@ -234,4 +234,48 @@ class ApiDigmCore extends DigmCore {
   void parapay_end(String streamId, {bool skipped = false}) {
     _api.parapayEnd(streamId, skipped: skipped);
   }
+
+  // --- DIGM Anti-Spam Gate (real API calls) ---
+
+  @override
+  int acquire_digm_heat(String address) {
+    _api.acquireDigmHeat(address);
+    return 0;
+  }
+
+  @override
+  int acquire_digm_xfg(String address) {
+    _api.acquireDigmXfg(address);
+    return 0;
+  }
+
+  @override
+  int consume_held_digm(String address) {
+    _api.consumeHeldDigm(address);
+    return 0;
+  }
+
+  String _cachedPoolStats = '{}';
+
+  @override
+  String digm_pool_stats() {
+    _api.digmPoolStats().then((s) => _cachedPoolStats = s.toString());
+    return _cachedPoolStats;
+  }
+
+  @override
+  int get_unspent_digm(String address) {
+    _api.unspentDigm(address);
+    return super.get_unspent_digm(address);
+  }
+
+  @override
+  int singles_remaining() {
+    return super.singles_remaining();
+  }
+
+  @override
+  bool is_single_catalogue_full() {
+    return super.is_single_catalogue_full();
+  }
 }
