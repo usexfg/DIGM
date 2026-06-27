@@ -68,14 +68,14 @@ pub struct CuraColoredCoin {
     pub version: u32,
 }
 
-/// 0xAA — PARA Claim (on-chain cash-out of off-chain paper PARA).
+/// 0xAA — PARA Claim (on-chain cash-out of off-chain paper para).
 ///
-/// PARA is a Fuego colored coin: 1 total token with 27 decimal places.
-/// Total supply: 10^27 atomic units (1.000000000000000000000000000 PARA).
-/// Submits a Merkle proof that the claimant had X PARA at a checkpoint
-/// previously anchored to L1. If valid, PARA colored coin is minted on-chain.
-/// Distributed through per-second Parapay streaming emissions — extremely slow
-/// inflation ensures scarcity even at nano-PARA granularity.
+/// PARA is a Fuego colored coin with 27 decimal places.
+/// The atomic unit is called "para" (lowercase). Total supply: 10^27 para.
+/// Submits a Merkle proof that the claimant held X para at a checkpoint
+/// previously anchored to L1. Any amount can be claimed — no "1.0 PARA" ceiling.
+/// Distribution: per-second Parapay emissions. Extremely slow inflation
+/// ensures scarcity even at pico-para granularity.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ParaClaim {
     pub claimant: PubKey,           // wallet pubkey claiming PARA

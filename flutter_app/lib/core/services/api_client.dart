@@ -291,6 +291,11 @@ class ApiClient {
     final result = await _get('digm/unspent/$address');
     return (result['unspent'] as num?)?.toInt() ?? 0;
   }
+
+  Future<int> totalParaBurned() async {
+    final result = await _get('digm/burned');
+    return (result['burned'] as num?)?.toInt() ?? 0;
+  }
 }
 
 final apiClientProvider = Provider<ApiClient>((ref) {

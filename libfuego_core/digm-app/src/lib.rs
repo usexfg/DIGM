@@ -100,13 +100,17 @@ pub struct GlobalState {
     pub digm_xfg_pool_remaining: u64,
     pub digm_heat_pool_sold: u64,
     pub digm_xfg_pool_sold: u64,
+    /// Cumulative para burned (boost redirect burn + purchase burn)
+    pub total_para_burned: u128,
 }
 
 /// DIGM token supply model — two pools, anti-spam single-release gate.
 pub const MAX_SINGLE_SLOTS: u64 = 10_000;
 pub const DIGM_HEAT_POOL_SIZE: u64 = 5_000;
 pub const DIGM_XFG_POOL_SIZE: u64 = 5_000;
-pub const DIGM_HEAT_FIXED_PRICE: u64 = 10_000_000; // 0.1 HEAT in atomic units (1 XFG = 10M HEAT → 0.1 XFG = 1M, but HEAT is 0.01 XFG so 0.1 HEAT = 10M atomic)
+pub const DIGM_HEAT_FIXED_PRICE: u64 = 10_000_000;
+/// Fraction of purchase amount burned (10% = 1000 bps).
+pub const PURCHASE_BURN_BPS: u64 = 1000;
 pub const DIGM_COIN_NAME: &str = "DIGM";
 /// Hard deadline for v0 cycle — all DIGM must be used by this timestamp.
 /// Set to end of 2026 (1735689600 = Dec 31 2026 00:00 UTC).
@@ -167,7 +171,7 @@ impl DigmApp {
         struct DigmSettler {
             app: Arc<RwLock<GlobalState>>,
         }
-        impl parapay_sessions::PayoutSettler for DigmSettler {
+         impl parapay_sessions::PayoutSettler for DigmSettler {
             fn apply(
                 &self,
                 payout: &parapay::Payout,
@@ -181,6 +185,8 @@ impl DigmApp {
                 if let Some(c) = curator {
                     credit_account(&mut state, c, payout.curator_amount);
                 }
+                // Boost burn — 10% of redirect destroyed
+                state.total_para_burned += payout.burn_amount;
             }
         }
 
@@ -223,6 +229,11 @@ impl DigmApp {
     pub fn get_para_balance(&self, address: &Address) -> u128 {
         let state = self.state.read().unwrap();
         state.accounts.get(address).map(|a| a.para_balance).unwrap_or(0)
+    }
+
+    pub fn get_total_para_burned(&self) -> u128 {
+        let state = self.state.read().unwrap();
+        state.total_para_burned
     }
 
     pub fn earn_para(&self, address: &Address, amount: u128) {
@@ -403,6 +414,10 @@ impl DigmApp {
         }
         
         account.para_balance -= amount as u128;
+        
+        // 10% purchase burn
+        let burn = (amount as u128) * PURCHASE_BURN_BPS as u128 / 10000;
+        state.total_para_burned += burn;
         
         let album = state.albums.get_mut(album_id).unwrap();
         album.total_sales_value += amount;
