@@ -24,12 +24,13 @@ pub const PARA_DECIMALS: u8 = 27;
 
 impl Default for AccrualConfig {
     fn default() -> Self {
-        // 1 nano-PARA/sec = 10^18 atomic units (10^-9 × 10^27)
-        // BASE_PPS = 0.4 nano-PARA/sec, BONUS_PPS = 0.6 nano-PARA/sec
-        let nano_para: u128 = 1_000_000_000_000_000_000; // 10^18
+        // ~1,000,000 para (atomic units) per full 180-sec track play.
+        // BASE = 4,800 au/sec pre-threshold (120s), BONUS = 7,100 au/sec post (60s):
+        //   120 × 4,800 + 60 × 7,100 = 576,000 + 426,000 = 1,002,000 ≈ 1M
+        // 1 full PARA (10^27 au) at 10^6 per play = 10^21 plays = functionally infinite.
         AccrualConfig {
-            base_pps: 400_000_000_000_000_000,   // 0.4 nPARA/sec
-            bonus_pps: 600_000_000_000_000_000,  // 0.6 nPARA/sec
+            base_pps: 4_800,
+            bonus_pps: 7_100,
             threshold_num: 2,
             threshold_den: 3,
             curator_rate_bps: 3300,

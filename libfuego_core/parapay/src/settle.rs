@@ -131,8 +131,8 @@ mod tests {
     #[test]
     fn test_worked_example_full_completion() {
         let cfg = AccrualConfig {
-            base_pps: 400_000_000_000_000_000u128,
-            bonus_pps: 600_000_000_000_000_000u128,
+            base_pps: 4_800,
+            bonus_pps: 7_100,
             ..AccrualConfig::default()
         };
         let mut s = session_180sec(true);
