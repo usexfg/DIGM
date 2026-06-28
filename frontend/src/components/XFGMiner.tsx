@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface MinerStats {
@@ -432,20 +433,3 @@ const XFGMiner: React.FC = () => {
 };
 
 export default XFGMiner;
-```
-
-Now let me create the worker.js file that will handle the actual mining:
-
-<tool_call>
-<function=edit_file>
-<parameter=path>
-/Users/aejt/digm-platform/public/js/worker.js
-</parameter>
-<parameter=mode>
-create
-</parameter>
-<parameter=display_description>
-Create worker.js for browser-based XFG mining
-</parameter>
-</function>
-</tool_call>

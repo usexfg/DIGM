@@ -1,64 +1,110 @@
 import 'package:flutter/material.dart';
 
 class DigmTheme {
-  // ── Web Brand Colors ────────────────────────────────────────
-  static const Color fuchsia    = Color(0xFFC026D3); // fuchsia-600
-  static const Color fuchsia500 = Color(0xFFD946EF); // fuchsia-500 (focus/border)
-  static const Color fuchsia700 = Color(0xFFA21CAF); // fuchsia-700 (hover)
-  static const Color fuchsia400 = Color(0xFFE879F9); // fuchsia-400 (accents)
-  static const Color pink       = Color(0xFFEC4899); // pink-500 (gradient end)
-  static const Color purple     = Color(0xFF9333EA); // purple-600
-  static const Color darkPurple = Color(0xFF1A0033); // bg via-purple-900/20
+  // ── Ethereal Glass Palette ───────────────────────────────────
+  static const Color oledBlack  = Color(0xFF050505);
+  static const Color fuchsia    = Color(0xFFC026D3);
+  static const Color fuchsia500 = Color(0xFFD946EF);
+  static const Color fuchsia700 = Color(0xFFA21CAF);
+  static const Color fuchsia400 = Color(0xFFE879F9);
+  static const Color pink       = Color(0xFFEC4899);
+  static const Color purple     = Color(0xFF9333EA);
+  static const Color darkPurple = Color(0xFF1A0033);
 
-  static const Color green     = Color(0xFF22C55E); // green-500
-  static const Color green600  = Color(0xFF16A34A); // green-600 (hover)
-  static const Color sky       = Color(0xFF0EA5E9); // sky-500
-  static const Color sky600    = Color(0xFF0284C7); // sky-600
-  static const Color red       = Color(0xFFEF4444); // red-500
-  static const Color red600    = Color(0xFFDC2626); // red-600
-  static const Color orange    = Color(0xFFF97316); // orange-500
-  static const Color yellow    = Color(0xFFEAB308); // yellow-500
+  static const Color green     = Color(0xFF22C55E);
+  static const Color green600  = Color(0xFF16A34A);
+  static const Color sky       = Color(0xFF0EA5E9);
+  static const Color sky600    = Color(0xFF0284C7);
+  static const Color red       = Color(0xFFEF4444);
+  static const Color red600    = Color(0xFFDC2626);
+  static const Color orange    = Color(0xFFF97316);
+  static const Color yellow    = Color(0xFFEAB308);
+  static const Color emerald   = Color(0xFF10B981);
 
-  // Backward-compat aliases (screens reference these old names)
-  // Must be defined AFTER the constants above (Dart init order)
-  // ignore: constant_identifier_names
+  // Backward-compat aliases
   static const Color fuchsiaLight = pink;
-  // ignore: constant_identifier_names
   static const Color success = green;
-  // ignore: constant_identifier_names
   static const Color error = red;
 
   // ── Neutral / Surface ───────────────────────────────────────
   static const Color black       = Color(0xFF000000);
-  static const Color surfaceDark = Color(0xFF0F172A); // slate-900
-  static const Color surface800  = Color(0xFF1E293B); // slate-800 (card bg)
-  static const Color surface700  = Color(0xFF334155); // slate-700 (stat boxes)
-  static const Color surface600  = Color(0xFF475569); // slate-600 (borders)
+  static const Color surfaceDark = Color(0xFF0F172A);
+  static const Color surface800  = Color(0xFF1E293B);
+  static const Color surface700  = Color(0xFF334155);
+  static const Color surface600  = Color(0xFF475569);
+  static const Color surface500  = Color(0xFF64748B);
 
   static const Color textPrimary   = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFF94A3B8); // slate-400
-  static const Color textMuted     = Color(0xFF64748B); // slate-500
-  static const Color textDisabled  = Color(0xFF475569); // slate-600
+  static const Color textSecondary = Color(0xFF94A3B8);
+  static const Color textMuted     = Color(0xFF64748B);
+  static const Color textDisabled  = Color(0xFF475569);
 
-  // ── Glass-morphism (matching web .glass) ────────────────────
-  // Web: background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
-  //      border: 1px solid rgba(192,38,211,0.2);
-  static const Color  glassBg       = Color(0x4D000000); // black 30%
-  static const Color  glassBorder   = Color(0x33C026D3); // fuchsia 20%
-  static const Color  cardBg        = Color(0x66000000); // black 40% (.card)
-  static const Color  inputBg       = Color(0x99000000); // black 60% (.input-field)
+  // ── Glass-morphism ──────────────────────────────────────────
+  static const Color  glassBg       = Color(0x4D000000);
+  static const Color  glassBorder   = Color(0x33C026D3);
+  static const Color  cardBg        = Color(0x66000000);
+  static const Color  inputBg       = Color(0x99000000);
   static const double glassBlur     = 10.0;
-  static const double cardBlur      = 4.0;  // backdrop-blur-sm
-  static const double borderRadius  = 12.0; // rounded-xl (web)
-  static const double inputRadius   = 8.0;  // rounded-lg (web)
+  static const double cardBlur      = 4.0;
+  static const double borderRadius  = 12.0;
+  static const double inputRadius   = 8.0;
+  static const double squircleLarge = 32.0;
+  static const double squircleXl    = 40.0;
 
   // ── Gradients ───────────────────────────────────────────────
   static const LinearGradient bgGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [black, darkPurple, black],
+    colors: [oledBlack, darkPurple, oledBlack],
     stops: [0.0, 0.5, 1.0],
   );
+
+  static BoxDecoration get etherealGlass {
+    return BoxDecoration(
+      gradient: RadialGradient(
+        center: const Alignment(-0.3, -0.5),
+        radius: 1.8,
+        colors: [
+          const Color(0xFF2D1B69).withValues(alpha: 0.4),
+          const Color(0xFF0A0A1A).withValues(alpha: 0.6),
+          oledBlack,
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ),
+    );
+  }
+
+  /// Double-Bezel outer shell — a padded enclosure with large squircle radius
+  static BoxDecoration doubleBezelOuter({
+    Color borderColor = const Color(0x1AFFFFFF),
+    double radius = 32,
+  }) {
+    return BoxDecoration(
+      color: const Color(0x0AFFFFFF),
+      borderRadius: BorderRadius.circular(radius),
+      border: Border.all(color: borderColor, width: 0.5),
+    );
+  }
+
+  /// Double-Bezel inner core — sits inside the shell with smaller radius
+  static BoxDecoration doubleBezelInner({
+    Color bg = const Color(0xFF0A0A0F),
+    Color? borderColor,
+    double radius = 28,
+  }) {
+    return BoxDecoration(
+      color: bg,
+      borderRadius: BorderRadius.circular(radius),
+      border: Border.all(color: borderColor ?? const Color(0x0DFFFFFF), width: 0.5),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x08000000),
+          blurRadius: 24,
+          offset: Offset(0, 8),
+        ),
+      ],
+    );
+  }
 
   static const LinearGradient textGradient = LinearGradient(
     colors: [fuchsia, pink],

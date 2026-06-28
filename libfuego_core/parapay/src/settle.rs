@@ -1,16 +1,14 @@
-use crate::config::{AccrualConfig, BOOST_BURN_BPS};
+use crate::config::AccrualConfig;
 use crate::session::{StreamSession};
 use crate::splits::AccruedAmounts;
 
 /// Final payout from a settled ParaPay session.
-/// burn_amount is the para destroyed via boost redirect (10% of redirect).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Payout {
     pub stream_id: [u8; 32],
     pub artist_amount: u128,
     pub listener_amount: u128,
     pub curator_amount: u128,
-    pub burn_amount: u128,
     pub total_emission: u128,
     pub forfeited: bool,
 }
@@ -28,7 +26,6 @@ pub fn forfeit(session: &StreamSession) -> Payout {
         artist_amount: 0,
         listener_amount: 0,
         curator_amount: 0,
-        burn_amount: 0,
         total_emission: 0,
         forfeited: true,
     }
@@ -54,16 +51,14 @@ fn compute_payout(session: &StreamSession, cfg: &AccrualConfig, forfeited: bool)
         (0, listener_pending)
     };
 
-    // Boost redirect: listener forgoes share to artist, 10% burned
+    // Boost redirect: listener forgoes share to artist
     let boost_redirect = if cfg.max_boost_presses > 0 {
         listener_after_curator * session.boost_presses as u128 / cfg.max_boost_presses as u128
     } else {
         0
     };
-    let boost_burn = boost_redirect * BOOST_BURN_BPS as u128 / 10000;
-    let boost_to_artist = boost_redirect - boost_burn;
     let listener_final = listener_after_curator - boost_redirect;
-    let artist_after_boost = artist_pending + boost_to_artist;
+    let artist_after_boost = artist_pending + boost_redirect;
 
     // Curator slice from artist side
     let (curator_total, artist_final) = if session.curator_present {
@@ -78,7 +73,6 @@ fn compute_payout(session: &StreamSession, cfg: &AccrualConfig, forfeited: bool)
         artist_amount: artist_final,
         listener_amount: listener_final,
         curator_amount: curator_total,
-        burn_amount: boost_burn,
         total_emission,
         forfeited: false,
     }
@@ -101,7 +95,7 @@ mod tests {
         }
 
         let payout = finalize(&s, &cfg);
-        let sum = payout.artist_amount + payout.listener_amount + payout.curator_amount + payout.burn_amount;
+        let sum = payout.artist_amount + payout.listener_amount + payout.curator_amount;
         assert_eq!(sum, payout.total_emission);
         assert!(!payout.forfeited);
         assert_eq!(payout.curator_amount, 0);
@@ -120,7 +114,7 @@ mod tests {
         }
 
         let payout = finalize(&s, &cfg);
-        let sum = payout.artist_amount + payout.listener_amount + payout.curator_amount + payout.burn_amount;
+        let sum = payout.artist_amount + payout.listener_amount + payout.curator_amount;
         assert_eq!(sum, payout.total_emission);
         assert!(payout.curator_amount > 0);
     }
@@ -153,7 +147,7 @@ mod tests {
         let payout = finalize(&s, &cfg);
         // From spec: 84 PARA total, artist ~46.99, curator ~37.01, listener 0 after 5 boosts
         assert!(payout.total_emission > 0);
-        let sum = payout.artist_amount + payout.listener_amount + payout.curator_amount + payout.burn_amount;
+        let sum = payout.artist_amount + payout.listener_amount + payout.curator_amount;
         assert_eq!(sum, payout.total_emission);
     }
 

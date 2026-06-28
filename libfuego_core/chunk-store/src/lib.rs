@@ -29,6 +29,7 @@ impl From<std::io::Error> for StoreError {
 
 pub struct ChunkStore {
     conn: Arc<Mutex<Connection>>,
+    #[allow(dead_code)]
     storage_path: PathBuf,
     max_size_bytes: u64,
 }
@@ -64,7 +65,7 @@ impl ChunkStore {
             Quality::Lofi => b"lofi",
         });
         let hash = hasher.finalize();
-        let hash_str = hex::encode(&hash);
+        let hash_str = hex::encode(hash);
 
         {
             let conn = self.conn.lock().unwrap();
@@ -117,7 +118,7 @@ impl ChunkStore {
     }
 
     pub fn get_chunk_by_original_hash(&self, original_hash_str: &str, quality: Quality) -> Result<Vec<u8>, StoreError> {
-        use sha2::{Sha256, Digest};
+        use sha2::Digest;
         let original_hash = hex::decode(original_hash_str).map_err(|_| StoreError::ChunkNotFound)?;
         
         let mut h = sha2::Sha256::new();

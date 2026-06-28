@@ -27,7 +27,7 @@ class _StakingScreenState extends ConsumerState<StakingScreen> {
   Future<void> _stakeSingle() async {
     final trackId = _trackIdController.text.trim();
     final albumId = _albumIdController.text.trim();
-    final amountText = _amountController.text.trim;
+    final amountText = _amountController.text.trim();
 
     if (trackId.isEmpty || albumId.isEmpty || amountText.isEmpty) return;
 
@@ -45,7 +45,7 @@ class _StakingScreenState extends ConsumerState<StakingScreen> {
 
   Future<void> _stakeAlbum() async {
     final albumId = _albumIdController.text.trim();
-    final amountText = _amountController.text.trim;
+    final amountText = _amountController.text.trim();
 
     if (albumId.isEmpty || amountText.isEmpty) return;
 

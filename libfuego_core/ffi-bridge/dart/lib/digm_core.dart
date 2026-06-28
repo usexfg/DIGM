@@ -89,9 +89,6 @@ class DigmCore {
     return false;
   }
 
-  int get_total_para_burned() {
-    return 0;
-  }
 
   // --- Node (ASYNC - real API calls) ---
 

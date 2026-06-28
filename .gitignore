@@ -167,6 +167,8 @@ jspm_packages/
 
 # IDE files
 .vscode/
+!.vscode/tasks.json
+!.vscode/launch.json
 .idea/
 *.swp
 *.swo
@@ -201,4 +203,10 @@ private/
 docker-compose.override.yml
 
 # External repositories
-/fuego-node/ 
+/fuego-node/
+
+# Git worktrees (Superpowers convention)
+.worktrees/
+
+# Superpowers brainstorm artifacts (visual companion mockups)
+.superpowers/

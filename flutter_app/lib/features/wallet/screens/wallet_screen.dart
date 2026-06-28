@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/ffi/digm_core.dart';
 import '../../../core/theme/digm_theme.dart';
 import 'recovery_screen.dart';
-import '../../features/artist/screens/artist_dashboard_screen.dart';
-import '../../features/curator/screens/curator_dashboard_screen.dart';
-import '../../features/marketplace/screens/create_album_screen.dart';
+import '../../artist/screens/artist_dashboard_screen.dart';
+import '../../curator/screens/curator_dashboard_screen.dart';
+import '../../marketplace/screens/create_album_screen.dart';
 import '../../../core/widgets/access_locked_screen.dart';
 
 final nodeModeProvider = StateProvider<String>((ref) => 'Client');
@@ -30,8 +31,6 @@ class WalletScreen extends ConsumerWidget {
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -542,7 +541,7 @@ class _StudioButton extends StatelessWidget {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white.withOpacity(0.1),
+        backgroundColor: Colors.white.withValues(alpha: 0.1),
         foregroundColor: DigmTheme.textPrimary,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(

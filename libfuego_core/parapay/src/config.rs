@@ -20,8 +20,6 @@ pub struct AccrualConfig {
 /// Total para supply in atomic units.
 pub const PARA_TOTAL_SUPPLY: u128 = 1_000_000_000_000_000_000_000_000_000;
 pub const PARA_DECIMALS: u8 = 27;
-/// Fraction of boost redirect that is burned (10% = 1000 bps).
-pub const BOOST_BURN_BPS: u32 = 1000;
 
 impl Default for AccrualConfig {
     fn default() -> Self {

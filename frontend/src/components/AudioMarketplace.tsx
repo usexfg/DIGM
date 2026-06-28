@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PremiumAccess from './PremiumAccess';
 import { GENRES_WITH_ALL } from '../constants/genres';
 import { api } from '../utils/api';
+import { usePlayer } from '../context/AudioContext';
 
 interface Track {
   id: string;
@@ -18,7 +19,6 @@ interface Track {
   sales: number;
   description: string;
   uploadDate: string;
-  previewUrl?: string;
   serviceType: 'album-only' | 'streaming-enabled';
   streamingEnabled: boolean;
   paraEarnings: number;
@@ -27,6 +27,7 @@ interface Track {
 
 const AudioMarketplace: React.FC = () => {
   const { evmAddress, stellarAddress } = useWallet();
+  const { playTrack, isPlaying, currentTrack } = usePlayer();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,10 +35,10 @@ const AudioMarketplace: React.FC = () => {
   const [selectedGenre, setSelectedGenre] = useState('');
   const [selectedServiceType, setSelectedServiceType] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [hasPremium, setHasPremium] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
   const [currentD, setCurrentD] = useState(0);
   const [currentI, setCurrentI] = useState(0);
   const [currentG, setCurrentG] = useState(0);
@@ -57,14 +58,12 @@ const AudioMarketplace: React.FC = () => {
     setHasPremium(premium);
   };
 
-  // Auto-rotate individual words at random intervals
   useEffect(() => {
     const D = ['Decentralized', 'Digital', 'Dynamic', 'Distributed', 'Direct', 'Diverse', 'Dual', 'Deeply', 'Dope', 'Driven'];
     const I = ['Independent', 'Innovative', 'Indie', 'Inspired', 'Interactive', 'Iconic', 'Inclusive', 'Infinite', 'Intuitive', 'Intense'];
     const G = ['Groove', 'Genre', 'Glorious', 'Gathering', 'Growth', 'Genius'];
     const M = ['Marketplace', 'Machine', 'Media', 'Music', 'Movement', 'Mining', 'Mission', 'Model', 'Matrix', 'Magic'];
 
-    // Safety check: reset any out-of-bounds indices
     if (currentD >= D.length) setCurrentD(0);
     if (currentI >= I.length) setCurrentI(0);
     if (currentG >= G.length) setCurrentG(0);
@@ -75,7 +74,6 @@ const AudioMarketplace: React.FC = () => {
       setTimeout(() => {
         setCurrent((prev: number) => {
           const nextIndex = (prev + 1) % maxLength;
-          // Safety check to ensure index is within bounds
           return nextIndex >= 0 && nextIndex < maxLength ? nextIndex : 0;
         });
         setTransitioning(false);
@@ -98,13 +96,10 @@ const AudioMarketplace: React.FC = () => {
 
   const fetchTracks = async () => {
     try {
-      // Load tracks from the catalog
       const response = await fetch('/assets/catalog/albums.json');
       const catalogData = await response.json();
       
-      // Transform catalog data to match the Track interface
       const tracksFromCatalog: Track[] = [];
-      
       catalogData.albums.forEach((album: any) => {
         album.tracks.forEach((track: any) => {
           if (track.isPreview) {
@@ -112,25 +107,24 @@ const AudioMarketplace: React.FC = () => {
               id: track.trackId,
               title: track.title,
               artist: album.artist,
-              artistAddress: '0x' + Math.random().toString(16).substr(2, 40), // Mock address
+              artistAddress: '0x' + Math.random().toString(16).substr(2, 40),
               duration: `${Math.floor(track.duration / 60)}:${(track.duration % 60).toString().padStart(2, '0')}`,
-              price: track.fileSize / 10000000, // Convert atomic units to XFG
+              price: track.fileSize / 10000000,
               genre: album.genre || 'Electronic',
               coverArt: (track.coverArt || album.coverArt),
               audioUrl: track.previewAudio,
-              sales: Math.floor(Math.random() * 500), // Mock sales data
+              sales: Math.floor(Math.random() * 500),
               description: album.description,
               uploadDate: album.releaseDate,
               serviceType: 'streaming-enabled' as const,
               streamingEnabled: true,
-              paraEarnings: Math.floor(Math.random() * 200), // Mock PARA earnings
-              totalStreamTime: Math.floor(Math.random() * 5000) // Mock stream time
+              paraEarnings: Math.floor(Math.random() * 200),
+              totalStreamTime: Math.floor(Math.random() * 5000)
             });
           }
         });
       });
       
-      // Merge in uploaded tracks from local mock API (published only)
       const uploaded = await api.tracks.getAllTracks();
       const uploadedAsMarketplace: Track[] = uploaded.map(u => ({
         id: u.id,
@@ -154,109 +148,23 @@ const AudioMarketplace: React.FC = () => {
       setTracks([...tracksFromCatalog, ...uploadedAsMarketplace]);
     } catch (error) {
       console.error('Failed to fetch tracks from catalog:', error);
-      
-      // Fallback to mock data if catalog fails
-      const mockTracks = [
-        {
-          id: '1',
-          title: 'Midnight City',
-          artist: 'Headphone Son',
-          artistAddress: '0x1234...5678',
-          duration: '4:32',
-          price: 0.08,
-          genre: 'Electronic',
-          coverArt: '/assets/covers/headphone_zen_midnightcity.jpg',
-          audioUrl: '/assets/audio/preview-singles/headphone-son-midnight-city.opus',
-          sales: 342,
-          description: 'A mesmerizing electronic journey through the neon-lit streets of a digital metropolis.',
-          uploadDate: '2018-01-08',
-          serviceType: 'streaming-enabled' as const,
-          streamingEnabled: true,
-          paraEarnings: 156.8,
-          totalStreamTime: 2840
-        },
-        {
-          id: '2',
-          title: 'Bitcoin',
-          artist: 'Headphone Son',
-          artistAddress: '0x8765...4321',
-          duration: '4:20',
-          price: 0.08,
-          genre: 'Electronic',
-          coverArt: '/assets/covers/headphone-son-bitcoin.jpg',
-          audioUrl: '/assets/audio/preview-singles/headphone-son-bitcoin.opus',
-          sales: 89,
-          description: 'Hot beats with fire energy',
-          uploadDate: '2019-01-08',
-          serviceType: 'streaming-enabled' as const,
-          streamingEnabled: true,
-          paraEarnings: 78.9,
-          totalStreamTime: 1200
-        },
-        {
-          id: '3',
-          title: 'The Arbinger',
-          artist: 'Headphone Son',
-          artistAddress: '0x9999...8888',
-          duration: '4:50',
-          price: 0.12,
-          genre: 'Electronic',
-          coverArt: '/assets/covers/headphone-son-the-arbinger.jpg',
-          audioUrl: '/assets/audio/preview-singles/headphone-son-the-arbinger.opus',
-          sales: 203,
-          description: 'Atmospheric electronic composition',
-          uploadDate: '2025-01-08',
-          serviceType: 'streaming-enabled' as const,
-          streamingEnabled: true,
-          paraEarnings: 92.5,
-          totalStreamTime: 1850
-        },
-        {
-          id: '3',
-          title: 'Pitchmont High',
-          artist: 'Headphone Son',
-          artistAddress: '0x9999...8888',
-          duration: '4:50',
-          price: 0.12,
-          genre: 'Electronic',
-          coverArt: '/assets/covers/headphone_zen-pitchmontcover.jpg',
-          audioUrl: '/assets/audio/preview-singles/headphone-son-the-arbinger.opus',
-          sales: 203,
-          description: 'Atmospheric electronic composition',
-          uploadDate: '2025-01-08',
-          serviceType: 'streaming-enabled' as const,
-          streamingEnabled: true,
-          paraEarnings: 92.5,
-          totalStreamTime: 1850
-        }
-      ];
-      
-      setTracks(mockTracks);
     }
   };
 
   const filterAndSortTracks = () => {
     let filtered = tracks;
-
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(track =>
         track.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         track.artist.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
-    // Filter by genre
     if (selectedGenre) {
       filtered = filtered.filter(track => track.genre === selectedGenre);
     }
-
-    // Filter by service type
     if (selectedServiceType) {
       filtered = filtered.filter(track => track.serviceType === selectedServiceType);
     }
-
-    // Sort tracks
     switch (sortBy) {
       case 'newest':
         filtered.sort((a, b) => new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime());
@@ -274,7 +182,6 @@ const AudioMarketplace: React.FC = () => {
         filtered.sort((a, b) => b.sales - a.sales);
         break;
     }
-
     setFilteredTracks(filtered);
   };
 
@@ -283,17 +190,11 @@ const AudioMarketplace: React.FC = () => {
       alert('Please connect your wallet to purchase tracks');
       return;
     }
-
     setIsPurchasing(true);
     try {
-      // Mock purchase since backend is not running
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
-      
-      // Simulate successful purchase
+      await new Promise(resolve => setTimeout(resolve, 2000));
       const mockTxHash = '0x' + Math.random().toString(16).substr(2, 64);
       alert(`Purchase successful! Transaction hash: ${mockTxHash}`);
-      
-      // Update local sales count
       setTracks(prevTracks => 
         prevTracks.map(t => 
           t.id === track.id ? { ...t, sales: t.sales + 1 } : t
@@ -308,16 +209,20 @@ const AudioMarketplace: React.FC = () => {
   };
 
   const handlePreview = (track: Track) => {
-    setSelectedTrack(track);
+    playTrack({
+      id: track.id,
+      title: track.title,
+      artist: track.artist,
+      url: track.audioUrl,
+      duration: 0, // Simplified for preview
+    }, 'preview');
   };
 
   const availableGenres = GENRES_WITH_ALL;
 
   return (
     <div className="space-y-8">
-      {/* Hero Section */}
       <div className="text-center space-y-4">
-        {/* Premium Status Banner */}
         {!hasPremium && (
           <div className="glass p-4 rounded-xl border border-fuchsia-500/40 bg-fuchsia-900/20 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-3">
@@ -393,8 +298,7 @@ const AudioMarketplace: React.FC = () => {
           Discover the future of music by streaming DIGM artist's album-preview tracks on the <span className="gradient-text-gold">Fuego L1</span> blockchain
         </p>
       </div>
-
-        {/* Search and Filters */}
+      
       <div className="glass p-6 space-y-6">
         <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1">
@@ -442,9 +346,8 @@ const AudioMarketplace: React.FC = () => {
             </select>
         </div>
       </div>
-
-      {/* Tracks Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-cols-4 gap-6">
         {filteredTracks.map(track => (
           <div key={track.id} className="group">
             <div
@@ -459,7 +362,6 @@ const AudioMarketplace: React.FC = () => {
                     <div className="text-6xl text-fuchsia-400/50">🎵</div>
                   )}
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300"></div>
-                  {/* Centered Play Button */}
                   <button
                     onClick={e => {
                       e.stopPropagation();
@@ -476,7 +378,6 @@ const AudioMarketplace: React.FC = () => {
                   </div>
                 </div>
               </div>
-
               <div className="space-y-3">
                 <div>
                   <h3 className="text-white font-semibold text-lg truncate group-hover:text-fuchsia-300 transition-colors">
@@ -488,8 +389,7 @@ const AudioMarketplace: React.FC = () => {
                   >
                     {track.artist}
                   </Link>
-            </div>
-
+                </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-400">{track.genre}</span>
                   <div className="flex items-center space-x-2">
@@ -500,8 +400,7 @@ const AudioMarketplace: React.FC = () => {
                     )}
                     <span className="text-fuchsia-400 font-medium">{track.sales} sales</span>
                   </div>
-              </div>
-              
+                </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-2xl font-bold gradient-text">{track.price} XF₲</span>
@@ -513,7 +412,7 @@ const AudioMarketplace: React.FC = () => {
                           className="w-3 h-3 rounded-full"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
-                          }}
+                          } }
                         />
                         <span>+{track.paraEarnings.toFixed(1)} PARA earned</span>
                       </div>
@@ -543,7 +442,6 @@ const AudioMarketplace: React.FC = () => {
                           if (!hasPremium) {
                             setShowPremiumModal(true);
                           } else {
-                            // Handle streaming for premium users
                             alert('🎧 Starting stream... Earn PARA while listening!');
                           }
                         }}
@@ -564,7 +462,6 @@ const AudioMarketplace: React.FC = () => {
           </div>
         ))}
       </div>
-
       {filteredTracks.length === 0 && (
         <div className="card text-center py-16">
           <div className="text-6xl mb-4">🎵</div>
@@ -572,8 +469,6 @@ const AudioMarketplace: React.FC = () => {
           <p className="text-gray-400">Try adjusting your search or filters</p>
         </div>
       )}
-
-      {/* Track Preview Modal */}
       {selectedTrack && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="glass rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -586,7 +481,6 @@ const AudioMarketplace: React.FC = () => {
                 ✕
               </button>
             </div>
-
             <div className="space-y-6">
               <div className="w-full h-80 bg-gradient-to-br from-fuchsia-900/50 to-purple-900/50 rounded-xl flex items-center justify-center overflow-hidden">
                 {selectedTrack.coverArt ? (
@@ -595,18 +489,11 @@ const AudioMarketplace: React.FC = () => {
                   <div className="text-8xl text-fuchsia-400/50">🎵</div>
                 )}
               </div>
-
-              {/* Audio Player */}
-              {selectedTrack.audioUrl && selectedTrack.audioUrl !== '#' && (
-                <AudioPlayer audioUrl={selectedTrack.audioUrl} />
-              )}
-
               <div className="space-y-4">
                 <div>
                   <h4 className="text-white font-bold text-2xl">{selectedTrack.title}</h4>
                   <p className="text-fuchsia-300 text-lg">{selectedTrack.artist}</p>
                 </div>
-
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="glass p-4 rounded-xl">
                     <span className="text-gray-400">Duration</span>
@@ -619,148 +506,46 @@ const AudioMarketplace: React.FC = () => {
                   <div className="glass p-4 rounded-xl">
                     <span className="text-gray-400">Price</span>
                     <p className="gradient-text font-bold text-xl">{selectedTrack.price} XFG</p>
-                </div>
+                  </div>
                   <div className="glass p-4 rounded-xl">
                     <span className="text-gray-400">Sales</span>
                     <p className="text-white font-medium">{selectedTrack.sales}</p>
+                  </div>
                 </div>
-              </div>
-
-              {selectedTrack.description && (
+                {selectedTrack.description && (
                   <div className="glass p-4 rounded-xl">
                     <span className="text-gray-400 text-sm">Description</span>
                     <p className="text-white text-sm mt-2">{selectedTrack.description}</p>
-                </div>
-              )}
-
+                  </div>
+                )}
                 <div className="flex space-x-4 pt-4">
-                <button
-                  onClick={() => handlePurchase(selectedTrack)}
-                  disabled={isPurchasing}
-                  className="btn-primary flex-1 disabled:opacity-50"
-                >
+                  <button
+                    onClick={() => handlePurchase(selectedTrack)}
+                    disabled={isPurchasing}
+                    className="btn-primary flex-1 disabled:opacity-50"
+                  >
                     {isPurchasing ? 'Processing...' : `Purchase for ${selectedTrack.price} XFG`}
-                </button>
-                <button
-                  onClick={() => setSelectedTrack(null)}
-                  className="btn-secondary flex-1"
-                >
-                  Close
-                </button>
+                  </button>
+                  <button
+                    onClick={() => setSelectedTrack(null)}
+                    className="btn-secondary flex-1"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Premium Access Modal */}
       {showPremiumModal && (
         <PremiumAccess 
           onClose={() => setShowPremiumModal(false)} 
           isModal={true} 
         />
       )}
-
-      {/* Artist & Listener Economy Notice */}
-      <div className="glass p-8">
-        <h3 className="gradient-text text-2xl font-bold mb-6 text-center">Artist & Listener-First Economy</h3>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="text-center space-y-2">
-            <div className="text-3xl">₲</div>
-            <h4 className="font-semibold text-white">100% Artist Revenue</h4>
-            <p className="text-sm text-gray-300">Artists keep every single XFG from their sales. No 60/40 split, no $0.000001 per stream- One. Hundred. Percent. </p>
-          </div>
-          <div className="text-center space-y-2">
-            <div className="text-3xl">🎧</div>
-                    <h4 className="font-semibold text-white">Artist & Listener Rewards</h4>
-        <p className="text-sm text-gray-300">Earn <img src="/assets/para.png" alt="PARA" className="inline-block w-4 h-4 rounded-full" /> Para tokens for streaming.  The artist who's music you are streaming earns Para-  and you, the listener, also earn Para for time spent listening.</p>
-          </div>
-          <div className="text-center space-y-2">
-            <div className="text-3xl">⇆</div>
-            <h4 className="font-semibold text-white">Direct P2P Payments</h4>
-            <p className="text-sm text-gray-300">Payments go directly from buyer-2-artist. Allowing users to inherit all monetary features of XF₲- like fungibility, purchasing power, & security of Fuego L1 network.</p>
-          </div>
-
-          <div className="text-center space-y-2">
-            <div className="text-3xl">䷍</div>
-            <h4 className="font-semibold text-white">True Ownership</h4>
-            <p className="text-sm text-gray-300">Artists fully control their music & pricing, while fans OWN files (or physicals delivery possible via FuegoL1's private msgs) of all audio they purchase, forever.</p>
-          </div>
-          <div className="text-center space-y-2">
-            <div className="text-3xl">⛨</div>
-            <h4 className="font-semibold text-white">Purchasing Power + Privacy</h4>
-            <p className="text-sm text-gray-300">Time to upgrade your money. Preserve the value of your hard earned money using XF₲ (or HEAT). Plus keep control over your data privacy, instead of it being tracked & sold behind your back (cough Spotify, Apple, Google, Meta, Amazon, etc).</p>
-          </div>
-          <div className="text-center space-y-2">
-            <div className="text-3xl">🜂</div>
-            <h4 className="font-semibold gradient-text-gold">Fire Powered</h4>
-            <p className="text-sm text-gray-300">Built on the hottest L1 privacy blockchain in town, Fuego's L1 network provides the public framework needed to achieve PRIVATE commerce for a worldwide community of artists, musicians, developers, and music lovers alike.</p>
-          </div>
- 
-        </div>
-      </div>
     </div>
   );
 };
 
-function AudioPlayer({ audioUrl }: { audioUrl: string }) {
-  const audioRef = React.useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-
-  const handlePlayPause = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch((e) => {
-        setError('Unable to play audio.');
-      });
-    }
-  };
-
-  React.useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const onPlay = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
-    const onEnded = () => setIsPlaying(false);
-    const onError = () => setError('Unable to play audio.');
-    audio.addEventListener('play', onPlay);
-    audio.addEventListener('pause', onPause);
-    audio.addEventListener('ended', onEnded);
-    audio.addEventListener('error', onError);
-    return () => {
-      audio.removeEventListener('play', onPlay);
-      audio.removeEventListener('pause', onPause);
-      audio.removeEventListener('ended', onEnded);
-      audio.removeEventListener('error', onError);
-    };
-  }, []);
-
-  React.useEffect(() => {
-    setError(null);
-    setIsPlaying(false);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, [audioUrl]);
-
-  return (
-    <div className="flex flex-col items-center space-y-2">
-      <audio ref={audioRef} src={audioUrl} preload="none" />
-      <button
-        onClick={handlePlayPause}
-        className="btn-primary px-4 py-2 rounded-full text-sm"
-        type="button"
-      >
-        {isPlaying ? 'Pause' : 'Play'} Preview
-      </button>
-      {error && <div className="text-red-400 text-xs mt-1">{error}</div>}
-    </div>
-  );
-}
-
-export default AudioMarketplace; 
+export default AudioMarketplace;

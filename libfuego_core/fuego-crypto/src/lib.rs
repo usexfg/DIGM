@@ -1,12 +1,10 @@
-use ed25519_dalek::{SigningKey, VerifyingKey, Signature, Signer};
-use curve25519_dalek::scalar::Scalar;
+use ed25519_dalek::{SigningKey, Signature, Signer};
 use sha2::{Sha256, Digest};
 use rand::{rngs::OsRng, RngCore};
 use bip39::{Mnemonic, Language};
 use bs58::encode;
 use zeroize::Zeroize;
 use serde::{Serialize, Deserialize};
-use std::fmt;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Zeroize)]
 #[zeroize(drop)]
@@ -30,7 +28,7 @@ impl Keypair {
     pub fn derive_from_seed(seed: &[u8], index: u32) -> Self {
         let mut hasher = Sha256::new();
         hasher.update(seed);
-        hasher.update(&index.to_le_bytes());
+        hasher.update(index.to_le_bytes());
         let result = hasher.finalize();
         
         let mut secret = [0u8; 32];
@@ -61,7 +59,7 @@ pub struct PublicKey(pub [u8; 32]);
 impl PublicKey {
     pub fn to_address(&self) -> Address {
         let mut hasher = Sha256::new();
-        hasher.update(&self.0);
+        hasher.update(self.0);
         let hash = hasher.finalize();
         
         Address(encode(hash.as_slice()).into_string())

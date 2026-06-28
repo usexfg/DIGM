@@ -327,10 +327,6 @@ impl DigmCore {
         app.get_unspent_digm(&Address::from(address))
     }
 
-    pub fn get_total_para_burned(&self) -> u128 {
-        let app = self.app.lock().unwrap();
-        app.get_total_para_burned()
-    }
 
     pub fn vote_for_single(&self, address: String, track_id: String) -> Result<(), String> {
         let app = self.app.lock().unwrap();

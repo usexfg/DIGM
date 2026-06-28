@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIGM — Curator Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;600;700&family=SpaceGrotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#050505;
+  color:#fff;
+  font-family:Inter,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* ── Ethereal Glass background ── */
+.bg-mesh{
+  position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(ellipse 120% 80% at 20% 10%,rgba(45,27,105,0.3),transparent 70%),
+             radial-gradient(ellipse 80% 60% at 80% 90%,rgba(192,38,211,0.08),transparent 60%),
+             radial-gradient(ellipse 50% 50% at 50% 50%,rgba(10,10,26,0.5),transparent),
+             #050505;
+}
+/* ── Noise overlay ── */
+.bg-noise{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:0.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+  background-size:256px 256px;
+}
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(192,38,211,0.3);border-radius:4px}
+
+/* ── Layout ── */
+.page{max-width:860px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1}
+
+/* ── Eyebrow badge ── */
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:999px;
+  background:rgba(192,38,211,0.12);border:0.5px solid rgba(192,38,211,0.25);
+  font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:3px;
+  color:#EC4899;font-weight:600;text-transform:uppercase;
+}
+
+/* ── Double-Bezel ── */
+.double-bezel{
+  background:rgba(255,255,255,0.04);
+  border-radius:28px;
+  border:0.5px solid rgba(255,255,255,0.1);
+  padding:4px;
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.double-bezel:hover{
+  box-shadow:0 0 40px rgba(192,38,211,0.06);
+}
+.double-bezel-inner{
+  background:#0A0A0F;
+  border-radius:24px;
+  border:0.5px solid rgba(255,255,255,0.05);
+  box-shadow:0 8px 24px rgba(0,0,0,0.03);
+  padding:24px;
+}
+
+/* ── Section accent bar ── */
+.section-title{
+  display:flex;align-items:center;gap:10px;
+  font-family:SpaceGrotesk,sans-serif;font-size:13px;font-weight:600;
+  color:#94A3B8;letter-spacing:1px;text-transform:uppercase;
+}
+.section-accent{
+  width:4px;height:20px;border-radius:2px;
+  background:linear-gradient(180deg,#C026D3,#EC4899);
+}
+
+/* ── Split bar ── */
+.split-row{
+  display:flex;align-items:center;gap:10px;
+}
+.split-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.split-label{font-size:13px;color:#94A3B8;flex:1}
+.split-pct{font-family:SpaceGrotesk,sans-serif;font-size:13px;font-weight:600;color:#fff}
+.split-bar{
+  width:80px;height:4px;border-radius:4px;overflow:hidden;
+  background:rgba(255,255,255,0.06);
+}
+.split-fill{
+  height:100%;border-radius:4px;transition:width .6s ease;
+}
+
+/* ── Stat card ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:600px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-card{
+  padding:16px;text-align:center;border-radius:16px;
+  background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.04);
+}
+.stat-icon{font-size:20px;margin-bottom:10px;opacity:.7}
+.stat-value{font-family:SpaceGrotesk,sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1}
+.stat-label{font-size:12px;color:#64748B;margin-top:4px}
+
+/* ── Track row ── */
+.track{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border-radius:12px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.03);
+}
+.track-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.track-info{flex:1;min-width:0}
+.track-title{font-size:14px;font-weight:500;color:#fff}
+.track-artist{font-size:12px;color:#64748B}
+.track-meta{font-size:12px;color:#64748B;flex-shrink:0}
+
+/* ── Badge types ── */
+.badge-fuchsia{
+  display:inline-flex;padding:4px 10px;border-radius:999px;
+  background:rgba(192,38,211,0.12);border:0.5px solid rgba(192,38,211,0.2);
+  font-family:Orbitron,sans-serif;font-size:8px;letter-spacing:1.5px;color:#EC4899;
+}
+.badge-emerald{
+  display:inline-flex;padding:4px 10px;border-radius:999px;
+  background:rgba(16,185,129,0.12);border:0.5px solid rgba(16,185,129,0.2);
+  font-family:Orbitron,sans-serif;font-size:8px;letter-spacing:1.5px;color:#10B981;
+}
+
+/* ── Button-in-Button ── */
+.btn-magnetic{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:0 24px;height:56px;border:none;border-radius:999px;
+  background:#C026D3;color:#fff;cursor:pointer;
+  font-family:Orbitron,sans-serif;font-size:12px;letter-spacing:1px;font-weight:600;
+  transition:transform .2s ease,box-shadow .2s ease;white-space:nowrap;
+}
+.btn-magnetic:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(192,38,211,0.3)}
+.btn-magnetic .btn-icon{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.btn-magnetic.compact{height:48px;padding:0 20px}
+.btn-magnetic.compact .btn-icon{width:28px;height:28px;font-size:14px}
+.btn-emerald{background:#10B981}
+.btn-emerald:hover{box-shadow:0 4px 20px rgba(16,185,129,0.3)}
+
+/* ── Input ── */
+.input-glass{
+  width:100%;padding:14px 16px;border-radius:14px;border:none;
+  background:rgba(255,255,255,0.03);color:#fff;
+  font-family:Inter,sans-serif;font-size:14px;outline:none;
+  transition:background .2s;
+}
+.input-glass:focus{background:rgba(255,255,255,0.06)}
+.input-glass::placeholder{color:rgba(100,116,139,0.5)}
+
+/* ── Progress bar ── */
+.progress{height:6px;border-radius:6px;background:rgba(255,255,255,0.06);overflow:hidden}
+.progress-fill{height:100%;border-radius:6px;transition:width .5s ease}
+
+/* ── Lock info box ── */
+.lock-note{
+  display:flex;align-items:center;gap:8px;padding:12px;
+  border-radius:14px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.04);
+}
+.lock-note-text{font-size:11px;color:#64748B;line-height:1.4;flex:1}
+
+/* ── Empty state ── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:32px;border-radius:12px;background:rgba(255,255,255,0.02);
+}
+.empty-state-icon{font-size:28px;opacity:.4}
+.empty-state-text{font-size:13px;color:#64748B}
+
+/* ── Segmented nav ── */
+.nav-tabs{
+  display:flex;gap:4px;margin-bottom:32px;
+  background:rgba(255,255,255,0.03);padding:4px;border-radius:16px;
+  border:0.5px solid rgba(255,255,255,0.06);
+}
+.nav-tab{
+  flex:1;padding:10px 20px;border:none;border-radius:12px;cursor:pointer;
+  font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:1.5px;
+  background:transparent;color:#64748B;transition:all .3s;text-align:center;
+}
+.nav-tab.active{background:rgba(192,38,211,0.15);color:#EC4899}
+
+/* ── Asymmetrical bento ── */
+.bento-pair{
+  display:flex;gap:16px;align-items:stretch;
+}
+@media(max-width:600px){.bento-pair{flex-direction:column}}
+.bento-3{flex:3}
+.bento-4{flex:4}
+
+/* ── Animation ── */
+.anim{opacity:0;transform:translateY(24px);animation:fadeSlide .8s cubic-bezier(0.32,0.72,0.0,1.0) forwards}
+.anim:nth-child(1){animation-delay:0s}
+.anim:nth-child(2){animation-delay:.12s}
+.anim:nth-child(3){animation-delay:.24s}
+.anim:nth-child(4){animation-delay:.36s}
+.anim:nth-child(5){animation-delay:.48s}
+.anim:nth-child(6){animation-delay:.60s}
+@keyframes fadeSlide{to{opacity:1;transform:translateY(0)}}
+
+/* ── Header ── */
+.profile-header{text-align:center}
+.avatar{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 12px;
+  background:linear-gradient(135deg,#C026D3,#9333EA);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;border:2px solid rgba(192,38,211,0.3);
+  box-shadow:0 0 30px rgba(192,38,211,0.15);
+}
+.verified-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:999px;
+  background:rgba(16,185,129,0.12);border:0.5px solid rgba(16,185,129,0.2);
+  font-family:Orbitron,sans-serif;font-size:9px;letter-spacing:1px;color:#10B981;
+}
+
+/* ── Playlist track ── */
+.playlist-track{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border-radius:12px;background:rgba(255,255,255,0.02);border:0.5px solid rgba(255,255,255,0.03);
+}
+.playlist-remove{
+  width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(255,255,255,0.04);color:#64748B;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:background .2s;
+}
+.playlist-remove:hover{background:rgba(239,68,68,0.2);color:#EF4444}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="bg-noise"></div>
+
+<div class="page">
+
+  <!-- ── Segmented Nav ── -->
+  <div class="nav-tabs anim">
+    <button class="nav-tab active">DASHBOARD</button>
+    <button class="nav-tab">PROFILE</button>
+    <button class="nav-tab">STATIONS</button>
+    <button class="nav-tab">ANALYTICS</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- CURATOR DASHBOARD -->
+  <!-- ════════════════════════════════════════════════ -->
+
+  <div class="anim" style="margin-bottom:40px">
+    <span class="badge">● CURATOR DASHBOARD</span>
+  </div>
+
+  <!-- Revenue Bento -->
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner">
+      <div class="section-title"><span class="section-accent"></span>Revenue Split</div>
+      <div style="margin-top:20px">
+        <span style="font-family:SpaceGrotesk,sans-serif;font-size:40px;font-weight:700;color:#fff;line-height:1">33.0M</span>
+        <div style="font-size:13px;color:#64748B;margin-top:4px">PARA earned</div>
+      </div>
+      <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">
+        <div class="split-row">
+          <div class="split-dot" style="background:#EC4899;box-shadow:0 0 6px rgba(236,72,153,.4)"></div>
+          <span class="split-label">Curator</span>
+          <span class="split-pct">33.0%</span>
+          <div class="split-bar"><div class="split-fill" style="width:33%;background:#EC4899"></div></div>
+        </div>
+        <div class="split-row">
+          <div class="split-dot" style="background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.4)"></div>
+          <span class="split-label">Artist Payout</span>
+          <span class="split-pct">33.5%</span>
+          <div class="split-bar"><div class="split-fill" style="width:33.5%;background:#10B981"></div></div>
+        </div>
+        <div class="split-row">
+          <div class="split-dot" style="background:#F97316;box-shadow:0 0 6px rgba(249,115,22,.4)"></div>
+          <span class="split-label">Listener Reward</span>
+          <span class="split-pct">33.5%</span>
+          <div class="split-bar"><div class="split-fill" style="width:33.5%;background:#F97316"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:28px"></div>
+
+  <!-- Stations & Controls (Asymmetrical Bento) -->
+  <div class="bento-pair anim">
+    <!-- Station Counter -->
+    <div class="bento-3">
+      <div class="double-bezel" style="height:100%">
+        <div class="double-bezel-inner" style="height:100%;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+            <span style="color:#EC4899;font-size:18px">📻</span>
+            <span style="font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:2px;color:#EC4899;font-weight:600">CURA STATIONS</span>
+          </div>
+          <div>
+            <span style="font-family:SpaceGrotesk,sans-serif;font-size:48px;font-weight:700;color:#fff;line-height:.9">2</span>
+            <div style="font-size:14px;color:#64748B;margin-top:2px">of 10 stations</div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="progress"><div class="progress-fill" style="width:20%;background:#C026D3"></div></div>
+          </div>
+          <div style="margin-top:16px;font-size:12px;color:#94A3B8">8 creation slots left</div>
+          <div style="margin-top:auto;padding-top:20px">
+            <button class="btn-magnetic" style="width:100%;justify-content:center">
+              Create Station
+              <span class="btn-icon">+</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Station Controls -->
+    <div class="bento-4">
+      <div class="double-bezel" style="height:100%">
+        <div class="double-bezel-inner" style="height:100%;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+            <span style="color:#fff;font-size:18px">🎵</span>
+            <span style="font-family:Orbitron,sans-serif;font-size:10px;letter-spacing:2px;color:#94A3B8;font-weight:600;flex:1">ACTIVE ROTATION</span>
+            <span class="badge-fuchsia">IMMUTABLE</span>
+          </div>
+          <div class="track">
+            <div class="track-icon" style="background:rgba(192,38,211,.1)"><span style="color:#EC4899;font-size:14px">♪</span></div>
+            <div class="track-info">
+              <div class="track-title">Deep Space Mix</div>
+              <div class="track-artist">Symmetry</div>
+            </div>
+            <span style="color:#64748B;font-size:14px">🔒</span>
+          </div>
+          <div style="height:8px"></div>
+          <div class="track">
+            <div class="track-icon" style="background:rgba(192,38,211,.1)"><span style="color:#EC4899;font-size:14px">♪</span></div>
+            <div class="track-info">
+              <div class="track-title">Neon Nights</div>
+              <div class="track-artist">CyberPulse</div>
+            </div>
+            <span style="color:#64748B;font-size:14px">🔒</span>
+          </div>
+          <div style="height:8px"></div>
+          <div class="track">
+            <div class="track-icon" style="background:rgba(255,255,255,.03)"><span style="color:#64748B;font-size:14px">🔒</span></div>
+            <div class="track-info">
+              <div class="track-title">Void Walker</div>
+              <div class="track-artist">Lumina</div>
+            </div>
+            <span style="color:#64748B;font-size:14px">🔒</span>
+          </div>
+          <div style="height:8px"></div>
+          <div class="track">
+            <div class="track-icon" style="background:rgba(255,255,255,.03)"><span style="color:#64748B;font-size:14px">🔒</span></div>
+            <div class="track-info">
+              <div class="track-title">Quantum Echo</div>
+              <div class="track-artist">Nova</div>
+            </div>
+            <span style="color:#64748B;font-size:14px">🔒</span>
+          </div>
+          <div style="margin-top:16px">
+            <div class="lock-note">
+              <span style="color:#64748B;font-size:14px">🔒</span>
+              <span class="lock-note-text">Station rotation is locked after creation. Choose wisely.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:28px"></div>
+
+  <!-- Performance Bento -->
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner">
+      <div class="section-title"><span class="section-accent"></span>Station Performance</div>
+      <div style="margin-top:24px">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="color:#EC4899">📡</div>
+            <div class="stat-value">412</div>
+            <div class="stat-label">Live Listeners</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="color:#EC4899">⏱</div>
+            <div class="stat-value">84%</div>
+            <div class="stat-label">Avg. Retention</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="color:#EC4899">⭐</div>
+            <div class="stat-value">4</div>
+            <div class="stat-label">CURA Level</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="color:#EC4899">🌐</div>
+            <div class="stat-value">Global</div>
+            <div class="stat-label">Reach</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:28px"></div>
+
+  <!-- Profile Editor -->
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner">
+      <div class="section-title"><span class="section-accent"></span>Public Profile</div>
+      <div style="margin-top:24px">
+        <textarea class="input-glass" rows="3" placeholder="Describe your station vibe..."></textarea>
+      </div>
+      <div style="margin-top:16px;display:flex;justify-content:flex-end">
+        <button class="btn-magnetic compact">
+          Save Changes
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!-- CURATOR PROFILE (separated by large gap) -->
+  <!-- ════════════════════════════════════════════════ -->
+
+  <div style="height:64px;border-top:0.5px solid rgba(255,255,255,0.06);padding-top:64px;margin-bottom:40px">
+    <span class="badge">● CURATOR PROFILE</span>
+  </div>
+
+  <!-- Profile Header -->
+  <div class="anim" style="text-align:center;margin-bottom:32px">
+    <div class="avatar">🎧</div>
+    <div style="font-family:SpaceGrotesk,sans-serif;font-size:24px;font-weight:700;color:#fff">DJ AURORA</div>
+    <div style="font-size:14px;color:#64748B;margin-top:4px">Curator · Electronic · Ambient</div>
+    <div style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+      <span class="verified-badge">✓ CURA VERIFIED</span>
+      <span style="font-size:12px;color:#94A3B8">0x1a2b...3c4d</span>
+    </div>
+  </div>
+
+  <!-- Station Vibe -->
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner" style="display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap">
+      <div>
+        <div style="font-family:SpaceGrotesk,sans-serif;font-size:13px;font-weight:600;color:#94A3B8;letter-spacing:1px">STATION VIBE</div>
+        <div style="font-size:20px;font-weight:600;color:#fff;margin-top:6px">Deep Space Radio</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px">Ambient electronic journeys through the void</div>
+      </div>
+      <div style="text-align:right">
+        <button class="btn-magnetic compact" style="font-size:10px">
+          Edit Vibe
+          <span class="btn-icon">✎</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:28px"></div>
+
+  <!-- Station Rotation (Immutable) -->
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="section-accent" style="background:linear-gradient(180deg,#C026D3,#EC4899)"></span>
+        <span class="section-title" style="flex:1">Station Rotation</span>
+        <span class="badge-fuchsia">LOCKED</span>
+      </div>
+      <div class="lock-note" style="margin-bottom:16px">
+        <span style="color:#64748B;font-size:14px">🔒</span>
+        <span class="lock-note-text">Immutable once created — tracks cannot be changed</span>
+      </div>
+      <div class="track">
+        <div class="track-icon" style="background:rgba(192,38,211,.1)"><span style="color:#64748B;font-size:14px">🔒</span></div>
+        <div class="track-info">
+          <div class="track-title">Void Walker</div>
+          <div class="track-artist">Symmetry</div>
+        </div>
+        <span class="track-meta">5:12</span>
+      </div>
+      <div style="height:8px"></div>
+      <div class="track">
+        <div class="track-icon" style="background:rgba(192,38,211,.1)"><span style="color:#64748B;font-size:14px">🔒</span></div>
+        <div class="track-info">
+          <div class="track-title">Cyber Drift</div>
+          <div class="track-artist">Neon Pulse</div>
+        </div>
+        <span class="track-meta">3:45</span>
+      </div>
+      <div style="height:8px"></div>
+      <div class="track">
+        <div class="track-icon" style="background:rgba(192,38,211,.1)"><span style="color:#64748B;font-size:14px">🔒</span></div>
+        <div class="track-info">
+          <div class="track-title">Quantum Echo</div>
+          <div class="track-artist">Lumina</div>
+        </div>
+        <span class="track-meta">4:20</span>
+      </div>
+      <div style="height:8px"></div>
+      <div class="track">
+        <div class="track-icon" style="background:rgba(192,38,211,.1)"><span style="color:#64748B;font-size:14px">🔒</span></div>
+        <div class="track-info">
+          <div class="track-title">Solar Flare</div>
+          <div class="track-artist">Nova</div>
+        </div>
+        <span class="track-meta">6:02</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:28px"></div>
+
+  <!-- Curator's Pick (Mutable) -->
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="section-accent" style="background:linear-gradient(180deg,#10B981,#16A34A)"></span>
+        <span class="section-title" style="flex:1">Curator's Pick</span>
+        <span class="badge-emerald">EDITABLE</span>
+      </div>
+      <div style="font-size:12px;color:#64748B;line-height:1.4;margin-bottom:20px">
+        Swap tracks anytime — this playlist reflects your current curation mood.
+      </div>
+      <!-- Playlist empty state (shown when no tracks) -->
+      <div class="empty-state" style="margin-bottom:16px">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-text">Your curator's pick is empty</div>
+      </div>
+      <!-- Add track row -->
+      <div style="display:flex;gap:12px">
+        <div style="flex:1">
+          <input class="input-glass" placeholder="Add a track..." style="height:48px">
+        </div>
+        <button class="btn-magnetic compact btn-emerald" style="flex-shrink:0">
+          Add
+          <span class="btn-icon">+</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer with track list showing populated state -->
+  <div style="height:48px"></div>
+  <div class="double-bezel anim">
+    <div class="double-bezel-inner">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span class="section-accent" style="background:linear-gradient(180deg,#10B981,#16A34A)"></span>
+        <span class="section-title" style="flex:1">Curator's Pick</span>
+        <span class="badge-emerald">EDITABLE</span>
+      </div>
+      <div style="font-size:12px;color:#64748B;line-height:1.4;margin-bottom:20px">
+        Swap tracks anytime — this playlist reflects your current curation mood.
+      </div>
+      <!-- Populated playlist -->
+      <div class="playlist-track">
+        <span style="color:#10B981;font-size:18px">▶</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;color:#fff">Midnight Signal — Kiasmos</div>
+        </div>
+        <button class="playlist-remove">✕</button>
+      </div>
+      <div style="height:8px"></div>
+      <div class="playlist-track">
+        <span style="color:#10B981;font-size:18px">▶</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;color:#fff">Sférot — Alfa Mist</div>
+        </div>
+        <button class="playlist-remove">✕</button>
+      </div>
+      <div style="height:8px"></div>
+      <div class="playlist-track">
+        <span style="color:#10B981;font-size:18px">▶</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;color:#fff">An Ending (Ascent) — Brian Eno</div>
+        </div>
+        <button class="playlist-remove">✕</button>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:12px">
+        <div style="flex:1">
+          <input class="input-glass" placeholder="Add a track..." style="height:48px" value="Agape — Kiasmos">
+        </div>
+        <button class="btn-magnetic compact btn-emerald" style="flex-shrink:0">
+          Add
+          <span class="btn-icon">+</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:48px;text-align:center;font-size:12px;color:#475569;margin-top:20px">
+    DIGM Preview · Curator UI · Ethereal Glass Theme
+  </div>
+
+</div>
+
+</body>
+</html>

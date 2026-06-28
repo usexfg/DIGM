@@ -30,8 +30,8 @@ class _CreateAlbumScreenState extends ConsumerState<CreateAlbumScreen> {
   Future<void> _publish() async {
     final albumId = _albumIdController.text.trim();
     final title = _titleController.text.trim();
-    final priceText = _priceController.text.trim;
-    final singlesText = _singlesController.text.trim;
+    final priceText = _priceController.text.trim();
+    final singlesText = _singlesController.text.trim();
 
     if (albumId.isEmpty || title.isEmpty || priceText.isEmpty) return;
 

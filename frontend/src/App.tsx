@@ -13,6 +13,8 @@ import ArtistPage from './components/ArtistPage';
 import AlbumPage from './components/AlbumPage';
 import PremiumAccess from './components/PremiumAccess';
 import { WalletProvider, useWallet } from './hooks/useWallet';
+import { AudioProvider } from './context/AudioContext';
+import PlayerBar from './components/PlayerBar';
 
 function AppContent() {
   const [hasDigmHosting, setHasDigmHosting] = useState(false);
@@ -222,34 +224,37 @@ function AppContent() {
           </nav>
 
           {/* Main Content */}
-          <main className="flex-1 p-2 md:p-8 md:ml-64 md:mt-16 overflow-y-auto min-h-[calc(100vh-4rem)]">
-            <div className="max-w-6xl mx-auto">
-              <Routes>
-                <Route path="/" element={<AudioMarketplace />} />
-                <Route path="/artist/:artistId" element={<ArtistPage />} />
-                <Route path="/album/:albumId" element={<AlbumPage />} />
-                <Route path="/artist/profile" element={<ArtistProfile />} />
-                <Route path="/artist/dashboard" element={<ArtistDashboard />} />
-                <Route path="/paradio" element={<Paradio />} />
-                <Route path="/bridge" element={<ParaBridge />} />
-                <Route path="/premium" element={<PremiumAccess />} />
-                <Route path="/hosting" element={<HostingPermissions />} />
-                <Route path="/economy" element={<EconomyOverview />} />
-                <Route path="/xfg" element={<XfgWallet />} />
-              </Routes>
+            <main className="flex-1 p-2 md:p-8 md:ml-64 md:mt-16 overflow-y-auto min-h-[calc(100vh-4rem)]">
+              <div className="max-w-6xl mx-auto">
+                <Routes>
+                  <Route path="/" element={<AudioMarketplace />} />
+                  <Route path="/artist/:artistId" element={<ArtistPage />} />
+                  <Route path="/album/:albumId" element={<AlbumPage />} />
+                  <Route path="/artist/profile" element={<ArtistProfile />} />
+                  <Route path="/artist/dashboard" element={<ArtistDashboard />} />
+                  <Route path="/paradio" element={<Paradio />} />
+                  <Route path="/bridge" element={<ParaBridge />} />
+                  <Route path="/premium" element={<PremiumAccess />} />
+                  <Route path="/hosting" element={<HostingPermissions />} />
+                  <Route path="/economy" element={<EconomyOverview />} />
+                  <Route path="/xfg" element={<XfgWallet />} />
+                </Routes>
+              </div>
+            </main>
+            <PlayerBar />
           </div>
-        </main>
         </div>
-      </div>
     );
   }
 
-  function App() {
-    return (
-      <WalletProvider>
+function App() {
+  return (
+    <WalletProvider>
+      <AudioProvider>
         <Router>
           <AppContent />
         </Router>
+      </AudioProvider>
     </WalletProvider>
   );
 }

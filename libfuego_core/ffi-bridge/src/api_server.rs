@@ -65,7 +65,6 @@ pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
         .route("/api/digm/digm/pool-stats", get(digm_pool_stats_route))
         .route("/api/digm/digm/singles-remaining", get(singles_remaining_route))
         .route("/api/digm/digm/unspent/:address", get(unspent_digm_route))
-        .route("/api/digm/digm/burned", get(para_burned_route))
         .route("/api/digm/stations-remaining/:address", get(stations_remaining_route))
         .layer(cors)
         .with_state(state);
@@ -474,13 +473,6 @@ async fn digm_pool_stats_route(State(state): State<ApiState>) -> Result<Json<ser
     let stats = core.digm_pool_stats();
     let value: serde_json::Value = serde_json::from_str(&stats).unwrap_or(serde_json::json!({}));
     Ok(Json(value))
-}
-
-
-async fn para_burned_route(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, StatusCode> {
-    let core = state.core.lock().unwrap();
-    let burned = core.get_total_para_burned();
-    Ok(Json(serde_json::json!({ "burned": burned })))
 }
 
 async fn unspent_digm_route(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<serde_json::Value>, StatusCode> {
