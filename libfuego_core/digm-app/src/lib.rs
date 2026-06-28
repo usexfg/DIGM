@@ -572,7 +572,11 @@ impl DigmApp {
         }).collect()
     }
 
-    pub const MAX_STATIONS: u64 = 10;
+    /// CURA = curation right. Each CURA held enables one station.
+    /// Earned through listener engagement on curator stations.
+    pub const CURA_PER_STATION: u64 = 1;
+    /// CURA earned per 1000 listener-seconds on a curator's station.
+    pub const CURA_PER_KLISTENER_SEC: u64 = 1;
 
     pub fn create_station(&self, curator: &Address, station_id: String, name: String, description: String, tracks: Vec<String>) -> Result<(), String> {
         let mut state = self.state.write().unwrap();
@@ -580,8 +584,12 @@ impl DigmApp {
             return Err("Station already exists".to_string());
         }
         let account = state.accounts.get_mut(curator).ok_or("Curator account not found")?;
-        if account.stations_created >= Self::MAX_STATIONS {
-            return Err(format!("CURA station limit reached (max {})", Self::MAX_STATIONS));
+        let unspent_cura = account.cura_balance.saturating_sub(account.stations_created);
+        if unspent_cura < Self::CURA_PER_STATION {
+            return Err(format!(
+                "Need {} CURA to create station. You have {} unspent ({} held, {} in use).",
+                Self::CURA_PER_STATION, unspent_cura, account.cura_balance, account.stations_created
+            ));
         }
         account.stations_created += 1;
         let now = std::time::SystemTime::now()
@@ -616,11 +624,39 @@ impl DigmApp {
 
     pub fn curator_stations_remaining(&self, curator: &Address) -> u64 {
         let state = self.state.read().unwrap();
-        let created = state.accounts.get(curator)
-            .map(|a| a.stations_created)
-            .unwrap_or(0);
-        Self::MAX_STATIONS.saturating_sub(created)
+        let acct = state.accounts.get(curator);
+        match acct {
+            Some(a) => a.cura_balance.saturating_sub(a.stations_created),
+            None => 0,
+        }
     }
+
+    /// Earn CURA through curation — called when listener plays from curator's station.
+    pub fn earn_cura(&self, curator: &Address, listener_seconds: u64) -> u64 {
+        let mut state = self.state.write().unwrap();
+        let acct = state.accounts.entry(curator.clone()).or_insert(UserAccount {
+            address: curator.clone(),
+            para_balance: 0,
+            vox_balance: 0,
+            cura_balance: 0,
+            digm_tokens_held: 0,
+            digm_tokens_consumed: 0,
+            digm_token_acquired_at: Vec::new(),
+            display_name: None,
+            wallet_age_epochs: 0,
+            stations_created: 0,
+            curator_playlist: Vec::new(),
+            curator_vibe: None,
+        });
+        // 1 CURA per 1000 listener-seconds (roughly 1 CURA per ~6 full tracks)
+        let earned = listener_seconds / 1000 * Self::CURA_PER_KLISTENER_SEC;
+        if earned > 0 {
+            acct.cura_balance += earned;
+        }
+        earned
+    }
+
+    /// Reward top curators with CURA at epoch close.
 
     pub fn update_curator_vibe(&self, curator: &Address, vibe: String) -> Result<(), String> {
         let mut state = self.state.write().unwrap();
@@ -716,6 +752,19 @@ impl DigmApp {
             println!("Album #1 hit! Rewards distributed for: {}", winning_album_id);
         }
         
+        // CURA epoch reward for top curator
+        {
+            let top_curator = state.accounts.iter()
+                .filter(|(_, a)| a.stations_created > 0)
+                .max_by_key(|(_, a)| a.stations_created)
+                .map(|(addr, _)| addr.clone());
+            if let Some(addr) = top_curator {
+                if let Some(acct) = state.accounts.get_mut(&addr) {
+                    acct.cura_balance += 1;
+                }
+            }
+        }
+
         // Increment all active account ages
         for account in state.accounts.values_mut() {
             if account.para_balance > 0 || account.vox_balance > 0 {

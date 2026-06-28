@@ -247,7 +247,8 @@ class DigmCore {
 
   // -- Stations & CURA (partially SYNC, partially fire-and-forget) --
 
-  static const int maxStations = 10;
+  /// CURA = curation right. Each CURA held = 1 station slot.
+  /// Earned through listener engagement on your stations.
 
   void create_station(String curator, String stationId, String name, String description, List<String> tracks) {
     if (!useMock) {
