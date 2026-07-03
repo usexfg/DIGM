@@ -40,8 +40,10 @@ impl Vault {
     }
 
     pub fn get_address(&self, index: u32) -> Address {
-        let kp = self.derive_keypair(index);
-        kp.public_key().to_address()
+        // CryptoNote-style: spend_key at index N, view_key at index N+1
+        let spend_kp = self.derive_keypair(index);
+        let view_kp = self.derive_keypair(index + 1);
+        spend_kp.public_key().to_address(&view_kp.public_key())
     }
 
     pub fn set_display_name(&mut self, name: String) {

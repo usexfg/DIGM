@@ -15,6 +15,7 @@ rand = "0.8"
 bs58 = "0.5"
 hex = "0.4"
 base58check = "0.1"
+sha3 = "0.10"
 bip39 = "2.0"
 zeroize = { version = "1.7", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }

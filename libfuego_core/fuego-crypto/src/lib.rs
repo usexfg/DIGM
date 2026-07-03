@@ -57,12 +57,19 @@ impl Keypair {
 pub struct PublicKey(pub [u8; 32]);
 
 impl PublicKey {
-    pub fn to_address(&self) -> Address {
-        let mut hasher = Sha256::new();
-        hasher.update(self.0);
-        let hash = hasher.finalize();
-        
-        Address(encode(hash.as_slice()).into_string())
+    /// Build a CryptoNote-style address with Fuego network prefix.
+    /// Format: [network_byte(25)] + [spend_pub(32)] + [view_pub(32)] + [keccak_checksum(4)]
+    pub fn to_address(&self, view_key: &PublicKey) -> Address {
+        use sha3::{Digest, Keccak256};
+        let mut raw = Vec::with_capacity(1 + 32 + 32 + 4);
+        raw.push(25u8);
+        raw.extend_from_slice(&self.0);
+        raw.extend_from_slice(&view_key.0);
+
+        let hash = Keccak256::digest(&raw);
+        raw.extend_from_slice(&hash[..4]);
+
+        Address(bs58::encode(&raw).into_string())
     }
 }
 
