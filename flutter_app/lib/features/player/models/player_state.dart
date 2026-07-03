@@ -13,6 +13,7 @@ class PlayerState {
   final RepeatMode repeatMode;
   final bool isShuffled;
   final PlaybackSource source;
+  final int boostPresses;
 
   const PlayerState({
     this.currentTrack,
@@ -24,6 +25,7 @@ class PlayerState {
     this.repeatMode = RepeatMode.none,
     this.isShuffled = false,
     this.source = PlaybackSource.paradio,
+    this.boostPresses = 0,
   });
 
   bool get isParadio => source == PlaybackSource.paradio;
@@ -47,6 +49,7 @@ class PlayerState {
     RepeatMode? repeatMode,
     bool? isShuffled,
     PlaybackSource? source,
+    int? boostPresses,
     bool clearTrack = false,
   }) {
     return PlayerState(
@@ -59,6 +62,7 @@ class PlayerState {
       repeatMode: repeatMode ?? this.repeatMode,
       isShuffled: isShuffled ?? this.isShuffled,
       source: source ?? this.source,
+      boostPresses: boostPresses ?? this.boostPresses,
     );
   }
 }

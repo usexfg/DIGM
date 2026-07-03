@@ -7,6 +7,7 @@ import 'recovery_screen.dart';
 import '../../artist/screens/artist_dashboard_screen.dart';
 import '../../curator/screens/curator_dashboard_screen.dart';
 import '../../marketplace/screens/create_album_screen.dart';
+import '../../marketplace/widgets/digm_pool_sheet.dart';
 import '../../../core/widgets/access_locked_screen.dart';
 
 final nodeModeProvider = StateProvider<String>((ref) => 'Client');
@@ -120,6 +121,8 @@ class WalletScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 _SectionHeader(title: 'DIGM Pools'),
+                const SizedBox(height: 12),
+                DigmPoolSheet(artistAddress: address),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,

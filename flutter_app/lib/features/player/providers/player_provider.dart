@@ -60,7 +60,11 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
     state = state.copyWith(isPlaying: true);
   }
 
-  int boost() => _audioPlayer.boost();
+  int boost() {
+    final presses = _audioPlayer.boost();
+    state = state.copyWith(boostPresses: presses);
+    return presses;
+  }
 
   void rewind10s() {
     // ParaPay allows 10-sec rewind only — no forward seek

@@ -6,6 +6,7 @@ import '../providers/player_provider.dart';
 import '../widgets/live_waveform.dart';
 import '../widgets/para_meter_bar.dart';
 import '../widgets/para_meter_ring.dart';
+import '../widgets/parapay_controls.dart';
 
 class ParadioScreen extends ConsumerStatefulWidget {
   const ParadioScreen({super.key});
@@ -228,7 +229,20 @@ class _ParadioScreenState extends ConsumerState<ParadioScreen> {
                 height: 48,
                 child: LiveWaveform(height: 48, barCount: 64),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+              // Position display (no scrubber during ParaPay)
+              ParaPayPositionDisplay(
+                position: state.position,
+                duration: state.duration,
+                isParadio: true,
+              ),
+              const SizedBox(height: 16),
+              // Boost meter
+              ParaPayBoostMeter(
+                pressesUsed: state.boostPresses,
+                onBoost: () => ref.read(playerProvider.notifier).boost(),
+              ),
+              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: ParaMeterBar(
