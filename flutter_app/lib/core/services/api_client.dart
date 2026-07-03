@@ -1,18 +1,17 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ApiClient {
   final String baseUrl;
-  final HttpClient _client;
+  final http.Client _client;
 
-  ApiClient({this.baseUrl = 'http://127.0.0.1:8889'}) : _client = HttpClient();
+  ApiClient({this.baseUrl = 'http://127.0.0.1:8889'}) : _client = http.Client();
 
   Future<dynamic> _get(String path) async {
     final url = Uri.parse('$baseUrl/api/digm/$path');
-    final request = await _client.getUrl(url);
-    final response = await request.close();
-    final body = await response.transform(utf8.decoder).join();
+    final response = await _client.get(url, headers: {'Accept': 'application/json'});
+    final body = response.body;
     return jsonDecode(body);
   }
 
@@ -20,12 +19,11 @@ class ApiClient {
 
   Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> body) async {
     final url = Uri.parse('$baseUrl/api/digm/$path');
-    final request = await _client.postUrl(url);
-    request.headers.contentType = ContentType.json;
-    request.write(jsonEncode(body));
-    final response = await request.close();
-    final responseBody = await response.transform(utf8.decoder).join();
-    return jsonDecode(responseBody) as Map<String, dynamic>;
+    final response = await _client.post(url,
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: jsonEncode(body),
+    );
+    return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
   Future<String> getAddress() async {
