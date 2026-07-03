@@ -56,6 +56,8 @@ class _ArtistDashboardContent extends ConsumerWidget {
               _buildHeader(earnings),
               const SizedBox(height: 32),
               _buildMetricGrid(),
+              const SizedBox(height: 24),
+              _buildCatalogueCounter(),
               const SizedBox(height: 32),
               Text(
                 'My Releases',
@@ -295,6 +297,55 @@ class _ArtistDashboardContent extends ConsumerWidget {
             letterSpacing: 1,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCatalogueCounter() {
+    final remaining = core.singles_remaining();
+    final posted = 10000 - remaining;
+    final pct = (posted / 10000.0).clamp(0.0, 1.0);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [DigmTheme.fuchsia.withValues(alpha: 0.08), Colors.transparent],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: DigmTheme.fuchsia.withValues(alpha: 0.15), width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('0P Singles Catalogue', style: GoogleFonts.spaceGrotesk(
+            fontSize: 14, fontWeight: FontWeight.w600, color: DigmTheme.fuchsia,
+          )),
+          const SizedBox(height: 4),
+          Text('${remaining} slots remaining of 10,000', style: const TextStyle(
+            fontSize: 11, color: DigmTheme.fuchsiaLight, fontFamily: 'SpaceGrotesk',
+          )),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(
+              value: pct,
+              backgroundColor: DigmTheme.fuchsia.withValues(alpha: 0.1),
+              color: pct > 0.9 ? Colors.orangeAccent : DigmTheme.fuchsia,
+              minHeight: 4,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text('$posted / 10,000 filled', style: const TextStyle(
+              fontSize: 10, color: Colors.white38, fontFamily: 'SpaceGrotesk',
+            )),
+          ),
+        ],
       ),
     );
   }
