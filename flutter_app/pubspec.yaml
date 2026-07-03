@@ -16,10 +16,6 @@ dependencies:
   audioplayers: ^6.0.0
   http: ^1.4.0
   webview_flutter: ^4.10.0
-  fuego_core:
-    git:
-      url: https://github.com/usexfg/fuego-sdk-flutter.git
-      path: packages/fuego_core
   digm_core:
     path: ../libfuego_core/ffi-bridge/dart
 

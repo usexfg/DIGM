@@ -159,6 +159,7 @@ impl DigmCore {
         })
     }
 
+
     /// Sync the node via RPC and feed blocks to the DIGM scanner.
     pub async fn sync_and_scan(&self) -> Result<(), String> {
         let rpc = self.rpc_client.as_ref().ok_or("No RPC client — use new_rpc() constructor")?;

@@ -18,14 +18,16 @@ class DigmCore {
 
   // --- Internal API Helper ---
   Future<dynamic> _apiCall(String path, {String method = 'GET', dynamic body}) async {
-    final url = Uri.parse('$baseUrl$path');
+    final uri = Uri.parse('$baseUrl$path');
     try {
-      final response = await http.request(
-        method,
-        url,
-        body: body != null ? jsonEncode(body) : null,
-        headers: {'Content-Type': 'application/json'},
-      );
+      final request = http.Request(method, uri);
+      request.headers['Content-Type'] = 'application/json';
+      if (body != null) {
+        request.body = jsonEncode(body);
+      }
+      final client = http.Client();
+      final streamedResponse = await client.send(request);
+      final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return jsonDecode(response.body);

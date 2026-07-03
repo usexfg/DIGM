@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/theme/digm_theme.dart';
-import '../../core/ffi/digm_core.dart';
+import '../../../core/theme/digm_theme.dart';
+import '../../../core/ffi/digm_core.dart';
+import 'package:digm_core/digm_core.dart';
 
 class CuratorDashboardScreen extends ConsumerWidget {
   const CuratorDashboardScreen({super.key});
@@ -278,8 +279,9 @@ class _CuratorDashboardContentState extends ConsumerState<_CuratorDashboardConte
 
   // ── Stations & Controls (Asymmetrical Bento pair) ────────────
   Widget _buildStationsAndControls(int remaining, String address) {
-    final created = DigmCore.maxStations - remaining;
-    final pct = created / DigmCore.maxStations;
+    final created = widget.core.get_cura_balance(address) - remaining;
+    final total = remaining + created;
+    final pct = total > 0 ? created / total : 0.0;
 
     return AnimatedBuilder(
       animation: _staggeredEntries[2],
@@ -297,17 +299,17 @@ class _CuratorDashboardContentState extends ConsumerState<_CuratorDashboardConte
             return Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 3, child: _buildStationCounter(remaining, created, pct)),
+                Expanded(flex: 3, child: _buildStationCounter(remaining, created, pct, total, address)),
                 const SizedBox(width: 16),
-                Expanded(flex: 4, child: _buildStationControls()),
+                Expanded(flex: 4, child: _buildStationControls(address)),
               ],
             );
           }
           return Column(
             children: [
-              _buildStationCounter(remaining, created, pct),
+              _buildStationCounter(remaining, created, pct, total, address),
               const SizedBox(height: 16),
-              _buildStationControls(),
+              _buildStationControls(address),
             ],
           );
         },
@@ -315,7 +317,7 @@ class _CuratorDashboardContentState extends ConsumerState<_CuratorDashboardConte
     );
   }
 
-  Widget _buildStationCounter(int remaining, int created, double pct) {
+  Widget _buildStationCounter(int remaining, int created, double pct, int total, String address) {
     return _doubleBezel(
       padding: 4,
       child: Padding(
@@ -349,7 +351,7 @@ class _CuratorDashboardContentState extends ConsumerState<_CuratorDashboardConte
               ),
             ),
             Text(
-              'of ${DigmCore.maxStations} stations',
+              'of $total stations',
               style: GoogleFonts.inter(fontSize: 14, color: DigmTheme.textMuted),
             ),
             const SizedBox(height: 16),
@@ -389,7 +391,7 @@ class _CuratorDashboardContentState extends ConsumerState<_CuratorDashboardConte
     );
   }
 
-  Widget _buildStationControls() {
+  Widget _buildStationControls(String address) {
     return _doubleBezel(
       padding: 4,
       child: Padding(

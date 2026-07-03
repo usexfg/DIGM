@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:fuego_core/rpc/daemon_client.dart';
 import 'package:digm_core/digm_core.dart';
 import '../services/api_client.dart';
 import '../services/api_digm_core.dart';
@@ -11,43 +10,22 @@ final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage();
 });
 
-final useRealApiProvider = StateProvider<bool>((ref) => false);
-
-final fuegoDaemonProvider = Provider<FuegoDaemonClient>((ref) {
-  return FuegoDaemonClient(host: '127.0.0.1', port: 18180);
-});
-
 final digmCoreProvider = FutureProvider<DigmCore>((ref) async {
   final api = ref.watch(apiClientProvider);
-  final daemon = ref.watch(fuegoDaemonProvider);
 
-  // 1. Try the Rust API server (DIGM business logic)
   try {
     final core = await ApiDigmCore.create(api);
     final addr = core.get_address(0);
     if (addr.isNotEmpty) {
-      ref.read(useRealApiProvider.notifier).state = true;
-      debugPrint('DIGM: connected to Rust API server ($addr)');
+      debugPrint('DIGM: connected to API server ($addr)');
       return core;
     }
   } catch (e) {
-    debugPrint('DIGM: Rust API not available ($e)');
+    debugPrint('DIGM: API server not available ($e)');
+    rethrow;
   }
 
-  // 2. Try direct fuegod connection via SDK
-  try {
-    final info = await daemon.getInfo();
-    debugPrint('DIGM: connected to fuegod at height ${info.height}');
-    ref.read(useRealApiProvider.notifier).state = true;
-  } catch (e) {
-    debugPrint('DIGM: fuegod not available ($e), using mock');
-  }
-
-  // 3. Fall back to mock
-  final storage = ref.watch(secureStorageProvider);
-  final mnemonic = await storage.read(key: 'digm_mnemonic') ?? '';
-  final dir = await _getStoragePath();
-  return DigmCore(mnemonic: mnemonic, storagePath: dir);
+  throw Exception('DIGM API server at http://localhost:8889 not reachable');
 });
 
 Future<String> _getStoragePath() async {

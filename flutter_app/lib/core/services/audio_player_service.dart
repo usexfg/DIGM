@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:digm_core/digm_core.dart';
 import '../ffi/digm_core.dart';
 import 'pcm_audio_sink.dart';
 

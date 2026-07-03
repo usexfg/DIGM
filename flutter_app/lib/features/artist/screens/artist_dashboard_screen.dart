@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/theme/digm_theme.dart';
-import '../../core/ffi/digm_core.dart';
-import '../marketplace/screens/create_album_screen.dart';
+import 'package:digm_core/digm_core.dart';
+import '../../../core/theme/digm_theme.dart';
+import '../../../core/ffi/digm_core.dart';
+import '../../marketplace/screens/create_album_screen.dart';
 
 class ArtistDashboardScreen extends ConsumerWidget {
   const ArtistDashboardScreen({super.key});
@@ -33,10 +34,10 @@ class _ArtistDashboardContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FutureBuilder(
+    return FutureBuilder<List<dynamic>>(
       future: Future.wait([
-        core.get_current_earnings('Fuego:1A2b3C4d5E6f7G8h9I0j'), // Using default mock addr
-        core.get_album_rankings(),
+        Future.value(core.get_current_earnings('Fuego:1A2b3C4d5E6f7G8h9I0j')),
+        Future.value(core.get_album_rankings()),
       ]),
       builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (!snapshot.hasData) {

@@ -3,24 +3,14 @@ use ffi_bridge::DigmCore;
 
 #[tokio::main]
 async fn main() {
-    // Use RPC mode — connects to local fuegod
-    let core = match ffi_bridge::DigmCore::new_rpc(
-        "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about".to_string(),
-        "/tmp/digm_data".to_string(),
-        "127.0.0.1",
-        18180,
-    ) {
-        Ok(c) => c,
-        Err(e) => {
-            eprintln!("RPC mode failed (is fuegod running?): {}", e);
-            eprintln!("Falling back to I2P mock mode...");
-            DigmCore::new(
-                "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about".to_string(),
-                "/tmp/digm_data".to_string(),
-                "Sovereign".to_string(),
-            ).expect("Failed to initialize DIGM core")
-        }
-    };
+    let mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about".to_string();
+    let storage = "/tmp/digm_data".to_string();
+
+    std::fs::create_dir_all(&storage).expect("Cannot create data directory");
+
+    // RPC mode — requires fuegod running on localhost:18180
+    let core = DigmCore::new_rpc(mnemonic, storage, "127.0.0.1", 18180)
+        .expect("Failed to initialize DIGM core. Is fuegod running on :18180?");
 
     let core_arc = Arc::new(Mutex::new(core));
 
@@ -28,21 +18,15 @@ async fn main() {
     {
         let c = core_arc.lock().unwrap();
         if let Err(e) = c.init_parapay() {
-            eprintln!("ParaPay init warning: {}", e);
+            eprintln!("ParaPay init failed: {e}");
         }
     }
 
-    // Seed some mock data for the UI
+    // Seed initial catalogue data
     {
         let c = core_arc.lock().unwrap();
-        let _ = c.create_album(
-            "album-1".to_string(), "Fuego Waves".to_string(), 10_000_000,
-            vec!["single-001".to_string(), "single-002".to_string()],
-        );
-        let _ = c.create_album(
-            "album-2".to_string(), "Deep Rust".to_string(), 8_000_000,
-            vec!["single-003".to_string()],
-        );
+        let _ = c.create_album("album-1".to_string(), "Fuego Waves".to_string(), 10_000_000, vec!["single-001".to_string(), "single-002".to_string()]);
+        let _ = c.create_album("album-2".to_string(), "Deep Rust".to_string(), 8_000_000, vec!["single-003".to_string()]);
         let addr = c.get_address(0);
         c.earn_para(addr.clone(), 100_000_000u128);
         let _ = c.stake_single(addr.clone(), "single-001".to_string(), "album-1".to_string(), 5_000_000);
@@ -52,7 +36,7 @@ async fn main() {
     }
 
     println!("DIGM Platform API server");
-    println!("Frontend expects API at: http://localhost:8889");
+    println!("Listening on http://localhost:8889");
 
     ffi_bridge::api_server::start_api_server(core_arc, 8889).await;
 }

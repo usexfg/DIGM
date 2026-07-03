@@ -274,7 +274,8 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> digmPoolStats() async {
-    return _get('digm/pool-stats');
+    final result = await _get('digm/pool-stats');
+    return Map<String, dynamic>.from(result as Map);
   }
 
   Future<int> singlesRemaining() async {
