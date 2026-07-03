@@ -18,9 +18,12 @@ pub struct ApiState {
 
 #[derive(Serialize)]
 struct BalanceResponse {
-    para: u64,
+    para: u128,
     vox: u64,
     cura: u64,
+    digm_held: u64,
+    digm_unspent: u64,
+    singles_remaining: u64,
 }
 
 pub async fn start_api_server(core: Arc<Mutex<DigmCore>>, port: u16) {
@@ -215,9 +218,12 @@ async fn get_address(State(state): State<ApiState>) -> Result<Json<serde_json::V
 async fn get_balance(State(state): State<ApiState>, Path(address): Path<String>) -> Result<Json<BalanceResponse>, StatusCode> {
     let core = state.core.lock().unwrap();
     Ok(Json(BalanceResponse {
-        para: core.get_current_earnings(address.clone()),
+        para: core.get_para_balance(address.clone()),
         vox: core.get_vox_balance(address.clone()),
-        cura: core.get_cura_balance(address),
+        cura: core.get_cura_balance(address.clone()),
+        digm_held: core.get_unspent_digm(address.clone()),
+        digm_unspent: core.get_unspent_digm(address.clone()),
+        singles_remaining: core.singles_remaining(),
     }))
 }
 

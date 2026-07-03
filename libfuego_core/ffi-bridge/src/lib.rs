@@ -268,9 +268,13 @@ impl DigmCore {
 
     pub fn get_current_earnings(&self, address: String) -> u64 {
         let app = self.app.lock().unwrap();
-        // Use Address::from for the string
         let addr = Address::from(address);
         app.get_current_earnings(&addr)
+    }
+
+    pub fn get_para_balance(&self, address: String) -> u128 {
+        let app = self.app.lock().unwrap();
+        app.get_para_balance(&Address::from(address))
     }
 
     pub fn get_vox_balance(&self, address: String) -> u64 {

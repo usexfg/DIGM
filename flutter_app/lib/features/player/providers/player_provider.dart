@@ -40,7 +40,7 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   }
 
   void _play(Track track, PlaybackSource source) {
-    _audioPlayer.loadTrack(track.chunkHashes);
+    _audioPlayer.loadTrack(track.chunkHashes, trackLengthSec: track.duration.inSeconds);
     _audioPlayer.play();
     state = state.copyWith(
       currentTrack: track,
@@ -58,6 +58,16 @@ class PlayerNotifier extends StateNotifier<PlayerState> {
   void resume() {
     _audioPlayer.play();
     state = state.copyWith(isPlaying: true);
+  }
+
+  int boost() => _audioPlayer.boost();
+
+  void rewind10s() {
+    // ParaPay allows 10-sec rewind only — no forward seek
+    _audioPlayer.pause();
+    _audioPlayer.loadTrack(state.currentTrack?.chunkHashes ?? [],
+      trackLengthSec: state.currentTrack?.duration.inSeconds ?? 180);
+    state = state.copyWith(isPlaying: false);
   }
 
   void setVolume(double vol) {

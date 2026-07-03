@@ -12,6 +12,9 @@ class ApiDigmCore extends DigmCore {
   int _paraBalance = 0;
   int _voxBalance = 0;
   int _curaBalance = 0;
+  int _digmHeld = 0;
+  int _digmUnspent = 0;
+  int _singlesRemaining = 0;
   String _singlePools = '[]';
   String _albumRankings = '[]';
   List<String> _guardians = [];
@@ -39,6 +42,9 @@ class ApiDigmCore extends DigmCore {
       _paraBalance = (balances['para'] as num?)?.toInt() ?? 0;
       _voxBalance = (balances['vox'] as num?)?.toInt() ?? 0;
       _curaBalance = (balances['cura'] as num?)?.toInt() ?? 0;
+      _digmHeld = (balances['digm_held'] as num?)?.toInt() ?? 0;
+      _digmUnspent = (balances['digm_unspent'] as num?)?.toInt() ?? 0;
+      _singlesRemaining = (balances['singles_remaining'] as num?)?.toInt() ?? 0;
       _singlePools = jsonEncode(await _api.getSinglePools());
       _albumRankings = jsonEncode(await _api.getAlbumRankings());
       final guardians = await _api.getGuardians();
@@ -59,6 +65,9 @@ class ApiDigmCore extends DigmCore {
       _paraBalance = (balances['para'] as num?)?.toInt() ?? _paraBalance;
       _voxBalance = (balances['vox'] as num?)?.toInt() ?? _voxBalance;
       _curaBalance = (balances['cura'] as num?)?.toInt() ?? _curaBalance;
+      _digmHeld = (balances['digm_held'] as num?)?.toInt() ?? _digmHeld;
+      _digmUnspent = (balances['digm_unspent'] as num?)?.toInt() ?? _digmUnspent;
+      _singlesRemaining = (balances['singles_remaining'] as num?)?.toInt() ?? _singlesRemaining;
     } catch (e) {
       debugPrint('Balances refresh error: $e');
     }

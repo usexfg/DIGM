@@ -24,6 +24,8 @@ class WalletScreen extends ConsumerWidget {
         final paraBalance = core.get_current_earnings(address).toString();
         final voxBalance = core.get_vox_balance(address).toString();
         final curaBalance = core.get_cura_balance(address).toString();
+        final digmUnspent = core.get_unspent_digm(address).toString();
+        final singlesRemaining = core.singles_remaining().toString();
 
         return Scaffold(
           appBar: AppBar(
@@ -110,6 +112,14 @@ class WalletScreen extends ConsumerWidget {
                 _BalanceTile(label: 'PARA', value: paraBalance),
                 _BalanceTile(label: 'VOX', value: voxBalance),
                 _BalanceTile(label: 'CURA', value: curaBalance),
+                _BalanceTile(label: 'DIGM (unspent)', value: digmUnspent),
+                const SizedBox(height: 8),
+                Text(
+                  '0P Singles: $singlesRemaining / 10,000 remaining',
+                  style: const TextStyle(fontFamily: 'SpaceGrotesk', fontSize: 12, color: DigmTheme.fuchsiaLight),
+                ),
+                const SizedBox(height: 16),
+                _SectionHeader(title: 'DIGM Pools'),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
