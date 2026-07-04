@@ -2,7 +2,7 @@ use ed25519_dalek::{SigningKey, Signature, Signer};
 use sha2::{Sha256, Digest};
 use rand::{rngs::OsRng, RngCore};
 use bip39::{Mnemonic, Language};
-use bs58::encode;
+use bs58;
 use zeroize::Zeroize;
 use serde::{Serialize, Deserialize};
 
@@ -53,24 +53,53 @@ impl Keypair {
     }
 }
 
+/// Fuego mainnet address prefix (CryptoNoteConfig.h:35).
+pub const ADDRESS_BASE58_PREFIX: u64 = 1753191;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PublicKey(pub [u8; 32]);
 
 impl PublicKey {
-    /// Build a CryptoNote-style address with Fuego network prefix.
-    /// Format: [network_byte(25)] + [spend_pub(32)] + [view_pub(32)] + [keccak_checksum(4)]
+    /// Build a Fuego address matching the C++ Base58::encode_addr algorithm.
+    ///
+    /// 1. Serialize AccountPublicAddress: spend_pub(32) + view_pub(32)
+    /// 2. Payload = varint(prefix 1753191) + raw_data
+    /// 3. Checksum = keccak(payload)[..4]
+    /// 4. Base58 encode
+    ///
+    /// Produces "fire..." prefixed addresses.
     pub fn to_address(&self, view_key: &PublicKey) -> Address {
         use sha3::{Digest, Keccak256};
-        let mut raw = Vec::with_capacity(1 + 32 + 32 + 4);
-        raw.push(25u8);
-        raw.extend_from_slice(&self.0);
-        raw.extend_from_slice(&view_key.0);
 
-        let hash = Keccak256::digest(&raw);
-        raw.extend_from_slice(&hash[..4]);
+        let mut raw_data = Vec::with_capacity(64);
+        raw_data.extend_from_slice(&self.0);
+        raw_data.extend_from_slice(&view_key.0);
 
-        Address(bs58::encode(&raw).into_string())
+        let mut payload = varint_encode(ADDRESS_BASE58_PREFIX);
+        payload.extend_from_slice(&raw_data);
+
+        let hash = Keccak256::digest(&payload);
+        payload.extend_from_slice(&hash[..4]);
+
+        Address(bs58::encode(&payload).into_string())
     }
+}
+
+/// Encode a u64 as a variable-length integer (LE, 7 bits per byte, MSB = continuation).
+fn varint_encode(mut value: u64) -> Vec<u8> {
+    let mut buf = Vec::new();
+    loop {
+        let mut byte = (value & 0x7F) as u8;
+        value >>= 7;
+        if value > 0 {
+            byte |= 0x80;
+        }
+        buf.push(byte);
+        if value == 0 {
+            break;
+        }
+    }
+    buf
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
