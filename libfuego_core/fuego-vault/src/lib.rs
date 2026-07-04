@@ -1,4 +1,4 @@
-use fuego_crypto::{Keypair, Address, MnemonicUtils};
+use fuego_crypto::{Keypair, Address, MnemonicUtils, make_address};
 use serde::{Serialize, Deserialize};
 use std::path::PathBuf;
 use std::fs;
@@ -40,10 +40,9 @@ impl Vault {
     }
 
     pub fn get_address(&self, index: u32) -> Address {
-        // CryptoNote-style: spend_key at index N, view_key at index N+1
         let spend_kp = self.derive_keypair(index);
         let view_kp = self.derive_keypair(index + 1);
-        spend_kp.public_key().to_address(&view_kp.public_key())
+        make_address(&spend_kp.public, &view_kp.public)
     }
 
     pub fn set_display_name(&mut self, name: String) {
